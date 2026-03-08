@@ -22,7 +22,7 @@ import dev.tonholo.kss.lexer.css.token.consumer.WhitespaceTokenConsumer
  * It uses a set of token consumers to identify and consume different types
  * of tokens based on the current character in the input stream.
  */
-internal class CssTokenizer(
+class CssTokenizer(
     private val iterator: TokenIterator<CssTokenKind> = CssTokenIterator(),
     private val consumers: Set<TokenConsumer> = setOf(
         AtKeywordTokenConsumer(iterator),

@@ -17,7 +17,7 @@ import dev.tonholo.kss.parser.ast.iterator.AstParserIterator
  * @param content The complete CSS content being parsed.
  * @param valueConsumer The [Consumer] responsible for parsing value tokens into [Value] objects.
  */
-internal class DeclarationConsumer(
+class DeclarationConsumer(
     content: String,
     private val valueConsumer: Consumer<Value>,
 ) : Consumer<Declaration>(content) {

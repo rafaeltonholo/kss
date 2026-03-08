@@ -7,7 +7,7 @@ import dev.tonholo.kss.parser.ast.css.syntax.node.Selector
 import dev.tonholo.kss.parser.ast.css.syntax.node.SelectorListItem
 import dev.tonholo.kss.parser.ast.iterator.AstParserIterator
 
-internal val selectorTokens = setOf(
+val selectorTokens = setOf(
     CssTokenKind.Ident,
     CssTokenKind.Hash,
     CssTokenKind.Asterisk,
@@ -32,7 +32,7 @@ internal val selectorTokens = setOf(
  * @param content The entire CSS content string.
  * @param simpleSelectorConsumer A consumer responsible for consuming individual selectors.
  */
-internal class SelectorListItemConsumer(
+class SelectorListItemConsumer(
     content: String,
     private val simpleSelectorConsumer: Consumer<Selector>,
 ) : Consumer<SelectorListItem>(content) {

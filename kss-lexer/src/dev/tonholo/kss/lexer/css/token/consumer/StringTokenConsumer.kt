@@ -9,7 +9,7 @@ private const val ESCAPE_CHAR = '\\'
 private val quotesTokens: Set<Char> = CssTokenKind.Quote.representation +
     CssTokenKind.DoubleQuote.representation
 
-internal class StringTokenConsumer(
+class StringTokenConsumer(
     iterator: TokenIterator<CssTokenKind>,
 ) : TokenConsumer(iterator) {
     override val supportedTokenKinds: Set<CssTokenKind> = setOf(

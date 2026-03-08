@@ -18,7 +18,7 @@ import dev.tonholo.kss.parser.ast.iterator.parserError
  *
  * @param content The CSS content being parsed.
  */
-internal class SimpleSelectorConsumer(
+class SimpleSelectorConsumer(
     content: String,
 ) : Consumer<Selector>(content) {
     override fun consume(iterator: AstParserIterator<CssTokenKind>): Selector {

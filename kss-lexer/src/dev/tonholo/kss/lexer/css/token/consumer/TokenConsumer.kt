@@ -12,7 +12,7 @@ import dev.tonholo.kss.lexer.css.CssTokenKind
  *
  * @param iterator The token iterator to consume tokens from.
  */
-internal abstract class TokenConsumer(
+abstract class TokenConsumer(
     protected val iterator: TokenIterator<CssTokenKind>,
 ) {
     /**

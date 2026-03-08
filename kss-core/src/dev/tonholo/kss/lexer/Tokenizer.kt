@@ -5,7 +5,7 @@ package dev.tonholo.kss.lexer
  *
  * @param T The type of token kinds this tokenizer produces.
  */
-internal interface Tokenizer<out T : TokenKind> {
+interface Tokenizer<out T : TokenKind> {
     /**
      * Tokenizes the given input string into a list of tokens.
      * @param input The input string to tokenize.

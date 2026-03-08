@@ -21,7 +21,7 @@ private val colorFunctions = setOf(
  *
  * @param content The CSS content string being parsed.
  */
-internal class ValueConsumer(
+class ValueConsumer(
     content: String,
 ) : Consumer<Value>(content) {
     override fun consume(iterator: Iterator): Value {

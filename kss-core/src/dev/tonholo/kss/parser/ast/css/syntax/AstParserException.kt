@@ -19,7 +19,7 @@ import dev.tonholo.kss.lexer.TokenKind
  * @property backtrack The number of tokens to backtrack for context.
  * @property forward The number of tokens to look ahead for context.
  */
-internal class AstParserException internal constructor(
+class AstParserException internal constructor(
     message: String,
     private val tokens: List<Token<out TokenKind>>,
     private val offset: Int,

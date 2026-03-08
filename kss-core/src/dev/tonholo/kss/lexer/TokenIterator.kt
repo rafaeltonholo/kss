@@ -9,7 +9,7 @@ import dev.tonholo.kss.extensions.EMPTY
  *
  * @param T The type of token kind this iterator produces.
  */
-internal abstract class TokenIterator<out T : TokenKind> {
+abstract class TokenIterator<out T : TokenKind> {
     private var _content: String? = null
 
     /**

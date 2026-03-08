@@ -10,7 +10,7 @@ import dev.tonholo.kss.parser.ast.iterator.parserCheckNotNull
 /**
  * Typealias for the iterator used by the consumers.
  */
-internal typealias Iterator = AstParserIterator<CssTokenKind>
+typealias Iterator = AstParserIterator<CssTokenKind>
 
 /**
  * Base class for all CSS consumers.
@@ -20,7 +20,7 @@ internal typealias Iterator = AstParserIterator<CssTokenKind>
  *
  * @param T The type of [CssNode] produced by this consumer.
  */
-internal abstract class Consumer<out T : CssNode>(
+abstract class Consumer<out T : CssNode>(
     protected val content: String,
 ) {
     /**

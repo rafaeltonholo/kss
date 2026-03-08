@@ -23,7 +23,7 @@ private val validAtRules = setOf("media", "keyframes", "import", "charset", "sup
  * @param content The CSS content being parsed.
  * @param blockConsumer The consumer used to parse the block of the at-rule, if present.
  */
-internal class AtRuleConsumer(
+class AtRuleConsumer(
     content: String,
     private val blockConsumer: SimpleBlockConsumer<Rule>,
 ) : Consumer<AtRule>(content) {

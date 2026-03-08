@@ -13,7 +13,7 @@ import dev.tonholo.kss.parser.ast.iterator.AstParserIterator
  *
  * @property tokens The list of CSS tokens to iterate over.
  */
-internal class CssIterator(
+class CssIterator(
     tokens: List<Token<out CssTokenKind>>,
 ) : AstParserIterator<CssTokenKind>(tokens.trim()) {
     companion object {

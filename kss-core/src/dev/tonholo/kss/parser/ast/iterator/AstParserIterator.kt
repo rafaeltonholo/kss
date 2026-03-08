@@ -66,7 +66,7 @@ abstract class AstParserIterator<TTokenKind : TokenKind>(
  * @throws AstParserException When called, always throws an exception
  * with the provided error message and context.
  */
-internal fun <TTokenKind : TokenKind> AstParserIterator<TTokenKind>.parserError(
+fun <TTokenKind : TokenKind> AstParserIterator<TTokenKind>.parserError(
     content: String,
     message: String,
     backtrack: Int = 1,
@@ -104,7 +104,7 @@ internal fun <TTokenKind : TokenKind> AstParserIterator<TTokenKind>.parserError(
  * a syntax error in the input.
  */
 @OptIn(ExperimentalContracts::class)
-internal inline fun <TTokenKind : TokenKind> AstParserIterator<TTokenKind>.parserRequire(
+inline fun <TTokenKind : TokenKind> AstParserIterator<TTokenKind>.parserRequire(
     predicate: Boolean,
     content: String,
     backtrack: Int = 1,
@@ -137,7 +137,7 @@ internal inline fun <TTokenKind : TokenKind> AstParserIterator<TTokenKind>.parse
  * @throws AstParserException If the [predicate] is false.
  */
 @OptIn(ExperimentalContracts::class)
-internal inline fun <TTokenKind : TokenKind> AstParserIterator<TTokenKind>.parserCheck(
+inline fun <TTokenKind : TokenKind> AstParserIterator<TTokenKind>.parserCheck(
     predicate: Boolean,
     content: String,
     backtrack: Int = 1,
@@ -173,7 +173,7 @@ internal inline fun <TTokenKind : TokenKind> AstParserIterator<TTokenKind>.parse
  * @throws AstParserException If the [value] is null.
  */
 @OptIn(ExperimentalContracts::class)
-internal inline fun <TTokenKind : TokenKind, reified T> AstParserIterator<TTokenKind>.parserCheckNotNull(
+inline fun <TTokenKind : TokenKind, reified T> AstParserIterator<TTokenKind>.parserCheckNotNull(
     value: T?,
     content: String,
     backtrack: Int = 1,

@@ -7,7 +7,7 @@ import dev.tonholo.kss.lexer.css.constants.CssFunctionConstants
 /**
  * Iterator for CSS tokens.
  */
-internal class CssTokenIterator : TokenIterator<CssTokenKind>() {
+class CssTokenIterator : TokenIterator<CssTokenKind>() {
     /**
      * Gets the kind of the current token.
      * @return The kind of the current token.

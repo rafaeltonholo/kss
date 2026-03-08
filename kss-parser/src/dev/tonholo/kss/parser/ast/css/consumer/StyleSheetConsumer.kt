@@ -18,7 +18,7 @@ import dev.tonholo.kss.parser.ast.iterator.AstParserIterator
  * @param atRuleConsumer The consumer responsible for handling at-rules.
  * @param qualifiedRuleConsumer The consumer responsible for handling qualified rules.
  */
-internal class StyleSheetConsumer(
+class StyleSheetConsumer(
     content: String,
     private val atRuleConsumer: Consumer<AtRule>,
     private val qualifiedRuleConsumer: Consumer<QualifiedRule>,

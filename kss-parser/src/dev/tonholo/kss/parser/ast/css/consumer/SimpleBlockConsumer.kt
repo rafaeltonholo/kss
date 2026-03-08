@@ -23,7 +23,7 @@ private val blockOpeningTokens = mapOf(
  * object.
  * @param T The type of the children of the block.
  */
-internal abstract class SimpleBlockConsumer<T : CssNode>(
+abstract class SimpleBlockConsumer<T : CssNode>(
     content: String,
     private val consumer: Consumer<T>,
 ) : Consumer<Block.SimpleBlock<T>>(content) {
@@ -71,7 +71,7 @@ internal abstract class SimpleBlockConsumer<T : CssNode>(
 /**
  * Consumes a simple block of rules.
  */
-internal class SimpleRuleBlockConsumer(
+class SimpleRuleBlockConsumer(
     content: String,
     qualifiedRuleConsumer: Consumer<Rule>,
 ) : SimpleBlockConsumer<Rule>(content, qualifiedRuleConsumer)
@@ -82,7 +82,7 @@ internal class SimpleRuleBlockConsumer(
  *
  * E.g.: `selector { declaration1; declaration2; }`
  */
-internal class SimpleDeclarationBlockConsumer(
+class SimpleDeclarationBlockConsumer(
     content: String,
     declarationConsumer: Consumer<Declaration>,
 ) : SimpleBlockConsumer<Declaration>(

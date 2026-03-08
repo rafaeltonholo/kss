@@ -13,7 +13,7 @@ import dev.tonholo.kss.parser.ast.css.syntax.node.Value
  * DSL marker for CssConsumers DSL.
  */
 @DslMarker
-internal annotation class CssConsumersDslMarker
+annotation class CssConsumersDslMarker
 
 /**
  * Interface defining various consumers for CSS parsing.
@@ -29,7 +29,7 @@ internal annotation class CssConsumersDslMarker
  *  @property styleSheetConsumer A consumer responsible for parsing the entire style sheet.
  */
 @CssConsumersDslMarker
-internal interface CssConsumers {
+interface CssConsumers {
     val selectorConsumer: Consumer<Selector>
     val selectorListItemConsumer: Consumer<SelectorListItem>
     val valueConsumer: Consumer<Value>
@@ -44,7 +44,7 @@ internal interface CssConsumers {
 /**
  * Builder class for creating instances of [CssConsumers].
  */
-internal class CssConsumersBuilder {
+class CssConsumersBuilder {
     var customSelectorConsumer: Consumer<Selector>? = null
     var customSelectorListItemConsumer: Consumer<SelectorListItem>? = null
     var customValueConsumer: Consumer<Value>? = null
@@ -117,6 +117,6 @@ internal class CssConsumersBuilder {
  * @return An instance of [CssConsumers].
  */
 @CssConsumersDslMarker
-internal fun CssConsumers(content: String, builder: CssConsumersBuilder.() -> Unit = {}): CssConsumers {
+fun CssConsumers(content: String, builder: CssConsumersBuilder.() -> Unit = {}): CssConsumers {
     return CssConsumersBuilder().apply(builder).build(content)
 }

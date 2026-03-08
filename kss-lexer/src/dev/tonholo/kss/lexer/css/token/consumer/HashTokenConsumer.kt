@@ -5,7 +5,7 @@ import dev.tonholo.kss.lexer.Token
 import dev.tonholo.kss.lexer.TokenIterator
 import dev.tonholo.kss.lexer.css.CssTokenKind
 
-internal class HashTokenConsumer(
+class HashTokenConsumer(
     iterator: TokenIterator<CssTokenKind>,
 ) : TokenConsumer(iterator) {
     override val supportedTokenKinds: Set<CssTokenKind> = setOf(

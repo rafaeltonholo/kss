@@ -35,7 +35,7 @@ import dev.tonholo.kss.parser.ast.iterator.parserError
  * list items.
  * @param blockConsumer The consumer used to parse the declaration block.
  */
-internal class QualifiedRuleConsumer(
+class QualifiedRuleConsumer(
     content: String,
     private val selectorListItemConsumer: Consumer<SelectorListItem>,
     private val blockConsumer: SimpleBlockConsumer<Declaration>,
