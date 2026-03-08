@@ -67,11 +67,16 @@ synchronization.
 ./amper run -m kss-demo-desktop
 ```
 
-### Build Web
+### Run Web
+
+Requires [Node.js](https://nodejs.org/) (>= 18) and npm:
 
 ```bash
-./amper build -m kss-demo-web
+./scripts/run-web.sh
 ```
+
+This builds the wasmJs module, extracts the Skiko runtime, installs npm dependencies, and starts
+a Vite dev server at `http://localhost:3000`.
 
 ## Building
 
@@ -94,6 +99,7 @@ KSS uses the [Amper](https://github.com/JetBrains/amper) build system.
 ## Requirements
 
 - **JDK 17+** (for building)
+- **Node.js 18+** and **npm** (for the web demo only)
 - **Amper** is bootstrapped automatically via the included wrapper scripts
 
 ## Contributing
