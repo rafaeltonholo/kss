@@ -25,15 +25,17 @@ class StyleSheetConsumer(
 ) : Consumer<StyleSheet>(content) {
     override fun consume(iterator: AstParserIterator<CssTokenKind>): StyleSheet {
         val children = mutableListOf<CssStatementNode>()
-        val location = CssLocation(
-            source = content,
-            start = 0,
-            end = content.length,
-        )
-        val styleSheet = StyleSheet(
-            location = location,
-            children = children,
-        )
+        val location =
+            CssLocation(
+                source = content,
+                start = 0,
+                end = content.length
+            )
+        val styleSheet =
+            StyleSheet(
+                location = location,
+                children = children
+            )
         while (iterator.hasNext()) {
             val next = iterator.next()
             checkNotNull(next) {

@@ -37,14 +37,18 @@ class CssIterator(
                             token.kind == CssTokenKind.WhiteSpace &&
                                 prev?.kind in CssTokenKind.WhiteSpaceSignificantAdjacentTokens &&
                                 next.kind in CssTokenKind.WhiteSpaceSignificantAdjacentTokens
-                            ) -> i++
+                        ) -> {
+                            i++
+                        }
 
                         token.kind == CssTokenKind.WhiteSpace || token.kind == CssTokenKind.Comment -> {
                             removeLast()
                             i++
                         }
 
-                        else -> i++
+                        else -> {
+                            i++
+                        }
                     }
                 }
             }

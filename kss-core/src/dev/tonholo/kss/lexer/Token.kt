@@ -18,13 +18,12 @@ data class Token<T : TokenKind>(
     val startOffset: Int,
     val endOffset: Int,
 ) {
-    override fun toString(): String {
-        return buildString {
+    override fun toString(): String =
+        buildString {
             appendLine("Token(")
             appendLine("kind = $kind,".prependIndent(indentSize = 2))
             appendLine("startOffset = $startOffset,".prependIndent(indentSize = 2))
             appendLine("endOffset = $endOffset,".prependIndent(indentSize = 2))
             appendLine(")")
         }
-    }
 }

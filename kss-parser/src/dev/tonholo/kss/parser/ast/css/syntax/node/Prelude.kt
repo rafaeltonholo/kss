@@ -26,8 +26,8 @@ sealed interface Prelude<T : CssComponentValueNode> {
             calculateSelectorsSpecificity(this)
         }
 
-        override fun toString(): String {
-            return buildString {
+        override fun toString(): String =
+            buildString {
                 appendLine("Selector(")
                 appendLine("components = [".prependIndent(indentSize = 2))
                 components.forEach {
@@ -36,7 +36,6 @@ sealed interface Prelude<T : CssComponentValueNode> {
                 appendLine("],".prependIndent(indentSize = 2))
                 appendLine(")")
             }
-        }
     }
 
     /**
@@ -45,8 +44,8 @@ sealed interface Prelude<T : CssComponentValueNode> {
     data class AtRule(
         override val components: List<AtRulePrelude>,
     ) : Prelude<AtRulePrelude> {
-        override fun toString(): String {
-            return buildString {
+        override fun toString(): String =
+            buildString {
                 appendLine("AtRule(")
                 appendLine("components = [".prependIndent(indentSize = 2))
                 components.forEach {
@@ -55,6 +54,5 @@ sealed interface Prelude<T : CssComponentValueNode> {
                 appendLine("],".prependIndent(indentSize = 2))
                 appendLine(")")
             }
-        }
     }
 }

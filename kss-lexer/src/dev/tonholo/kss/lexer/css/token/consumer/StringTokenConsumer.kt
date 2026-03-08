@@ -6,16 +6,18 @@ import dev.tonholo.kss.lexer.TokenIterator
 import dev.tonholo.kss.lexer.css.CssTokenKind
 
 private const val ESCAPE_CHAR = '\\'
-private val quotesTokens: Set<Char> = CssTokenKind.Quote.representation +
-    CssTokenKind.DoubleQuote.representation
+private val quotesTokens: Set<Char> =
+    CssTokenKind.Quote.representation +
+        CssTokenKind.DoubleQuote.representation
 
 class StringTokenConsumer(
     iterator: TokenIterator<CssTokenKind>,
 ) : TokenConsumer(iterator) {
-    override val supportedTokenKinds: Set<CssTokenKind> = setOf(
-        CssTokenKind.Quote,
-        CssTokenKind.DoubleQuote,
-    )
+    override val supportedTokenKinds: Set<CssTokenKind> =
+        setOf(
+            CssTokenKind.Quote,
+            CssTokenKind.DoubleQuote
+        )
 
     override fun consume(kind: CssTokenKind): List<Token<out CssTokenKind>> {
         val start = iterator.offset
@@ -39,7 +41,7 @@ class StringTokenConsumer(
                 Token(CssTokenKind.BadString, start, iterator.offset)
             } else {
                 Token(CssTokenKind.String, start, iterator.offset)
-            },
+            }
         )
     }
 }

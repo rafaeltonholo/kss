@@ -5,12 +5,13 @@ import dev.tonholo.kss.parser.ast.css.syntax.node.CssLocation
 import dev.tonholo.kss.parser.ast.css.syntax.node.Value
 import dev.tonholo.kss.parser.ast.iterator.parserError
 
-private val colorFunctions = setOf(
-    "rgb",
-    "rgba",
-    "hsl",
-    "hsla",
-)
+private val colorFunctions =
+    setOf(
+        "rgb",
+        "rgba",
+        "hsl",
+        "hsla"
+    )
 
 /**
  * Consumes a CSS value from the given iterator and builds a [Value] object.
@@ -27,25 +28,53 @@ class ValueConsumer(
     override fun consume(iterator: Iterator): Value {
         val current = iterator.expectTokenNotNull()
         return when (current.kind) {
-            CssTokenKind.BadUrl -> iterator.parserError(
-                content,
-                "Incomplete URL value: missing closing ')' in 'url(...)",
-            )
+            CssTokenKind.BadUrl -> {
+                iterator.parserError(
+                    content,
+                    "Incomplete URL value: missing closing ')' in 'url(...)"
+                )
+            }
 
-            CssTokenKind.Ident -> iterator.parseIdentToken()
-            CssTokenKind.Number -> iterator.parseNumberToken()
-            CssTokenKind.Dimension -> iterator.parseDimensionToken()
-            CssTokenKind.Percentage -> iterator.parsePercentageToken()
-            CssTokenKind.String -> iterator.parseStringToken()
-            CssTokenKind.Function -> iterator.parseFunction()
-            CssTokenKind.Url -> iterator.parseUrl()
-            CssTokenKind.Hash -> iterator.parseColor()
-            else -> iterator.parserError(
-                content = content,
-                message = "Unexpected token: $current",
-                backtrack = 2,
-                forward = 2,
-            )
+            CssTokenKind.Ident -> {
+                iterator.parseIdentToken()
+            }
+
+            CssTokenKind.Number -> {
+                iterator.parseNumberToken()
+            }
+
+            CssTokenKind.Dimension -> {
+                iterator.parseDimensionToken()
+            }
+
+            CssTokenKind.Percentage -> {
+                iterator.parsePercentageToken()
+            }
+
+            CssTokenKind.String -> {
+                iterator.parseStringToken()
+            }
+
+            CssTokenKind.Function -> {
+                iterator.parseFunction()
+            }
+
+            CssTokenKind.Url -> {
+                iterator.parseUrl()
+            }
+
+            CssTokenKind.Hash -> {
+                iterator.parseColor()
+            }
+
+            else -> {
+                iterator.parserError(
+                    content = content,
+                    message = "Unexpected token: $current",
+                    backtrack = 2,
+                    forward = 2
+                )
+            }
         }
     }
 
@@ -55,12 +84,13 @@ class ValueConsumer(
     private fun Iterator.parseIdentToken(): Value.Identifier {
         val current = expectToken(kind = CssTokenKind.Ident)
         return Value.Identifier(
-            location = CssLocation(
-                source = content.substring(startIndex = current.startOffset, endIndex = current.endOffset),
-                start = current.startOffset,
-                end = current.endOffset,
-            ),
-            name = content.substring(startIndex = current.startOffset, endIndex = current.endOffset),
+            location =
+                CssLocation(
+                    source = content.substring(startIndex = current.startOffset, endIndex = current.endOffset),
+                    start = current.startOffset,
+                    end = current.endOffset
+                ),
+            name = content.substring(startIndex = current.startOffset, endIndex = current.endOffset)
         )
     }
 
@@ -70,12 +100,13 @@ class ValueConsumer(
     private fun Iterator.parseNumberToken(): Value {
         val current = expectToken(kind = CssTokenKind.Number)
         return Value.Number(
-            location = CssLocation(
-                source = content.substring(startIndex = current.startOffset, endIndex = current.endOffset),
-                start = current.startOffset,
-                end = current.endOffset,
-            ),
-            value = content.substring(startIndex = current.startOffset, endIndex = current.endOffset),
+            location =
+                CssLocation(
+                    source = content.substring(startIndex = current.startOffset, endIndex = current.endOffset),
+                    start = current.startOffset,
+                    end = current.endOffset
+                ),
+            value = content.substring(startIndex = current.startOffset, endIndex = current.endOffset)
         )
     }
 
@@ -87,13 +118,14 @@ class ValueConsumer(
         val value = content.substring(startIndex = current.startOffset, endIndex = current.endOffset)
         var unit = value.takeLastWhile { char -> char.isLetter() }
         return Value.Dimension(
-            location = CssLocation(
-                source = value,
-                start = current.startOffset,
-                end = current.endOffset,
-            ),
+            location =
+                CssLocation(
+                    source = value,
+                    start = current.startOffset,
+                    end = current.endOffset
+                ),
             value = value.removeSuffix(unit),
-            unit = unit,
+            unit = unit
         )
     }
 
@@ -103,12 +135,13 @@ class ValueConsumer(
     private fun Iterator.parsePercentageToken(): Value.Percentage {
         val current = expectToken(kind = CssTokenKind.Percentage)
         return Value.Percentage(
-            location = CssLocation(
-                source = content.substring(startIndex = current.startOffset, endIndex = current.endOffset),
-                start = current.startOffset,
-                end = current.endOffset,
-            ),
-            value = content.substring(startIndex = current.startOffset, endIndex = current.endOffset),
+            location =
+                CssLocation(
+                    source = content.substring(startIndex = current.startOffset, endIndex = current.endOffset),
+                    start = current.startOffset,
+                    end = current.endOffset
+                ),
+            value = content.substring(startIndex = current.startOffset, endIndex = current.endOffset)
         )
     }
 
@@ -118,12 +151,13 @@ class ValueConsumer(
     private fun Iterator.parseStringToken(): Value.String {
         val current = expectToken(kind = CssTokenKind.String)
         return Value.String(
-            location = CssLocation(
-                source = content.substring(startIndex = current.startOffset, endIndex = current.endOffset),
-                start = current.startOffset,
-                end = current.endOffset,
-            ),
-            value = content.substring(startIndex = current.startOffset, endIndex = current.endOffset),
+            location =
+                CssLocation(
+                    source = content.substring(startIndex = current.startOffset, endIndex = current.endOffset),
+                    start = current.startOffset,
+                    end = current.endOffset
+                ),
+            value = content.substring(startIndex = current.startOffset, endIndex = current.endOffset)
         )
     }
 
@@ -154,13 +188,14 @@ class ValueConsumer(
         val last = arguments.last()
         val endOffset = last.location.end + 1
         return Value.Function(
-            location = CssLocation(
-                source = content.substring(startIndex = current.startOffset, endIndex = endOffset),
-                start = current.startOffset,
-                end = endOffset,
-            ),
+            location =
+                CssLocation(
+                    source = content.substring(startIndex = current.startOffset, endIndex = endOffset),
+                    start = current.startOffset,
+                    end = endOffset
+                ),
             name = name,
-            arguments = arguments,
+            arguments = arguments
         )
     }
 
@@ -173,12 +208,13 @@ class ValueConsumer(
             val urlContentStartOffset = current.startOffset + 4
             val urlContentEndOffset = current.endOffset - 1
             return Value.Url(
-                location = CssLocation(
-                    source = content.substring(startIndex = urlContentStartOffset, endIndex = urlContentEndOffset),
-                    start = urlContentStartOffset,
-                    end = urlContentEndOffset,
-                ),
-                value = content.substring(startIndex = urlContentStartOffset, endIndex = urlContentEndOffset),
+                location =
+                    CssLocation(
+                        source = content.substring(startIndex = urlContentStartOffset, endIndex = urlContentEndOffset),
+                        start = urlContentStartOffset,
+                        end = urlContentEndOffset
+                    ),
+                value = content.substring(startIndex = urlContentStartOffset, endIndex = urlContentEndOffset)
             )
         }
 
@@ -189,7 +225,10 @@ class ValueConsumer(
         while (hasNext()) {
             val next = expectNextTokenNotNull()
             when (next.kind) {
-                CssTokenKind.CloseParenthesis -> break
+                CssTokenKind.CloseParenthesis -> {
+                    break
+                }
+
                 CssTokenKind.Semicolon, CssTokenKind.CloseCurlyBrace -> {
                     parserError(
                         content = content,
@@ -207,12 +246,13 @@ class ValueConsumer(
         }
 
         return Value.Url(
-            location = CssLocation(
-                source = content.substring(startIndex = current.endOffset, endIndex = endUrlOffset),
-                start = current.endOffset,
-                end = endUrlOffset,
-            ),
-            value = content.substring(startIndex = current.endOffset, endIndex = endUrlOffset),
+            location =
+                CssLocation(
+                    source = content.substring(startIndex = current.endOffset, endIndex = endUrlOffset),
+                    start = current.endOffset,
+                    end = endUrlOffset
+                ),
+            value = content.substring(startIndex = current.endOffset, endIndex = endUrlOffset)
         )
     }
 
@@ -225,12 +265,13 @@ class ValueConsumer(
             CssTokenKind.Hash -> {
                 val next = expectNextToken(kind = CssTokenKind.HexDigit)
                 Value.Color(
-                    location = CssLocation(
-                        source = content.substring(startIndex = current.startOffset, endIndex = next.endOffset),
-                        start = current.startOffset,
-                        end = next.endOffset,
-                    ),
-                    value = content.substring(startIndex = current.startOffset, endIndex = next.endOffset),
+                    location =
+                        CssLocation(
+                            source = content.substring(startIndex = current.startOffset, endIndex = next.endOffset),
+                            start = current.startOffset,
+                            end = next.endOffset
+                        ),
+                    value = content.substring(startIndex = current.startOffset, endIndex = next.endOffset)
                 )
             }
 
@@ -247,16 +288,19 @@ class ValueConsumer(
                 // account ) in color function
                 colorEndOffset++
                 Value.Color(
-                    location = CssLocation(
-                        source = content.substring(startIndex = current.startOffset, endIndex = colorEndOffset),
-                        start = current.startOffset,
-                        end = colorEndOffset,
-                    ),
-                    value = content.substring(startIndex = current.startOffset, endIndex = colorEndOffset),
+                    location =
+                        CssLocation(
+                            source = content.substring(startIndex = current.startOffset, endIndex = colorEndOffset),
+                            start = current.startOffset,
+                            end = colorEndOffset
+                        ),
+                    value = content.substring(startIndex = current.startOffset, endIndex = colorEndOffset)
                 )
             }
 
-            else -> parserError(content = content, message = "Unexpected token: $current")
+            else -> {
+                parserError(content = content, message = "Unexpected token: $current")
+            }
         }
     }
 }

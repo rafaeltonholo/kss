@@ -10,7 +10,10 @@ import dev.tonholo.kss.lexer.css.CssTokenKind
  * @property representation The string representation of the combinator.
  * @property tokenKind The [CssTokenKind] associated with the combinator.
  */
-enum class CssCombinator(val representation: String, val tokenKind: CssTokenKind) {
+enum class CssCombinator(
+    val representation: String,
+    val tokenKind: CssTokenKind,
+) {
     ChildCombinator(representation = " > ", tokenKind = CssTokenKind.Greater),
     NextSiblingCombinator(representation = " ~ ", tokenKind = CssTokenKind.Tilde),
     DescendantCombinator(representation = " ", tokenKind = CssTokenKind.WhiteSpace),
@@ -34,12 +37,13 @@ enum class CssCombinator(val representation: String, val tokenKind: CssTokenKind
          * @param tokenKind The [CssTokenKind] to convert to a combinator.
          * @return The corresponding [CssCombinator], or `null` if no matching combinator is found.
          */
-        fun from(tokenKind: CssTokenKind?): CssCombinator? = when (tokenKind) {
-            CssTokenKind.Greater -> ChildCombinator
-            CssTokenKind.Tilde -> NextSiblingCombinator
-            CssTokenKind.WhiteSpace -> DescendantCombinator
-            CssTokenKind.Plus -> SubsequentSiblingCombinator
-            else -> null
-        }
+        fun from(tokenKind: CssTokenKind?): CssCombinator? =
+            when (tokenKind) {
+                CssTokenKind.Greater -> ChildCombinator
+                CssTokenKind.Tilde -> NextSiblingCombinator
+                CssTokenKind.WhiteSpace -> DescendantCombinator
+                CssTokenKind.Plus -> SubsequentSiblingCombinator
+                else -> null
+            }
     }
 }

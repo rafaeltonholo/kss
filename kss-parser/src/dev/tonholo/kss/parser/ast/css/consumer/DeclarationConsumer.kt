@@ -30,7 +30,10 @@ class DeclarationConsumer(
         while (iterator.hasNext()) {
             val next = iterator.expectNextTokenNotNull()
             when (next.kind) {
-                CssTokenKind.Colon, CssTokenKind.WhiteSpace -> Unit
+                CssTokenKind.Colon, CssTokenKind.WhiteSpace -> {
+                    Unit
+                }
+
                 CssTokenKind.Semicolon, CssTokenKind.CloseCurlyBrace -> {
                     last = next
                     break
@@ -40,7 +43,9 @@ class DeclarationConsumer(
                     important = true
                 }
 
-                else -> values += valueConsumer.consume(iterator)
+                else -> {
+                    values += valueConsumer.consume(iterator)
+                }
             }
             last = next
         }
@@ -51,17 +56,19 @@ class DeclarationConsumer(
         }
 
         return Declaration(
-            location = CssLocation(
-                source = content.substring(
-                    startIndex = current.startOffset,
-                    endIndex = last?.endOffset ?: current.endOffset,
+            location =
+                CssLocation(
+                    source =
+                        content.substring(
+                            startIndex = current.startOffset,
+                            endIndex = last?.endOffset ?: current.endOffset
+                        ),
+                    start = current.startOffset,
+                    end = last?.endOffset ?: current.endOffset
                 ),
-                start = current.startOffset,
-                end = last?.endOffset ?: current.endOffset,
-            ),
             important = important,
             property = property,
-            values = values,
+            values = values
         )
     }
 }

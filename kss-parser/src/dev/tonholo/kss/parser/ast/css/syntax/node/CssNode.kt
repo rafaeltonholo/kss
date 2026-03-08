@@ -8,6 +8,7 @@ import dev.tonholo.kss.parser.ast.Element
  */
 sealed interface CssNode : Element {
     val location: CssLocation
+
     fun toString(indent: Int = 0): String
 }
 
@@ -31,19 +32,21 @@ data class CssLocation(
     val start: Int,
     val end: Int,
 ) {
-    override fun toString(): String = buildString {
-        appendLine("CssLocation(")
-        appendLine("source = \"\"\"$source\"\"\",".prependIndent(indentSize = 2))
-        appendLine("start = $start,".prependIndent(indentSize = 2))
-        appendLine("end = $end".prependIndent(indentSize = 2))
-        append(")")
-    }
+    override fun toString(): String =
+        buildString {
+            appendLine("CssLocation(")
+            appendLine("source = \"\"\"$source\"\"\",".prependIndent(indentSize = 2))
+            appendLine("start = $start,".prependIndent(indentSize = 2))
+            appendLine("end = $end".prependIndent(indentSize = 2))
+            append(")")
+        }
 
     companion object {
-        val Undefined = CssLocation(
-            source = "",
-            start = -1,
-            end = -1,
-        )
+        val Undefined =
+            CssLocation(
+                source = "",
+                start = -1,
+                end = -1
+            )
     }
 }

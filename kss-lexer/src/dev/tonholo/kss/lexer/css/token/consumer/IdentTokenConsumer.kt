@@ -7,9 +7,10 @@ import dev.tonholo.kss.lexer.css.CssTokenKind
 class IdentTokenConsumer(
     iterator: TokenIterator<CssTokenKind>,
 ) : TokenConsumer(iterator) {
-    override val supportedTokenKinds: Set<CssTokenKind> = setOf(
-        CssTokenKind.Ident,
-    )
+    override val supportedTokenKinds: Set<CssTokenKind> =
+        setOf(
+            CssTokenKind.Ident
+        )
 
     override fun consume(kind: CssTokenKind): List<Token<out CssTokenKind>> {
         val start = iterator.offset
@@ -21,9 +22,10 @@ class IdentTokenConsumer(
                 in 'a'..'z',
                 in 'A'..'Z',
                 '-',
-                '_' -> {
-                    iterator.nextOffset()
-                }
+                '_',
+                    -> {
+                        iterator.nextOffset()
+                    }
 
                 else -> {
                     break

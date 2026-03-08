@@ -24,18 +24,19 @@ import dev.tonholo.kss.lexer.css.token.consumer.WhitespaceTokenConsumer
  */
 class CssTokenizer(
     private val iterator: TokenIterator<CssTokenKind> = CssTokenIterator(),
-    private val consumers: Set<TokenConsumer> = setOf(
-        AtKeywordTokenConsumer(iterator),
-        WhitespaceTokenConsumer(iterator),
-        DirectTokenConsumer(iterator),
-        HashTokenConsumer(iterator),
-        StringTokenConsumer(iterator),
-        UrlTokenConsumer(iterator),
-        NumberTokenConsumer(iterator),
-        CommentTokenConsumer(iterator),
-        FunctionTokenConsumer(iterator),
-        IdentTokenConsumer(iterator),
-    ),
+    private val consumers: Set<TokenConsumer> =
+        setOf(
+            AtKeywordTokenConsumer(iterator),
+            WhitespaceTokenConsumer(iterator),
+            DirectTokenConsumer(iterator),
+            HashTokenConsumer(iterator),
+            StringTokenConsumer(iterator),
+            UrlTokenConsumer(iterator),
+            NumberTokenConsumer(iterator),
+            CommentTokenConsumer(iterator),
+            FunctionTokenConsumer(iterator),
+            IdentTokenConsumer(iterator)
+        ),
 ) : Tokenizer<CssTokenKind> {
     /**
      * Tokenizes the given CSS source code string into a list of tokens.
@@ -43,17 +44,19 @@ class CssTokenizer(
      * @param input The CSS source code string to tokenize.
      * @return A list of tokens representing the CSS source code.
      */
-    override fun tokenize(input: String): List<Token<out CssTokenKind>> = buildList {
-        iterator.initialize(input)
-        while (iterator.hasNext()) {
-            val kind = iterator.getTokenKind() ?: CssTokenKind.Ident
-            val token = consumers
-                .firstOrNull { consumer -> consumer.accept(kind) }
-                ?.consume(kind)
-                ?: error("Unsupported token kind: $kind at position ${iterator.offset}")
+    override fun tokenize(input: String): List<Token<out CssTokenKind>> =
+        buildList {
+            iterator.initialize(input)
+            while (iterator.hasNext()) {
+                val kind = iterator.getTokenKind() ?: CssTokenKind.Ident
+                val token =
+                    consumers
+                        .firstOrNull { consumer -> consumer.accept(kind) }
+                        ?.consume(kind)
+                        ?: error("Unsupported token kind: $kind at position ${iterator.offset}")
 
-            addAll(token)
+                addAll(token)
+            }
+            add(Token(CssTokenKind.EndOfFile, input.length, input.length))
         }
-        add(Token(CssTokenKind.EndOfFile, input.length, input.length))
-    }
 }

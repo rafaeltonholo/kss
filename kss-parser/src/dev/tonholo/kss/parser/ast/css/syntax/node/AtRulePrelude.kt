@@ -20,16 +20,15 @@ data class AtRulePrelude(
 ) : CssComponentValueNode {
     override fun toString(indent: Int): String = value
 
-    override fun toString(): String {
-        return buildString {
+    override fun toString(): String =
+        buildString {
             appendLine("AtRulePrelude(")
             appendLine(
-                "location = $location,".prependIndent(indentSize = 2),
+                "location = $location,".prependIndent(indentSize = 2)
             )
             appendLine(
-                "value = \"${value}\",".prependIndent(indentSize = 2),
+                "value = \"${value}\",".prependIndent(indentSize = 2)
             )
             append(")")
         }
-    }
 }

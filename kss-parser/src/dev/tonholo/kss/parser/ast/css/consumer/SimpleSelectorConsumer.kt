@@ -24,18 +24,20 @@ class SimpleSelectorConsumer(
     override fun consume(iterator: AstParserIterator<CssTokenKind>): Selector {
         val current = iterator.expectToken(selectorTokens)
         return when (current.kind) {
-            CssTokenKind.Ident, CssTokenKind.Asterisk -> Selector.Type(
-                location = calculateLocation(current, current),
-                name = content.substring(current.startOffset, endIndex = current.endOffset),
-                combinator = lookupForCombinator(iterator),
-            )
+            CssTokenKind.Ident, CssTokenKind.Asterisk -> {
+                Selector.Type(
+                    location = calculateLocation(current, current),
+                    name = content.substring(current.startOffset, endIndex = current.endOffset),
+                    combinator = lookupForCombinator(iterator)
+                )
+            }
 
             CssTokenKind.Hash -> {
                 val next = iterator.expectNextToken(kind = CssTokenKind.Ident)
                 Selector.Id(
                     location = calculateLocation(current, next),
                     name = content.substring(next.startOffset, endIndex = next.endOffset),
-                    combinator = lookupForCombinator(iterator),
+                    combinator = lookupForCombinator(iterator)
                 )
             }
 
@@ -44,7 +46,7 @@ class SimpleSelectorConsumer(
                 Selector.Class(
                     location = calculateLocation(current, next),
                     name = content.substring(next.startOffset, endIndex = next.endOffset),
-                    combinator = lookupForCombinator(iterator),
+                    combinator = lookupForCombinator(iterator)
                 )
             }
 
@@ -55,49 +57,52 @@ class SimpleSelectorConsumer(
                     name = content.substring(next.startOffset, endIndex = next.endOffset),
                     matcher = null,
                     value = null,
-                    combinator = lookupForCombinator(iterator),
+                    combinator = lookupForCombinator(iterator)
                 )
             }
 
             CssTokenKind.DoubleColon -> {
                 val next = iterator.expectNextToken(kind = CssTokenKind.Ident)
                 val parameters = buildParameters(iterator)
-                val endOffset = if (parameters.isEmpty()) {
-                    next.endOffset
-                } else {
-                    parameters.last().location.end + 1
-                }
+                val endOffset =
+                    if (parameters.isEmpty()) {
+                        next.endOffset
+                    } else {
+                        parameters.last().location.end + 1
+                    }
                 Selector.PseudoElement(
                     location = calculateLocation(current.startOffset, endOffset),
                     name = content.substring(next.startOffset, endIndex = next.endOffset),
                     parameters = parameters,
-                    combinator = lookupForCombinator(iterator),
+                    combinator = lookupForCombinator(iterator)
                 )
             }
 
             CssTokenKind.Colon -> {
                 val next = iterator.expectNextToken(kind = CssTokenKind.Ident)
                 val parameters = buildParameters(iterator)
-                val endOffset = if (parameters.isEmpty()) {
-                    next.endOffset
-                } else {
-                    parameters.last().location.end + 1
-                }
+                val endOffset =
+                    if (parameters.isEmpty()) {
+                        next.endOffset
+                    } else {
+                        parameters.last().location.end + 1
+                    }
                 Selector.PseudoClass(
                     location = calculateLocation(current.startOffset, endOffset),
                     name = content.substring(next.startOffset, endIndex = next.endOffset),
                     parameters = parameters,
-                    combinator = lookupForCombinator(iterator),
+                    combinator = lookupForCombinator(iterator)
                 )
             }
 
-            else -> iterator.parserError(content, "Unexpected token ${current.kind}")
+            else -> {
+                iterator.parserError(content, "Unexpected token ${current.kind}")
+            }
         }
     }
 
-    private fun lookupForCombinator(iterator: AstParserIterator<CssTokenKind>): CssCombinator? {
-        return CssCombinator.from(iterator.peek(steps = 0)?.kind)
-    }
+    private fun lookupForCombinator(iterator: AstParserIterator<CssTokenKind>): CssCombinator? =
+        CssCombinator.from(iterator.peek(steps = 0)?.kind)
 
     private fun calculateLocation(
         startToken: Token<out CssTokenKind>,
@@ -107,11 +112,12 @@ class SimpleSelectorConsumer(
     private fun calculateLocation(
         startOffset: Int,
         endOffset: Int,
-    ): CssLocation = CssLocation(
-        source = content.substring(startOffset, endOffset),
-        start = startOffset,
-        end = endOffset,
-    )
+    ): CssLocation =
+        CssLocation(
+            source = content.substring(startOffset, endOffset),
+            start = startOffset,
+            end = endOffset
+        )
 
     private fun buildParameters(iterator: AstParserIterator<CssTokenKind>): List<Selector> {
         if (iterator.expectNextTokenNotNull().kind != CssTokenKind.OpenParenthesis) {

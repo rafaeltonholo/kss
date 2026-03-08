@@ -7,9 +7,10 @@ import dev.tonholo.kss.lexer.css.CssTokenKind
 class WhitespaceTokenConsumer(
     iterator: TokenIterator<CssTokenKind>,
 ) : TokenConsumer(iterator) {
-    override val supportedTokenKinds: Set<CssTokenKind> = setOf(
-        CssTokenKind.WhiteSpace,
-    )
+    override val supportedTokenKinds: Set<CssTokenKind> =
+        setOf(
+            CssTokenKind.WhiteSpace
+        )
 
     override fun consume(kind: CssTokenKind): List<Token<out CssTokenKind>> {
         val start = iterator.offset

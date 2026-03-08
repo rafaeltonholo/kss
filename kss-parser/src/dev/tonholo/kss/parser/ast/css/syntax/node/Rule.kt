@@ -10,8 +10,8 @@ sealed interface Rule : CssStatementNode {
     val prelude: Prelude<*>
     val block: Block<out CssNode>
 
-    override fun toString(indent: Int): String {
-        return buildString {
+    override fun toString(indent: Int): String =
+        buildString {
             repeat(indent) { append(" ") }
             append(prelude.components.joinToString { it.toString(indent = 0) })
             appendLine(" {")
@@ -19,7 +19,6 @@ sealed interface Rule : CssStatementNode {
             repeat(indent) { append(" ") }
             append("}")
         }
-    }
 }
 
 /**
@@ -31,16 +30,15 @@ data class AtRule(
     override val prelude: Prelude.AtRule,
     override val block: Block<Rule>,
 ) : Rule {
-    override fun toString(indent: Int): String {
-        return buildString {
+    override fun toString(indent: Int): String =
+        buildString {
             appendLine("@$name ${prelude.components.joinToString { it.toString(indent = 0) }} {")
             appendLine(block.toString(indent = indent + 2))
             append("}")
         }
-    }
 
-    override fun toString(): String {
-        return buildString {
+    override fun toString(): String =
+        buildString {
             appendLine("AtRule(")
             appendLine("location = $location,".prependIndent(indentSize = 2))
             appendLine("name = \"$name\",".prependIndent(indentSize = 2))
@@ -48,7 +46,6 @@ data class AtRule(
             appendLine("block = $block,".prependIndent(indentSize = 2))
             append(")")
         }
-    }
 }
 
 /**
@@ -59,13 +56,12 @@ data class QualifiedRule(
     override val prelude: Prelude.Selector,
     override val block: Block<Declaration>,
 ) : Rule {
-    override fun toString(): String {
-        return buildString {
+    override fun toString(): String =
+        buildString {
             appendLine("QualifiedRule(")
             appendLine("location = $location,".prependIndent(indentSize = 2))
             appendLine("prelude = $prelude,".prependIndent(indentSize = 2))
             appendLine("block = $block,".prependIndent(indentSize = 2))
             append(")")
         }
-    }
 }

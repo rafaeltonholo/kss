@@ -26,33 +26,30 @@ data class CssSpecificity(
     val b: Int = 0,
     val c: Int = 0,
 ) : Comparable<CssSpecificity> {
-    operator fun get(index: Int): Int = when (index) {
-        0 -> a
-        1 -> b
-        2 -> c
-        else -> throw IndexOutOfBoundsException("Index $index is out of bounds.")
-    }
+    operator fun get(index: Int): Int =
+        when (index) {
+            0 -> a
+            1 -> b
+            2 -> c
+            else -> throw IndexOutOfBoundsException("Index $index is out of bounds.")
+        }
 
-    operator fun plus(other: CssSpecificity): CssSpecificity {
-        return CssSpecificity(
+    operator fun plus(other: CssSpecificity): CssSpecificity =
+        CssSpecificity(
             a = a + other.a,
             b = b + other.b,
-            c = c + other.c,
+            c = c + other.c
         )
-    }
 
-    override operator fun compareTo(other: CssSpecificity): Int {
-        return when {
+    override operator fun compareTo(other: CssSpecificity): Int =
+        when {
             a != other.a -> a.compareTo(other.a)
             b != other.b -> b.compareTo(other.b)
             c != other.c -> c.compareTo(other.c)
             else -> 0
         }
-    }
 
-    override fun toString(): String {
-        return "($a, $b, $c)"
-    }
+    override fun toString(): String = "($a, $b, $c)"
 }
 
 /**
@@ -67,25 +64,31 @@ data class CssSpecificity(
  * @return A map where the keys are the selector list items and the values
  * are the [CssSpecificity] of each selector in the rule's prelude.
  */
-fun calculateSelectorsSpecificity(prelude: Prelude.Selector): Map<SelectorListItem, CssSpecificity> {
-    return prelude.components.associateWith { selector ->
+fun calculateSelectorsSpecificity(prelude: Prelude.Selector): Map<SelectorListItem, CssSpecificity> =
+    prelude.components.associateWith { selector ->
         selector.selectors.fold(CssSpecificity()) { selectorSpecificity, selector ->
             selectorSpecificity + selector.calculateSpecificity()
         }
     }
-}
 
 private fun Selector.calculateSpecificity(): CssSpecificity {
     var a = 0
     var b = 0
     var c = 0
     when (this) {
-        is Selector.Id -> a = 1
+        is Selector.Id -> {
+            a = 1
+        }
 
         is Selector.Attribute,
-        is Selector.Class -> b = 1
+        is Selector.Class,
+            -> {
+                b = 1
+            }
 
-        is Selector.Type if name != "*" -> c = 1
+        is Selector.Type if name != "*" -> {
+            c = 1
+        }
 
         is Selector.PseudoClass -> {
             val specificity = calculateSpecificity()
@@ -94,9 +97,13 @@ private fun Selector.calculateSpecificity(): CssSpecificity {
             c = specificity.c
         }
 
-        is Selector.PseudoElement -> c = 1
+        is Selector.PseudoElement -> {
+            c = 1
+        }
 
-        else -> Unit
+        else -> {
+            Unit
+        }
     }
     return CssSpecificity(a, b, c)
 }
@@ -106,39 +113,47 @@ private fun Selector.PseudoClass.calculateSpecificity(): CssSpecificity {
     var b = 0
     var c = 0
     when (name) {
-        "where" -> Unit
+        "where" -> {
+            Unit
+        }
+
         "not",
         "is",
         "has",
-        "matches" -> {
-            parameters
-                .maxOf { it.calculateSpecificity() }
-                .also {
-                    a = it.a
-                    b = it.b
-                    c = it.c
-                }
-        }
+        "matches",
+            -> {
+                parameters
+                    .maxOf { it.calculateSpecificity() }
+                    .also {
+                        a = it.a
+                        b = it.b
+                        c = it.c
+                    }
+            }
 
         "nth-child",
-        "nth-last-child" -> {
-            parameters
-                .maxOf { it.calculateSpecificity() }
-                .also {
-                    a = it.a
-                    b = it.b + 1
-                    c = it.c
-                }
-        }
+        "nth-last-child",
+            -> {
+                parameters
+                    .maxOf { it.calculateSpecificity() }
+                    .also {
+                        a = it.a
+                        b = it.b + 1
+                        c = it.c
+                    }
+            }
 
         "before",
         "after",
         "first-line",
-        "first-letter" -> {
-            c = 1
-        }
+        "first-letter",
+            -> {
+                c = 1
+            }
 
-        else -> b = 1
+        else -> {
+            b = 1
+        }
     }
     return CssSpecificity(a, b, c)
 }

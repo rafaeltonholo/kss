@@ -23,18 +23,20 @@ private fun String.replaceDividers(): String {
 /**
  * Converts a string to camel case.
  */
-fun String.camelCase(): String = replaceDividers()
-    .replaceFirstChar { it.lowercaseChar() }
+fun String.camelCase(): String =
+    replaceDividers()
+        .replaceFirstChar { it.lowercaseChar() }
 
 /**
  * Converts a string to pascal case.
  */
-fun String.pascalCase(): String = replaceDividers()
-    .replaceFirstChar { it.uppercaseChar() }
+fun String.pascalCase(): String =
+    replaceDividers()
+        .replaceFirstChar { it.uppercaseChar() }
 
 @Deprecated(
     message = "Use prependIndent instead",
-    replaceWith = ReplaceWith(expression = "this.prependIndent(indentSize)"),
+    replaceWith = ReplaceWith(expression = "this.prependIndent(indentSize)")
 )
 fun String.indented(indentSize: Int) = " ".repeat(indentSize) + this
 
@@ -81,11 +83,12 @@ fun String.toLengthFloat(
 fun String.toLengthFloatOrNull(
     width: Float,
     height: Float,
-): Float? = if (this.contains("%")) {
-    max(width, height) * this.removeSuffix("%").toFloat() / PERCENT
-} else {
-    this.toFloatOrNull()
-}
+): Float? =
+    if (this.contains("%")) {
+        max(width, height) * this.removeSuffix("%").toFloat() / PERCENT
+    } else {
+        this.toFloatOrNull()
+    }
 
 /**
  * Converts a string to a percentage float value.

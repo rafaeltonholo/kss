@@ -12,24 +12,23 @@ data class StyleSheet(
     override val location: CssLocation,
     val children: List<CssStatementNode>,
 ) : CssNode {
-    override fun toString(indent: Int): String {
-        return children.joinToString("\n") { it.toString(indent) }
-    }
+    override fun toString(indent: Int): String = children.joinToString("\n") { it.toString(indent) }
 
-    override fun toString(): String = buildString {
-        appendLine("StyleSheet(")
-        appendLine("location = $location,".prependIndent(indentSize = 2))
-        appendLine(
-            "children = [".prependIndent(indentSize = 2),
-        )
-        appendLine(
-            children.joinToString { statement ->
-                statement
-                    .toString()
-                    .prependIndent(indentSize = 4)
-            },
-        )
-        appendLine("],".prependIndent(indentSize = 2))
-        append(")")
-    }
+    override fun toString(): String =
+        buildString {
+            appendLine("StyleSheet(")
+            appendLine("location = $location,".prependIndent(indentSize = 2))
+            appendLine(
+                "children = [".prependIndent(indentSize = 2)
+            )
+            appendLine(
+                children.joinToString { statement ->
+                    statement
+                        .toString()
+                        .prependIndent(indentSize = 4)
+                }
+            )
+            appendLine("],".prependIndent(indentSize = 2))
+            append(")")
+        }
 }

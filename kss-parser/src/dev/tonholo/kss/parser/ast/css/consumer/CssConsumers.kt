@@ -64,36 +64,43 @@ class CssConsumersBuilder {
     fun build(content: String): CssConsumers {
         val customSelectorConsumer = customSelectorConsumer ?: SimpleSelectorConsumer(content)
         val customValueConsumer = customValueConsumer ?: ValueConsumer(content)
-        val customDeclarationConsumer = customDeclarationConsumer ?: DeclarationConsumer(
-            content = content,
-            valueConsumer = customValueConsumer,
-        )
-        val customSelectorListItemConsumer = customSelectorListItemConsumer ?: SelectorListItemConsumer(
-            content,
-            simpleSelectorConsumer = customSelectorConsumer,
-        )
-        val customDeclarationBlockConsumer = customDeclarationBlockConsumer ?: SimpleDeclarationBlockConsumer(
-            content = content,
-            declarationConsumer = customDeclarationConsumer,
-        )
-        val customQualifiedRuleConsumer = customQualifiedRuleConsumer ?: QualifiedRuleConsumer(
-            content = content,
-            selectorListItemConsumer = customSelectorListItemConsumer,
-            blockConsumer = customDeclarationBlockConsumer,
-        )
-        val customRuleBlockConsumer = customRuleBlockConsumer ?: SimpleRuleBlockConsumer(
-            content = content,
-            qualifiedRuleConsumer = customQualifiedRuleConsumer,
-        )
-        val customAtRuleConsumer = customAtRuleConsumer ?: AtRuleConsumer(
-            content = content,
-            blockConsumer = customRuleBlockConsumer,
-        )
-        val customStyleSheetConsumer = customStyleSheetConsumer ?: StyleSheetConsumer(
-            content = content,
-            atRuleConsumer = customAtRuleConsumer,
-            qualifiedRuleConsumer = customQualifiedRuleConsumer,
-        )
+        val customDeclarationConsumer =
+            customDeclarationConsumer ?: DeclarationConsumer(
+                content = content,
+                valueConsumer = customValueConsumer
+            )
+        val customSelectorListItemConsumer =
+            customSelectorListItemConsumer ?: SelectorListItemConsumer(
+                content,
+                simpleSelectorConsumer = customSelectorConsumer
+            )
+        val customDeclarationBlockConsumer =
+            customDeclarationBlockConsumer ?: SimpleDeclarationBlockConsumer(
+                content = content,
+                declarationConsumer = customDeclarationConsumer
+            )
+        val customQualifiedRuleConsumer =
+            customQualifiedRuleConsumer ?: QualifiedRuleConsumer(
+                content = content,
+                selectorListItemConsumer = customSelectorListItemConsumer,
+                blockConsumer = customDeclarationBlockConsumer
+            )
+        val customRuleBlockConsumer =
+            customRuleBlockConsumer ?: SimpleRuleBlockConsumer(
+                content = content,
+                qualifiedRuleConsumer = customQualifiedRuleConsumer
+            )
+        val customAtRuleConsumer =
+            customAtRuleConsumer ?: AtRuleConsumer(
+                content = content,
+                blockConsumer = customRuleBlockConsumer
+            )
+        val customStyleSheetConsumer =
+            customStyleSheetConsumer ?: StyleSheetConsumer(
+                content = content,
+                atRuleConsumer = customAtRuleConsumer,
+                qualifiedRuleConsumer = customQualifiedRuleConsumer
+            )
 
         return object : CssConsumers {
             override val selectorConsumer: Consumer<Selector> = customSelectorConsumer
@@ -117,6 +124,7 @@ class CssConsumersBuilder {
  * @return An instance of [CssConsumers].
  */
 @CssConsumersDslMarker
-fun CssConsumers(content: String, builder: CssConsumersBuilder.() -> Unit = {}): CssConsumers {
-    return CssConsumersBuilder().apply(builder).build(content)
-}
+fun CssConsumers(
+    content: String,
+    builder: CssConsumersBuilder.() -> Unit = {},
+): CssConsumers = CssConsumersBuilder().apply(builder).build(content)

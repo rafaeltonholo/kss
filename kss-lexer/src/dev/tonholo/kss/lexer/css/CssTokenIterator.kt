@@ -20,11 +20,25 @@ class CssTokenIterator : TokenIterator<CssTokenKind>() {
                 CssTokenKind.Url
             }
 
-            char.isNumber() -> CssTokenKind.Number
-            char.isCommentStart() -> CssTokenKind.Comment
-            char.isCDOToken() -> CssTokenKind.CDO
-            char.isCDCToken() -> CssTokenKind.CDC
-            char.isFunction() -> CssTokenKind.Function
+            char.isNumber() -> {
+                CssTokenKind.Number
+            }
+
+            char.isCommentStart() -> {
+                CssTokenKind.Comment
+            }
+
+            char.isCDOToken() -> {
+                CssTokenKind.CDO
+            }
+
+            char.isCDCToken() -> {
+                CssTokenKind.CDC
+            }
+
+            char.isFunction() -> {
+                CssTokenKind.Function
+            }
 
             else -> {
                 CssTokenKind.fromChar(char) ?: CssTokenKind.Ident
@@ -35,7 +49,10 @@ class CssTokenIterator : TokenIterator<CssTokenKind>() {
     private fun Char.isNumber(): Boolean {
         val next = peek(1)
         return when (this) {
-            in '0'..'9' -> true
+            in '0'..'9' -> {
+                true
+            }
+
             '.' -> {
                 var prevIndex = -1
                 var prevNonWhitespace = ' '
@@ -48,19 +65,21 @@ class CssTokenIterator : TokenIterator<CssTokenKind>() {
                 next.isDigit() && prevNonWhitespace == ':'
             }
 
-            '+', '-' -> next.isDigit() || next == '.'
-            else -> false
+            '+', '-' -> {
+                next.isDigit() || next == '.'
+            }
+
+            else -> {
+                false
+            }
         }
     }
 
-    private fun Char.isCommentStart(): Boolean =
-        this == '/' && peek(1) == '*'
+    private fun Char.isCommentStart(): Boolean = this == '/' && peek(1) == '*'
 
-    private fun Char.isCDOToken(): Boolean =
-        this == '<' && peek(1) == '!' && peek(2) == '-' && peek(offset = 3) == '-'
+    private fun Char.isCDOToken(): Boolean = this == '<' && peek(1) == '!' && peek(2) == '-' && peek(offset = 3) == '-'
 
-    private fun Char.isCDCToken(): Boolean =
-        this == '-' && peek(1) == '-' && peek(2) == '!' && peek(offset = 3) == '>'
+    private fun Char.isCDCToken(): Boolean = this == '-' && peek(1) == '-' && peek(2) == '!' && peek(offset = 3) == '>'
 
     private fun isUrlToken(char: Char): Boolean =
         char == 'u' && peek(1) == 'r' && peek(2) == 'l' && peek(offset = 3) == '('

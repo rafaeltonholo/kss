@@ -7,13 +7,13 @@ import dev.tonholo.kss.lexer.css.CssTokenKind
 class NumberTokenConsumer(
     iterator: TokenIterator<CssTokenKind>,
 ) : TokenConsumer(iterator) {
-    override val supportedTokenKinds: Set<CssTokenKind> = setOf(
-        CssTokenKind.Number,
-    )
+    override val supportedTokenKinds: Set<CssTokenKind> =
+        setOf(
+            CssTokenKind.Number
+        )
 
-    override fun accept(kind: CssTokenKind): Boolean {
-        return super.accept(kind) || kind == CssTokenKind.Dot && iterator.peek(1).isDigit()
-    }
+    override fun accept(kind: CssTokenKind): Boolean =
+        super.accept(kind) || (kind == CssTokenKind.Dot && iterator.peek(1).isDigit())
 
     override fun consume(kind: CssTokenKind): List<Token<out CssTokenKind>> {
         val start = iterator.offset
@@ -24,9 +24,10 @@ class NumberTokenConsumer(
                 'e',
                 '+',
                 '-',
-                in '0'..'9' -> {
-                    iterator.nextOffset()
-                }
+                in '0'..'9',
+                    -> {
+                        iterator.nextOffset()
+                    }
 
                 else -> {
                     break
@@ -56,14 +57,15 @@ class NumberTokenConsumer(
                 iterator.peek(1) in CssTokenKind.Percent -> Token(CssTokenKind.Percentage, start, iterator.offset + 2)
                 dimension.isNotBlank() -> Token(CssTokenKind.Dimension, start, iterator.offset)
                 else -> Token(CssTokenKind.Number, start, iterator.offset)
-            },
+            }
         )
     }
 
-    private fun isEndOfNumber(char: Char): Boolean = char in CssTokenKind.OpenParenthesis ||
-        char in CssTokenKind.CloseParenthesis ||
-        char in CssTokenKind.WhiteSpace ||
-        char in CssTokenKind.Comma ||
-        char in CssTokenKind.Semicolon ||
-        char in CssTokenKind.CloseCurlyBrace
+    private fun isEndOfNumber(char: Char): Boolean =
+        char in CssTokenKind.OpenParenthesis ||
+            char in CssTokenKind.CloseParenthesis ||
+            char in CssTokenKind.WhiteSpace ||
+            char in CssTokenKind.Comma ||
+            char in CssTokenKind.Semicolon ||
+            char in CssTokenKind.CloseCurlyBrace
 }

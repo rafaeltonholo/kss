@@ -17,24 +17,22 @@ abstract class AstParserIterator<TTokenKind : TokenKind>(
     internal var offset = 0
         private set
 
-    fun hasNext(): Boolean {
-        return offset < tokens.size
-    }
+    fun hasNext(): Boolean = offset < tokens.size
 
     /**
      * Returns the next token in the iteration.
      */
-    fun next(): Token<out TTokenKind>? = if (offset < tokens.size) {
-        tokens[offset++]
-    } else {
-        null
-    }
+    fun next(): Token<out TTokenKind>? =
+        if (offset < tokens.size) {
+            tokens[offset++]
+        } else {
+            null
+        }
 
     /**
      * Peeks the next token without consuming it.
      */
-    fun peek(steps: Int = 1): Token<out TTokenKind>? =
-        tokens.getOrNull(offset + steps)
+    fun peek(steps: Int = 1): Token<out TTokenKind>? = tokens.getOrNull(offset + steps)
 
     /**
      * Returns the current token, which is the token that was previously consumed.
@@ -71,16 +69,15 @@ fun <TTokenKind : TokenKind> AstParserIterator<TTokenKind>.parserError(
     message: String,
     backtrack: Int = 1,
     forward: Int = 1,
-): Nothing {
+): Nothing =
     throw AstParserException(
         message = message,
         tokens = tokens,
         offset = offset,
         content,
         backtrack,
-        forward,
+        forward
     )
-}
 
 /**
  * Asserts a condition during parsing. If the condition is false,

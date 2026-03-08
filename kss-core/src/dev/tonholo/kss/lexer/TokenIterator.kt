@@ -10,6 +10,7 @@ import dev.tonholo.kss.extensions.EMPTY
  * @param T The type of token kind this iterator produces.
  */
 abstract class TokenIterator<out T : TokenKind> {
+    @Suppress("ktlint:standard:backing-property-naming")
     private var _content: String? = null
 
     /**
@@ -19,9 +20,10 @@ abstract class TokenIterator<out T : TokenKind> {
      * if accessed before initialization.
      */
     private val content
-        get() = requireNotNull(_content) {
-            "Content not initialized. Did you miss calling initialize(content)?"
-        }
+        get() =
+            requireNotNull(_content) {
+                "Content not initialized. Did you miss calling initialize(content)?"
+            }
 
     /**
      * The current offset within the content string.
@@ -82,8 +84,7 @@ abstract class TokenIterator<out T : TokenKind> {
      * @return The character at the specified offset, or [EMPTY] if the offset
      * is out of bounds.
      */
-    fun peek(offset: Int): Char =
-        content.getOrElse(this.offset + offset) { Char.EMPTY }
+    fun peek(offset: Int): Char = content.getOrElse(this.offset + offset) { Char.EMPTY }
 
     /** Advances the offset by the specified number of steps. */
     fun nextOffset(steps: Int = 1): Int {
@@ -108,6 +109,8 @@ abstract class TokenIterator<out T : TokenKind> {
      * @param end The end index of the substring.
      * @return The substring from start to end index.
      */
-    fun partialContent(start: Int, end: Int): String =
-        content.substring(start, end.coerceAtMost(content.length))
+    fun partialContent(
+        start: Int,
+        end: Int,
+    ): String = content.substring(start, end.coerceAtMost(content.length))
 }

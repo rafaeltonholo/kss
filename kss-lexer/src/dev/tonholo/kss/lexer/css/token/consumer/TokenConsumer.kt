@@ -23,9 +23,7 @@ abstract class TokenConsumer(
     /**
      * Checks if this consumer accepts the given token kind.
      */
-    open fun accept(kind: CssTokenKind): Boolean {
-        return kind in supportedTokenKinds
-    }
+    open fun accept(kind: CssTokenKind): Boolean = kind in supportedTokenKinds
 
     /**
      * Consumes the given token kind and returns a list of tokens that represent the consumed token.

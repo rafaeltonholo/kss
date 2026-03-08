@@ -46,13 +46,15 @@ class QualifiedRuleConsumer(
             "Expected qualified rule but got null"
         }
         val selectors = mutableListOf<SelectorListItem>()
-        val rule = QualifiedRule(
-            location = CssLocation.Undefined,
-            prelude = Prelude.Selector(
-                components = selectors,
-            ),
-            block = Block.EmptyDeclarationBlock,
-        )
+        val rule =
+            QualifiedRule(
+                location = CssLocation.Undefined,
+                prelude =
+                    Prelude.Selector(
+                        components = selectors
+                    ),
+                block = Block.EmptyDeclarationBlock
+            )
 
         // re-consume current token.
         iterator.rewind()
@@ -62,25 +64,34 @@ class QualifiedRuleConsumer(
                 "Expected token but got null"
             }
             when (next.kind) {
-                CssTokenKind.EndOfFile -> iterator.parserError(content, "Incomplete qualified rule.")
+                CssTokenKind.EndOfFile -> {
+                    iterator.parserError(content, "Incomplete qualified rule.")
+                }
+
                 CssTokenKind.OpenCurlyBrace -> {
                     val block = blockConsumer.consume(iterator)
                     return rule.copy(
-                        location = CssLocation(
-                            source = content.substring(
-                                current.startOffset,
-                                block.location.end.coerceAtMost(content.length),
+                        location =
+                            CssLocation(
+                                source =
+                                    content.substring(
+                                        current.startOffset,
+                                        block.location.end.coerceAtMost(content.length)
+                                    ),
+                                start = current.startOffset,
+                                end = block.location.end
                             ),
-                            start = current.startOffset,
-                            end = block.location.end,
-                        ),
-                        block = block,
+                        block = block
                     )
                 }
 
-                CssTokenKind.WhiteSpace -> Unit
+                CssTokenKind.WhiteSpace -> {
+                    Unit
+                }
 
-                else -> selectors += selectorListItemConsumer.consume(iterator)
+                else -> {
+                    selectors += selectorListItemConsumer.consume(iterator)
+                }
             }
         }
 

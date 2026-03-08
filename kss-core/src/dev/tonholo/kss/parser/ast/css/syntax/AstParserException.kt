@@ -25,7 +25,7 @@ class AstParserException internal constructor(
     private val offset: Int,
     private val content: String,
     private val backtrack: Int,
-    private val forward: Int
+    private val forward: Int,
 ) : IllegalStateException(message) {
     private val _message = message
 
@@ -33,26 +33,27 @@ class AstParserException internal constructor(
      * Builds an error message with context from the current parser state.
      */
     override val message: String
-        get() = buildString {
-            appendLine(_message)
-            val currentOffset = offset - 1
-            val prev = tokens.getOrNull(currentOffset - backtrack)?.startOffset ?: 0
-            val next = tokens.getOrNull(currentOffset + forward)?.endOffset ?: content.length
-            val current = tokens.getOrNull(currentOffset)
-            if (current != null) {
-                appendLine("Start offset: ${current.startOffset}")
-                appendLine("End offset: ${current.endOffset}")
-                appendLine("Content:")
-                var indent = 4
-                appendLine(
-                    content
-                        .substring(prev, next)
-                        .trimEnd('\n')
-                        .prependIndent(indent),
-                )
-                appendLine("^".repeat(current.endOffset - prev).prependIndent(indent))
-                indent += current.startOffset.minus(prev)
-                append("^".repeat(current.endOffset - current.startOffset).prependIndent(indent))
+        get() =
+            buildString {
+                appendLine(_message)
+                val currentOffset = offset - 1
+                val prev = tokens.getOrNull(currentOffset - backtrack)?.startOffset ?: 0
+                val next = tokens.getOrNull(currentOffset + forward)?.endOffset ?: content.length
+                val current = tokens.getOrNull(currentOffset)
+                if (current != null) {
+                    appendLine("Start offset: ${current.startOffset}")
+                    appendLine("End offset: ${current.endOffset}")
+                    appendLine("Content:")
+                    var indent = 4
+                    appendLine(
+                        content
+                            .substring(prev, next)
+                            .trimEnd('\n')
+                            .prependIndent(indent)
+                    )
+                    appendLine("^".repeat(current.endOffset - prev).prependIndent(indent))
+                    indent += current.startOffset.minus(prev)
+                    append("^".repeat(current.endOffset - current.startOffset).prependIndent(indent))
+                }
             }
-        }
 }

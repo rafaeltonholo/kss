@@ -8,9 +8,10 @@ data class Comment(
     override val location: CssLocation,
     val isHtmlComment: Boolean = false,
 ) : CssStatementNode {
-    override fun toString(indent: Int): String = if (isHtmlComment) {
-        "<!-- $value -->"
-    } else {
-        "/* $value */"
-    }
+    override fun toString(indent: Int): String =
+        if (isHtmlComment) {
+            "<!-- $value -->"
+        } else {
+            "/* $value */"
+        }
 }

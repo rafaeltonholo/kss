@@ -63,9 +63,7 @@ abstract class Consumer<out T : CssNode>(
     /**
      * Expects the current token to be one of the given types.
      */
-    protected fun Iterator.expectToken(
-        kinds: Set<CssTokenKind>
-    ): Token<out CssTokenKind> {
+    protected fun Iterator.expectToken(kinds: Set<CssTokenKind>): Token<out CssTokenKind> {
         val current = current()
         parserCheckNotNull(value = current, content = content) {
             "Expected one of $kinds but got null"

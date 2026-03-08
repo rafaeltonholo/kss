@@ -16,8 +16,8 @@ data class Declaration(
     val property: String,
     val values: List<Value>,
 ) : CssComponentValueNode {
-    override fun toString(indent: Int): String {
-        return buildString {
+    override fun toString(indent: Int): String =
+        buildString {
             repeat(indent) { append(" ") }
             append(property)
             append(": ")
@@ -27,16 +27,15 @@ data class Declaration(
             }
             append(";")
         }
-    }
 
-    override fun toString(): String {
-        return buildString {
+    override fun toString(): String =
+        buildString {
             appendLine("Declaration(")
             appendLine("location = $location,".prependIndent(indentSize = 2))
             appendLine("important = $important,".prependIndent(indentSize = 2))
             appendLine("property = \"$property\",".prependIndent(indentSize = 2))
             appendLine(
-                "values = [".prependIndent(indentSize = 2),
+                "values = [".prependIndent(indentSize = 2)
             )
             values.forEach {
                 appendLine(it.toString().prependIndent(indentSize = 4))
@@ -44,5 +43,4 @@ data class Declaration(
             appendLine("],".prependIndent(indentSize = 2))
             append(")")
         }
-    }
 }

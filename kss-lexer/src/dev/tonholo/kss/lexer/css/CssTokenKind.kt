@@ -70,19 +70,20 @@ enum class CssTokenKind(
          * This set is used to determine when whitespace should be preserved or
          * removed during CSS parsing.
          */
-        val WhiteSpaceSignificantAdjacentTokens = setOf(
-            Ident,
-            Hash,
-            Dot,
-            Number,
-            String,
-            Function,
-            Url,
-            OpenParenthesis,
-            CloseParenthesis,
-            OpenSquareBracket,
-            CloseSquareBracket,
-        )
+        val WhiteSpaceSignificantAdjacentTokens =
+            setOf(
+                Ident,
+                Hash,
+                Dot,
+                Number,
+                String,
+                Function,
+                Url,
+                OpenParenthesis,
+                CloseParenthesis,
+                OpenSquareBracket,
+                CloseSquareBracket
+            )
 
         /**
          * Retrieves the [CssTokenKind] associated with the given character.
@@ -95,8 +96,6 @@ enum class CssTokenKind(
          * @return The [CssTokenKind] associated with the given [char], or `null` if no
          * match is found.
          */
-        fun fromChar(char: Char): CssTokenKind? {
-            return entries.firstOrNull { char in it }
-        }
+        fun fromChar(char: Char): CssTokenKind? = entries.firstOrNull { char in it }
     }
 }

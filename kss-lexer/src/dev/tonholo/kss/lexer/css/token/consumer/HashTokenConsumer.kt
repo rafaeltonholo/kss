@@ -8,9 +8,10 @@ import dev.tonholo.kss.lexer.css.CssTokenKind
 class HashTokenConsumer(
     iterator: TokenIterator<CssTokenKind>,
 ) : TokenConsumer(iterator) {
-    override val supportedTokenKinds: Set<CssTokenKind> = setOf(
-        CssTokenKind.Hash,
-    )
+    override val supportedTokenKinds: Set<CssTokenKind> =
+        setOf(
+            CssTokenKind.Hash
+        )
 
     override fun consume(kind: CssTokenKind): List<Token<out CssTokenKind>> {
         val next = iterator.peek(1)
@@ -26,7 +27,7 @@ class HashTokenConsumer(
             if (iterator.peek(backwardLookupOffset) in CssTokenKind.Colon) {
                 listOf(
                     Token(CssTokenKind.Hash, iterator.offset, iterator.nextOffset()),
-                    handleHexDigit(start = iterator.offset),
+                    handleHexDigit(start = iterator.offset)
                 )
             } else {
                 listOf(Token(CssTokenKind.Hash, iterator.offset, iterator.nextOffset()))
@@ -41,18 +42,19 @@ class HashTokenConsumer(
             val char = iterator.get()
             when (char.lowercaseChar()) {
                 in '0'..'9',
-                in 'a'..'f' -> {
-                    iterator.nextOffset()
-                }
+                in 'a'..'f',
+                    -> {
+                        iterator.nextOffset()
+                    }
 
-                else -> break
+                else -> {
+                    break
+                }
             }
         }
 
         return Token(CssTokenKind.HexDigit, start, iterator.offset)
     }
 
-    private fun Char.isHexDigit(): Boolean {
-        return this in '0'..'9' || this in 'a'..'f' || this in 'A'..'F'
-    }
+    private fun Char.isHexDigit(): Boolean = this in '0'..'9' || this in 'a'..'f' || this in 'A'..'F'
 }

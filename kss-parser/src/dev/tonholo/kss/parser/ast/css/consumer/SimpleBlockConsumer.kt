@@ -11,11 +11,12 @@ import dev.tonholo.kss.parser.ast.iterator.parserCheck
 import dev.tonholo.kss.parser.ast.iterator.parserCheckNotNull
 import dev.tonholo.kss.parser.ast.iterator.parserError
 
-private val blockOpeningTokens = mapOf(
-    CssTokenKind.OpenParenthesis to CssTokenKind.CloseParenthesis,
-    CssTokenKind.OpenSquareBracket to CssTokenKind.CloseSquareBracket,
-    CssTokenKind.OpenCurlyBrace to CssTokenKind.CloseCurlyBrace,
-)
+private val blockOpeningTokens =
+    mapOf(
+        CssTokenKind.OpenParenthesis to CssTokenKind.CloseParenthesis,
+        CssTokenKind.OpenSquareBracket to CssTokenKind.CloseSquareBracket,
+        CssTokenKind.OpenCurlyBrace to CssTokenKind.CloseCurlyBrace
+    )
 
 /**
  * Consumes a simple block, which is a block of tokens enclosed by parenthesis,
@@ -39,10 +40,11 @@ abstract class SimpleBlockConsumer<T : CssNode>(
 
         val children = mutableListOf<T>()
 
-        val simpleBlock = Block.SimpleBlock(
-            location = CssLocation.Undefined,
-            children = children,
-        )
+        val simpleBlock =
+            Block.SimpleBlock(
+                location = CssLocation.Undefined,
+                children = children
+            )
 
         while (iterator.hasNext()) {
             val current = iterator.next()
@@ -50,15 +52,25 @@ abstract class SimpleBlockConsumer<T : CssNode>(
                 "Expected Component value but got null"
             }
             when (current.kind) {
-                closingToken -> return simpleBlock.copy(
-                    location = CssLocation(
-                        source = content.substring(prev.startOffset, current.endOffset.coerceAtMost(content.length)),
-                        start = prev.startOffset,
-                        end = current.endOffset,
+                closingToken -> {
+                    return simpleBlock.copy(
+                        location =
+                            CssLocation(
+                                source =
+                                    content.substring(
+                                        prev.startOffset,
+                                        current.endOffset.coerceAtMost(content.length)
+                                    ),
+                                start = prev.startOffset,
+                                end = current.endOffset
+                            )
                     )
-                )
+                }
 
-                CssTokenKind.EndOfFile -> iterator.parserError(content, "Incomplete simple block")
+                CssTokenKind.EndOfFile -> {
+                    iterator.parserError(content, "Incomplete simple block")
+                }
+
                 else -> {
                     children += consumer.consume(iterator)
                 }
@@ -86,6 +98,6 @@ class SimpleDeclarationBlockConsumer(
     content: String,
     declarationConsumer: Consumer<Declaration>,
 ) : SimpleBlockConsumer<Declaration>(
-    content = content,
-    consumer = declarationConsumer,
-)
+        content = content,
+        consumer = declarationConsumer
+    )

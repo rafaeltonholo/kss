@@ -7,21 +7,21 @@ import dev.tonholo.kss.lexer.css.CssTokenKind
 class CommentTokenConsumer(
     iterator: TokenIterator<CssTokenKind>,
 ) : TokenConsumer(iterator) {
-    override val supportedTokenKinds: Set<CssTokenKind> = setOf(
-        CssTokenKind.CDO,
-        CssTokenKind.CDC,
-        CssTokenKind.Comment,
-    )
+    override val supportedTokenKinds: Set<CssTokenKind> =
+        setOf(
+            CssTokenKind.CDO,
+            CssTokenKind.CDC,
+            CssTokenKind.Comment
+        )
 
-    override fun consume(kind: CssTokenKind): List<Token<out CssTokenKind>> {
-        return listOf(
+    override fun consume(kind: CssTokenKind): List<Token<out CssTokenKind>> =
+        listOf(
             when (kind) {
                 CssTokenKind.CDO -> consumeHtmlComment()
                 CssTokenKind.Comment -> consumeCssComment()
                 else -> error("Unsupported token kind: $kind")
-            },
+            }
         )
-    }
 
     private fun consumeHtmlComment(): Token<CssTokenKind> {
         val start = iterator.offset

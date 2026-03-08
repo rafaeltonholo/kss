@@ -11,8 +11,7 @@ sealed interface Value : CssComponentValueNode {
         override val location: CssLocation,
         val value: kotlin.String,
     ) : Value {
-        override fun toString(indent: Int): kotlin.String =
-            value
+        override fun toString(indent: Int): kotlin.String = value
     }
 
     /**
@@ -22,8 +21,7 @@ sealed interface Value : CssComponentValueNode {
         override val location: CssLocation,
         val value: kotlin.String,
     ) : Value {
-        override fun toString(indent: Int): kotlin.String =
-            "'$value'"
+        override fun toString(indent: Int): kotlin.String = "'$value'"
     }
 
     /**
@@ -33,8 +31,7 @@ sealed interface Value : CssComponentValueNode {
         override val location: CssLocation,
         val name: kotlin.String,
     ) : Value {
-        override fun toString(indent: Int): kotlin.String =
-            name
+        override fun toString(indent: Int): kotlin.String = name
     }
 
     /**
@@ -44,8 +41,7 @@ sealed interface Value : CssComponentValueNode {
         override val location: CssLocation,
         val value: kotlin.String,
     ) : Value {
-        override fun toString(indent: Int): kotlin.String =
-            value
+        override fun toString(indent: Int): kotlin.String = value
     }
 
     /**
@@ -56,8 +52,7 @@ sealed interface Value : CssComponentValueNode {
         val value: kotlin.String,
         val unit: kotlin.String,
     ) : Value {
-        override fun toString(indent: Int): kotlin.String =
-            value + unit
+        override fun toString(indent: Int): kotlin.String = value + unit
     }
 
     /**
@@ -67,8 +62,7 @@ sealed interface Value : CssComponentValueNode {
         override val location: CssLocation,
         val value: kotlin.String,
     ) : Value {
-        override fun toString(indent: Int): kotlin.String =
-            "$value%"
+        override fun toString(indent: Int): kotlin.String = "$value%"
     }
 
     /**
@@ -91,11 +85,12 @@ sealed interface Value : CssComponentValueNode {
         val value: kotlin.String,
     ) : Value {
         override fun toString(indent: Int): kotlin.String {
-            val quotedIfNeeded = if (value.startsWith('#')) {
-                value
-            } else {
-                "\"$value\""
-            }
+            val quotedIfNeeded =
+                if (value.startsWith('#')) {
+                    value
+                } else {
+                    "\"$value\""
+                }
             return "url($quotedIfNeeded)"
         }
     }

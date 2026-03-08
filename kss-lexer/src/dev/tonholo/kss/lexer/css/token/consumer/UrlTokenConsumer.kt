@@ -7,9 +7,10 @@ import dev.tonholo.kss.lexer.css.CssTokenKind
 class UrlTokenConsumer(
     iterator: TokenIterator<CssTokenKind>,
 ) : TokenConsumer(iterator) {
-    override val supportedTokenKinds: Set<CssTokenKind> = setOf(
-        CssTokenKind.Url,
-    )
+    override val supportedTokenKinds: Set<CssTokenKind> =
+        setOf(
+            CssTokenKind.Url
+        )
 
     override fun consume(kind: CssTokenKind): List<Token<out CssTokenKind>> {
         val start = iterator.offset - 4
@@ -33,8 +34,8 @@ class UrlTokenConsumer(
                 Token(
                     kind = CssTokenKind.Function,
                     startOffset = start,
-                    endOffset = iterator.offset,
-                ),
+                    endOffset = iterator.offset
+                )
             )
         }
 
@@ -55,14 +56,15 @@ class UrlTokenConsumer(
 
         return listOf(
             Token(
-                kind = if (char !in CssTokenKind.CloseParenthesis) {
-                    CssTokenKind.BadUrl
-                } else {
-                    CssTokenKind.Url
-                },
+                kind =
+                    if (char !in CssTokenKind.CloseParenthesis) {
+                        CssTokenKind.BadUrl
+                    } else {
+                        CssTokenKind.Url
+                    },
                 startOffset = start,
-                endOffset = iterator.offset,
-            ),
+                endOffset = iterator.offset
+            )
         )
     }
 }
