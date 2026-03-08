@@ -28,6 +28,17 @@ class AstParserException internal constructor(
     private val forward: Int,
 ) : IllegalStateException(message) {
     private val _message = message
+    private val currentToken: Token<out TokenKind>? = tokens.getOrNull(offset - 1)
+
+    /**
+     * The start offset of the offending token in the source content, or `-1` if unavailable.
+     */
+    val startOffset: Int = currentToken?.startOffset ?: -1
+
+    /**
+     * The end offset of the offending token in the source content, or `-1` if unavailable.
+     */
+    val endOffset: Int = currentToken?.endOffset ?: -1
 
     /**
      * Builds an error message with context from the current parser state.
@@ -39,10 +50,9 @@ class AstParserException internal constructor(
                 val currentOffset = offset - 1
                 val prev = tokens.getOrNull(currentOffset - backtrack)?.startOffset ?: 0
                 val next = tokens.getOrNull(currentOffset + forward)?.endOffset ?: content.length
-                val current = tokens.getOrNull(currentOffset)
-                if (current != null) {
-                    appendLine("Start offset: ${current.startOffset}")
-                    appendLine("End offset: ${current.endOffset}")
+                if (currentToken != null) {
+                    appendLine("Start offset: $startOffset")
+                    appendLine("End offset: $endOffset")
                     appendLine("Content:")
                     var indent = 4
                     appendLine(
@@ -51,9 +61,9 @@ class AstParserException internal constructor(
                             .trimEnd('\n')
                             .prependIndent(indent)
                     )
-                    appendLine("^".repeat(current.endOffset - prev).prependIndent(indent))
-                    indent += current.startOffset.minus(prev)
-                    append("^".repeat(current.endOffset - current.startOffset).prependIndent(indent))
+                    appendLine("^".repeat(endOffset - prev).prependIndent(indent))
+                    indent += startOffset.minus(prev)
+                    append("^".repeat(endOffset - startOffset).prependIndent(indent))
                 }
             }
 }
