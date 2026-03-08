@@ -1,0 +1,13 @@
+product:
+  type: jvm/app
+
+apply:
+  - ../kss.module-template.yaml
+
+settings:
+  compose:
+    enabled: true
+
+dependencies:
+  - ../kss-demo
+  - $compose.desktop.currentOs

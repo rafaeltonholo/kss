@@ -42,9 +42,11 @@ naming:
     active: true
     excludes:
       - "**/test/**"
+    ignoreAnnotated:
+      - "Composable"
   TopLevelPropertyNaming:
     active: true
-    constantPattern: "[A-Z][A-Za-z0-9]*"
+    constantPattern: "[A-Z][_A-Za-z0-9]*"
 
 performance:
   active: true
@@ -63,6 +65,7 @@ style:
       - "0"
       - "1"
       - "2"
+    ignorePropertyDeclaration: true
   MaxLineLength:
     active: true
     maxLineLength: 120
@@ -75,3 +78,60 @@ style:
     active: true
     excludeImports:
       - "kotlin.test.*"
+
+Compose:
+  active: true
+  ComposableAnnotationNaming:
+    active: true
+  CompositionLocalAllowlist:
+    active: false
+  CompositionLocalNaming:
+    active: true
+  ContentEmitterReturningValues:
+    active: true
+  DefaultsVisibility:
+    active: true
+  LambdaParameterInRestartableEffect:
+    active: true
+  Material2:
+    active: false
+  ModifierClickableOrder:
+    active: true
+  ModifierComposable:
+    active: true
+  ModifierComposed:
+    active: true
+  ModifierMissing:
+    active: true
+  ModifierNaming:
+    active: true
+  ModifierNotDefaultParam:
+    active: true
+  ModifierReused:
+    active: true
+  ModifierWithoutDefault:
+    active: true
+  MultipleEmitters:
+    active: true
+  MutableParams:
+    active: true
+  MutableStateAutoboxing:
+    active: true
+  MutableStateParam:
+    active: true
+  ParameterOrder:
+    active: true
+  PreviewAnnotationNaming:
+    active: true
+  PreviewPublic:
+    active: true
+  RememberMissing:
+    active: true
+  RememberContentMissing:
+    active: true
+  UnstableCollections:
+    active: false
+  ViewModelForwarding:
+    active: true
+  ViewModelInjection:
+    active: true

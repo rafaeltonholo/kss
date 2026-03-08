@@ -2,3 +2,6 @@ modules:
   - kss-core
   - kss-lexer
   - kss-parser
+  - kss-demo
+  - kss-demo-desktop
+  - kss-demo-web

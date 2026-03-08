@@ -1,0 +1,15 @@
+product:
+  type: lib
+  platforms: [jvm, wasmJs]
+
+apply:
+  - ../kss.module-template.yaml
+
+settings:
+  compose:
+    enabled: true
+
+dependencies:
+  - ../kss-parser
+  - $compose.foundation: exported
+  - $compose.material3: exported
