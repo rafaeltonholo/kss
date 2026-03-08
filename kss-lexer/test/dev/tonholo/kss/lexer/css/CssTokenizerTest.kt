@@ -1,9 +1,7 @@
 package dev.tonholo.kss.lexer.css
 
-import app.cash.burst.Burst
-import dev.tonholo.kss.lexer.Token
-import kotlin.test.Test
-import kotlin.test.assertEquals
+import dev.tonholo.kss.lexer.*
+import kotlin.test.*
 
 class CssTokenizerTest {
     @Test
@@ -359,7 +357,7 @@ class CssTokenizerTest {
             Token(
                 kind = CssTokenKind.AtKeyword,
                 startOffset = 0,
-                endOffset = 6
+                endOffset = 6,
             ),            // '@media'
             Token(kind = CssTokenKind.WhiteSpace, startOffset = 6, endOffset = 7),           // ' '
             Token(kind = CssTokenKind.Ident, startOffset = 7, endOffset = 13),          // 'screen'
@@ -370,14 +368,14 @@ class CssTokenizerTest {
             Token(
                 kind = CssTokenKind.Ident,
                 startOffset = 19,
-                endOffset = 28
+                endOffset = 28,
             ),         // 'min-width'
             Token(kind = CssTokenKind.Colon, startOffset = 28, endOffset = 29),              // ':'
             Token(kind = CssTokenKind.WhiteSpace, startOffset = 29, endOffset = 30),         // ' '
             Token(
                 kind = CssTokenKind.Dimension,
                 startOffset = 30,
-                endOffset = 35
+                endOffset = 35,
             ),          // '768px'
             Token(kind = CssTokenKind.CloseParenthesis, startOffset = 35, endOffset = 36),   // ')'
             Token(kind = CssTokenKind.WhiteSpace, startOffset = 36, endOffset = 37),         // ' '
@@ -385,7 +383,7 @@ class CssTokenizerTest {
             Token(
                 kind = CssTokenKind.WhiteSpace,
                 startOffset = 38,
-                endOffset = 43
+                endOffset = 43,
             ),         // '\n    '
 
             // body.homepage .main-content > section:first-of-type:not(.hidden) {
@@ -394,14 +392,14 @@ class CssTokenizerTest {
             Token(
                 kind = CssTokenKind.Ident,
                 startOffset = 48,
-                endOffset = 56
+                endOffset = 56,
             ),         // 'homepage'
             Token(kind = CssTokenKind.WhiteSpace, startOffset = 56, endOffset = 57),         // ' '
             Token(kind = CssTokenKind.Dot, startOffset = 57, endOffset = 58),                // '.'
             Token(
                 kind = CssTokenKind.Ident,
                 startOffset = 58,
-                endOffset = 70
+                endOffset = 70,
             ),         // 'main-content'
             Token(kind = CssTokenKind.WhiteSpace, startOffset = 70, endOffset = 71),         // ' '
             Token(kind = CssTokenKind.Greater, startOffset = 71, endOffset = 72),        // '>'
@@ -411,7 +409,7 @@ class CssTokenizerTest {
             Token(
                 kind = CssTokenKind.Ident,
                 startOffset = 81,
-                endOffset = 94
+                endOffset = 94,
             ),         // 'first-of-type'
             Token(kind = CssTokenKind.Colon, startOffset = 94, endOffset = 95),              // ':'
             Token(kind = CssTokenKind.Ident, startOffset = 95, endOffset = 98),         // 'not'
@@ -424,7 +422,7 @@ class CssTokenizerTest {
             Token(
                 kind = CssTokenKind.WhiteSpace,
                 startOffset = 109,
-                endOffset = 118
+                endOffset = 118,
             ),       // '\n        '
 
             // Declaration: display: flex;
@@ -436,14 +434,14 @@ class CssTokenizerTest {
             Token(
                 kind = CssTokenKind.WhiteSpace,
                 startOffset = 132,
-                endOffset = 141
+                endOffset = 141,
             ),       // '\n        '
 
             /* Declaration: flex-direction: column; */
             Token(
                 kind = CssTokenKind.Ident,
                 startOffset = 141,
-                endOffset = 155
+                endOffset = 155,
             ),       // 'flex-direction'
             Token(kind = CssTokenKind.Colon, startOffset = 155, endOffset = 156),            // ':'
             Token(kind = CssTokenKind.WhiteSpace, startOffset = 156, endOffset = 157),       // ' '
@@ -452,14 +450,14 @@ class CssTokenizerTest {
             Token(
                 kind = CssTokenKind.WhiteSpace,
                 startOffset = 164,
-                endOffset = 173
+                endOffset = 173,
             ),       // '\n        '
 
             /* Declaration: align-items: center; */
             Token(
                 kind = CssTokenKind.Ident,
                 startOffset = 173,
-                endOffset = 184
+                endOffset = 184,
             ),       // 'align-items'
             Token(kind = CssTokenKind.Colon, startOffset = 184, endOffset = 185),            // ':'
             Token(kind = CssTokenKind.WhiteSpace, startOffset = 185, endOffset = 186),       // ' '
@@ -468,14 +466,14 @@ class CssTokenizerTest {
             Token(
                 kind = CssTokenKind.WhiteSpace,
                 startOffset = 193,
-                endOffset = 202
+                endOffset = 202,
             ),       // '\n        '
 
             /* Declaration: background-color: rgba(255, 255, 255, 0.8); */
             Token(
                 kind = CssTokenKind.Ident,
                 startOffset = 202,
-                endOffset = 218
+                endOffset = 218,
             ),       // 'background-color'
             Token(kind = CssTokenKind.Colon, startOffset = 218, endOffset = 219),            // ':'
             Token(kind = CssTokenKind.WhiteSpace, startOffset = 219, endOffset = 220),       // ' '
@@ -484,42 +482,42 @@ class CssTokenizerTest {
             Token(
                 kind = CssTokenKind.Number,
                 startOffset = 225,
-                endOffset = 228
+                endOffset = 228,
             ),           // '255'
             Token(kind = CssTokenKind.Comma, startOffset = 228, endOffset = 229),            // ','
             Token(kind = CssTokenKind.WhiteSpace, startOffset = 229, endOffset = 230),       // ' '
             Token(
                 kind = CssTokenKind.Number,
                 startOffset = 230,
-                endOffset = 233
+                endOffset = 233,
             ),           // '255'
             Token(kind = CssTokenKind.Comma, startOffset = 233, endOffset = 234),            // ','
             Token(kind = CssTokenKind.WhiteSpace, startOffset = 234, endOffset = 235),       // ' '
             Token(
                 kind = CssTokenKind.Number,
                 startOffset = 235,
-                endOffset = 238
+                endOffset = 238,
             ),           // '255'
             Token(kind = CssTokenKind.Comma, startOffset = 238, endOffset = 239),            // ','
             Token(kind = CssTokenKind.WhiteSpace, startOffset = 239, endOffset = 240),       // ' '
             Token(
                 kind = CssTokenKind.Number,
                 startOffset = 240,
-                endOffset = 243
+                endOffset = 243,
             ),           // '0.8'
             Token(kind = CssTokenKind.CloseParenthesis, startOffset = 243, endOffset = 244), // ')'
             Token(kind = CssTokenKind.Semicolon, startOffset = 244, endOffset = 245),        // ';'
             Token(
                 kind = CssTokenKind.WhiteSpace,
                 startOffset = 245,
-                endOffset = 254
+                endOffset = 254,
             ),       // '\n        '
 
             /* Declaration: box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
             Token(
                 kind = CssTokenKind.Ident,
                 startOffset = 254,
-                endOffset = 264
+                endOffset = 264,
             ),            // 'box-shadow'
             Token(kind = CssTokenKind.Colon, startOffset = 264, endOffset = 265),            // ':'
             Token(kind = CssTokenKind.WhiteSpace, startOffset = 265, endOffset = 266),       // ' '
@@ -540,7 +538,7 @@ class CssTokenizerTest {
             Token(
                 kind = CssTokenKind.Function,
                 startOffset = 276,
-                endOffset = 280
+                endOffset = 280,
             ),         // 'rgba'
             Token(kind = CssTokenKind.OpenParenthesis, startOffset = 280, endOffset = 281),  // '('
             Token(kind = CssTokenKind.Number, startOffset = 281, endOffset = 282),           // '0'
@@ -555,14 +553,14 @@ class CssTokenizerTest {
             Token(
                 kind = CssTokenKind.Number,
                 startOffset = 290,
-                endOffset = 293
+                endOffset = 293,
             ),           // '0.1'
             Token(kind = CssTokenKind.CloseParenthesis, startOffset = 293, endOffset = 294), // ')'
             Token(kind = CssTokenKind.Semicolon, startOffset = 294, endOffset = 295),        // ';'
             Token(
                 kind = CssTokenKind.WhiteSpace,
                 startOffset = 295,
-                endOffset = 300
+                endOffset = 300,
             ),       // '\n        '
 
             /* Closing curly braces */
@@ -575,9 +573,30 @@ class CssTokenizerTest {
     }
 
     @Test
-    @Burst
-    fun `when url is incomplete - then should create a BadUrl token`(
-        // Arrange
+    fun `when url is incomplete - then should create a BadUrl token - with an empty url`() =
+        `when url is incomplete - then should create a BadUrl token`(BadUrlTokenParam.`with an empty url`)
+
+    @Test
+    fun `when url is incomplete - then should create a BadUrl token - with an open parenthesis url`() =
+        `when url is incomplete - then should create a BadUrl token`(BadUrlTokenParam.`with an open parenthesis url`)
+
+    @Test
+    fun `when url is incomplete - then should create a BadUrl token - with a hashed url`() =
+        `when url is incomplete - then should create a BadUrl token`(BadUrlTokenParam.`with a hashed url`)
+
+    @Test
+    fun `when url is incomplete - then should create a BadUrl token - with an unquoted url`() =
+        `when url is incomplete - then should create a BadUrl token`(BadUrlTokenParam.`with an unquoted url`)
+
+    @Test
+    fun `when url is incomplete - then should create a BadUrl token - with a spaced url`() =
+        `when url is incomplete - then should create a BadUrl token`(BadUrlTokenParam.`with a spaced url`)
+
+    @Test
+    fun `when url is incomplete - then should create a BadUrl token - with a leading spaced url`() =
+        `when url is incomplete - then should create a BadUrl token`(BadUrlTokenParam.`with a leading spaced url`)
+
+    private fun `when url is incomplete - then should create a BadUrl token`(
         url: BadUrlTokenParam,
     ) {
         println("url: '$url'")
@@ -599,7 +618,7 @@ class CssTokenizerTest {
             Token(
                 kind = CssTokenKind.EndOfFile,
                 startOffset = content.length,
-                endOffset = content.length
+                endOffset = content.length,
             ),
         )
 
@@ -608,9 +627,78 @@ class CssTokenizerTest {
     }
 
     @Test
-    @Burst
-    fun `when next non-whitespace token after url is quote or double-quote - then should create a Function token`(
-        // Arrange
+    fun `when next non-whitespace token after url is quote or double-quote - then should create a Function token - with a double quotes empty url`() =
+        `when next non-whitespace token after url is quote or double-quote - then should create a Function token`(
+            UrlAsFunctionParam.`with a double quotes empty url`,
+        )
+
+    @Test
+    fun `when next non-whitespace token after url is quote or double-quote - then should create a Function token - with a double quotes hashed url`() =
+        `when next non-whitespace token after url is quote or double-quote - then should create a Function token`(
+            UrlAsFunctionParam.`with a double quotes hashed url`,
+        )
+
+    @Test
+    fun `when next non-whitespace token after url is quote or double-quote - then should create a Function token - with a double quotes url`() =
+        `when next non-whitespace token after url is quote or double-quote - then should create a Function token`(
+            UrlAsFunctionParam.`with a double quotes url`,
+        )
+
+    @Test
+    fun `when next non-whitespace token after url is quote or double-quote - then should create a Function token - with a double quotes leading spaced url`() =
+        `when next non-whitespace token after url is quote or double-quote - then should create a Function token`(
+            UrlAsFunctionParam.`with a double quotes leading spaced url`,
+        )
+
+    @Test
+    fun `when next non-whitespace token after url is quote or double-quote - then should create a Function token - with a double quotes trailing spaced url`() =
+        `when next non-whitespace token after url is quote or double-quote - then should create a Function token`(
+            UrlAsFunctionParam.`with a double quotes trailing spaced url`,
+        )
+
+    @Test
+    fun `when next non-whitespace token after url is quote or double-quote - then should create a Function token - with a double quotes spaced url`() =
+        `when next non-whitespace token after url is quote or double-quote - then should create a Function token`(
+            UrlAsFunctionParam.`with a double quotes spaced url`,
+        )
+
+    @Test
+    fun `when next non-whitespace token after url is quote or double-quote - then should create a Function token - with a single quotes empty url`() =
+        `when next non-whitespace token after url is quote or double-quote - then should create a Function token`(
+            UrlAsFunctionParam.`with a single quotes empty url`,
+        )
+
+    @Test
+    fun `when next non-whitespace token after url is quote or double-quote - then should create a Function token - with a single quotes hashed url`() =
+        `when next non-whitespace token after url is quote or double-quote - then should create a Function token`(
+            UrlAsFunctionParam.`with a single quotes hashed url`,
+        )
+
+    @Test
+    fun `when next non-whitespace token after url is quote or double-quote - then should create a Function token - with a single quotes url`() =
+        `when next non-whitespace token after url is quote or double-quote - then should create a Function token`(
+            UrlAsFunctionParam.`with a single quotes url`,
+        )
+
+    @Test
+    fun `when next non-whitespace token after url is quote or double-quote - then should create a Function token - with a single quotes leading spaced url`() =
+        `when next non-whitespace token after url is quote or double-quote - then should create a Function token`(
+            UrlAsFunctionParam.`with a single quotes leading spaced url`,
+        )
+
+    @Test
+    fun `when next non-whitespace token after url is quote or double-quote - then should create a Function token - with a single quotes trailing spaced url`() =
+        `when next non-whitespace token after url is quote or double-quote - then should create a Function token`(
+            UrlAsFunctionParam.`with a single quotes trailing spaced url`,
+        )
+
+    @Test
+    fun `when next non-whitespace token after url is quote or double-quote - then should create a Function token - with a single quotes spaced url`() =
+        `when next non-whitespace token after url is quote or double-quote - then should create a Function token`(
+            UrlAsFunctionParam.`with a single quotes spaced url`,
+        )
+
+    private fun `when next non-whitespace token after url is quote or double-quote - then should create a Function token`(
         url: UrlAsFunctionParam,
     ) {
         println("url: '$url'")
@@ -647,7 +735,7 @@ class CssTokenizerTest {
                     Token(
                         kind = CssTokenKind.OpenParenthesis,
                         startOffset = 31,
-                        endOffset = openParenthesisEndOffset
+                        endOffset = openParenthesisEndOffset,
                     ),
                 ),
             )
@@ -710,7 +798,7 @@ class CssTokenizerTest {
                     Token(
                         kind = CssTokenKind.EndOfFile,
                         startOffset = endOffset,
-                        endOffset = endOffset
+                        endOffset = endOffset,
                     ),
                 ),
             )
@@ -765,8 +853,86 @@ class CssTokenizerTest {
     }
 
     @Test
-    @Burst
-    fun `create tokens for css property for numbers`(param: NumberOrDimensionTokenParam) {
+    fun `create tokens for css property for numbers - with a number starting with dot`() =
+        `create tokens for css property for numbers`(NumberOrDimensionTokenParam.`with a number starting with dot`)
+
+    @Test
+    fun `create tokens for css property for numbers - with a number starting with plus`() =
+        `create tokens for css property for numbers`(NumberOrDimensionTokenParam.`with a number starting with plus`)
+
+    @Test
+    fun `create tokens for css property for numbers - with a number starting with minus`() =
+        `create tokens for css property for numbers`(NumberOrDimensionTokenParam.`with a number starting with minus`)
+
+    @Test
+    fun `create tokens for css property for numbers - with a number starting with dot and a plus`() =
+        `create tokens for css property for numbers`(NumberOrDimensionTokenParam.`with a number starting with dot and a plus`)
+
+    @Test
+    fun `create tokens for css property for numbers - with a number starting with dot and a minus`() =
+        `create tokens for css property for numbers`(NumberOrDimensionTokenParam.`with a number starting with dot and a minus`)
+
+    @Test
+    fun `create tokens for css property for numbers - with a number with scientific notation`() =
+        `create tokens for css property for numbers`(NumberOrDimensionTokenParam.`with a number with scientific notation`)
+
+    @Test
+    fun `create tokens for css property for numbers - with a number with scientific notation and a plus`() =
+        `create tokens for css property for numbers`(NumberOrDimensionTokenParam.`with a number with scientific notation and a plus`)
+
+    @Test
+    fun `create tokens for css property for numbers - with a number with scientific notation starting with a plus`() =
+        `create tokens for css property for numbers`(NumberOrDimensionTokenParam.`with a number with scientific notation starting with a plus`)
+
+    @Test
+    fun `create tokens for css property for numbers - with a number with scientific notation starting with a minus`() =
+        `create tokens for css property for numbers`(NumberOrDimensionTokenParam.`with a number with scientific notation starting with a minus`)
+
+    @Test
+    fun `create tokens for css property for numbers - with a number with scientific notation starting with a dot`() =
+        `create tokens for css property for numbers`(NumberOrDimensionTokenParam.`with a number with scientific notation starting with a dot`)
+
+    @Test
+    fun `create tokens for css property for numbers - with a dimension starting with a dot`() =
+        `create tokens for css property for numbers`(NumberOrDimensionTokenParam.`with a dimension starting with a dot`)
+
+    @Test
+    fun `create tokens for css property for numbers - with a dimension starting with a plus`() =
+        `create tokens for css property for numbers`(NumberOrDimensionTokenParam.`with a dimension starting with a plus`)
+
+    @Test
+    fun `create tokens for css property for numbers - with a dimension starting with a minus`() =
+        `create tokens for css property for numbers`(NumberOrDimensionTokenParam.`with a dimension starting with a minus`)
+
+    @Test
+    fun `create tokens for css property for numbers - with a dimension starting with a dot and a plus`() =
+        `create tokens for css property for numbers`(NumberOrDimensionTokenParam.`with a dimension starting with a dot and a plus`)
+
+    @Test
+    fun `create tokens for css property for numbers - with a dimension starting with a dot and a minus`() =
+        `create tokens for css property for numbers`(NumberOrDimensionTokenParam.`with a dimension starting with a dot and a minus`)
+
+    @Test
+    fun `create tokens for css property for numbers - with a dimension with scientific notation`() =
+        `create tokens for css property for numbers`(NumberOrDimensionTokenParam.`with a dimension with scientific notation`)
+
+    @Test
+    fun `create tokens for css property for numbers - with a dimension with scientific notation and a plus`() =
+        `create tokens for css property for numbers`(NumberOrDimensionTokenParam.`with a dimension with scientific notation and a plus`)
+
+    @Test
+    fun `create tokens for css property for numbers - with a dimension with scientific notation starting with a plus`() =
+        `create tokens for css property for numbers`(NumberOrDimensionTokenParam.`with a dimension with scientific notation starting with a plus`)
+
+    @Test
+    fun `create tokens for css property for numbers - with a dimension with scientific notation starting with a minus`() =
+        `create tokens for css property for numbers`(NumberOrDimensionTokenParam.`with a dimension with scientific notation starting with a minus`)
+
+    @Test
+    fun `create tokens for css property for numbers - with a dimension with scientific notation starting with a dot`() =
+        `create tokens for css property for numbers`(NumberOrDimensionTokenParam.`with a dimension with scientific notation starting with a dot`)
+
+    private fun `create tokens for css property for numbers`(param: NumberOrDimensionTokenParam) {
         val property = "margin: ${param.value};"
         val valueStartOffset = 8
         val valueEndOffset = valueStartOffset + param.value.length
@@ -777,17 +943,17 @@ class CssTokenizerTest {
             Token(
                 kind = param.tokenKind,
                 startOffset = valueStartOffset,
-                endOffset = valueEndOffset
+                endOffset = valueEndOffset,
             ),
             Token(
                 kind = CssTokenKind.Semicolon,
                 startOffset = valueEndOffset,
-                endOffset = valueEndOffset + 1
+                endOffset = valueEndOffset + 1,
             ),
             Token(
                 kind = CssTokenKind.EndOfFile,
                 startOffset = valueEndOffset + 1,
-                endOffset = valueEndOffset + 1
+                endOffset = valueEndOffset + 1,
             ),
         )
 
@@ -795,8 +961,30 @@ class CssTokenizerTest {
     }
 
     @Test
-    @Burst
-    fun `create tokens for a rule with BadUrl`(badString: BadStringParams) {
+    fun `create tokens for a rule with BadUrl - with incomplete double-quoted string`() =
+        `create tokens for a rule with BadUrl`(BadStringParams.`with incomplete double-quoted string`)
+
+    @Test
+    fun `create tokens for a rule with BadUrl - with incomplete double-quoted string with escaped quote`() =
+        `create tokens for a rule with BadUrl`(BadStringParams.`with incomplete double-quoted string with escaped quote`)
+
+    @Test
+    fun `create tokens for a rule with BadUrl - with incomplete double-quoted string with symbols`() =
+        `create tokens for a rule with BadUrl`(BadStringParams.`with incomplete double-quoted string with symbols`)
+
+    @Test
+    fun `create tokens for a rule with BadUrl - with incomplete single-quoted string`() =
+        `create tokens for a rule with BadUrl`(BadStringParams.`with incomplete single-quoted string`)
+
+    @Test
+    fun `create tokens for a rule with BadUrl - with incomplete single-quoted string with escaped quote`() =
+        `create tokens for a rule with BadUrl`(BadStringParams.`with incomplete single-quoted string with escaped quote`)
+
+    @Test
+    fun `create tokens for a rule with BadUrl - with incomplete single-quoted string with symbols`() =
+        `create tokens for a rule with BadUrl`(BadStringParams.`with incomplete single-quoted string with symbols`)
+
+    private fun `create tokens for a rule with BadUrl`(badString: BadStringParams) {
         val content = """div { content: $badString; }"""
         println(content)
         val badStringStartOffset = 15
@@ -811,20 +999,122 @@ class CssTokenizerTest {
             Token(
                 kind = CssTokenKind.BadString,
                 startOffset = badStringStartOffset,
-                endOffset = content.length
+                endOffset = content.length,
             ),
             Token(
                 kind = CssTokenKind.EndOfFile,
                 startOffset = content.length,
-                endOffset = content.length
+                endOffset = content.length,
             ),
         )
         assertTokens(content, tokens)
     }
 
     @Test
-    @Burst
-    fun `given a dimension - when creating tokens - then should create a Dimension token`(
+    fun `given a dimension - when creating tokens - then should create a Dimension token - when dimension is px`() =
+        `given a dimension - when creating tokens - then should create a Dimension token`(DimensionsParam.`when dimension is px`)
+
+    @Test
+    fun `given a dimension - when creating tokens - then should create a Dimension token - when dimension is cm`() =
+        `given a dimension - when creating tokens - then should create a Dimension token`(DimensionsParam.`when dimension is cm`)
+
+    @Test
+    fun `given a dimension - when creating tokens - then should create a Dimension token - when dimension is mm`() =
+        `given a dimension - when creating tokens - then should create a Dimension token`(DimensionsParam.`when dimension is mm`)
+
+    @Test
+    fun `given a dimension - when creating tokens - then should create a Dimension token - when dimension is in`() =
+        `given a dimension - when creating tokens - then should create a Dimension token`(DimensionsParam.`when dimension is in`)
+
+    @Test
+    fun `given a dimension - when creating tokens - then should create a Dimension token - when dimension is pt`() =
+        `given a dimension - when creating tokens - then should create a Dimension token`(DimensionsParam.`when dimension is pt`)
+
+    @Test
+    fun `given a dimension - when creating tokens - then should create a Dimension token - when dimension is pc`() =
+        `given a dimension - when creating tokens - then should create a Dimension token`(DimensionsParam.`when dimension is pc`)
+
+    @Test
+    fun `given a dimension - when creating tokens - then should create a Dimension token - when dimension is em`() =
+        `given a dimension - when creating tokens - then should create a Dimension token`(DimensionsParam.`when dimension is em`)
+
+    @Test
+    fun `given a dimension - when creating tokens - then should create a Dimension token - when dimension is ex`() =
+        `given a dimension - when creating tokens - then should create a Dimension token`(DimensionsParam.`when dimension is ex`)
+
+    @Test
+    fun `given a dimension - when creating tokens - then should create a Dimension token - when dimension is ch`() =
+        `given a dimension - when creating tokens - then should create a Dimension token`(DimensionsParam.`when dimension is ch`)
+
+    @Test
+    fun `given a dimension - when creating tokens - then should create a Dimension token - when dimension is rem`() =
+        `given a dimension - when creating tokens - then should create a Dimension token`(DimensionsParam.`when dimension is rem`)
+
+    @Test
+    fun `given a dimension - when creating tokens - then should create a Dimension token - when dimension is vw`() =
+        `given a dimension - when creating tokens - then should create a Dimension token`(DimensionsParam.`when dimension is vw`)
+
+    @Test
+    fun `given a dimension - when creating tokens - then should create a Dimension token - when dimension is vh`() =
+        `given a dimension - when creating tokens - then should create a Dimension token`(DimensionsParam.`when dimension is vh`)
+
+    @Test
+    fun `given a dimension - when creating tokens - then should create a Dimension token - when dimension is vmin`() =
+        `given a dimension - when creating tokens - then should create a Dimension token`(DimensionsParam.`when dimension is vmin`)
+
+    @Test
+    fun `given a dimension - when creating tokens - then should create a Dimension token - when dimension is vmax`() =
+        `given a dimension - when creating tokens - then should create a Dimension token`(DimensionsParam.`when dimension is vmax`)
+
+    @Test
+    fun `given a dimension - when creating tokens - then should create a Dimension token - when dimension is fr`() =
+        `given a dimension - when creating tokens - then should create a Dimension token`(DimensionsParam.`when dimension is fr`)
+
+    @Test
+    fun `given a dimension - when creating tokens - then should create a Dimension token - when dimension is deg`() =
+        `given a dimension - when creating tokens - then should create a Dimension token`(DimensionsParam.`when dimension is deg`)
+
+    @Test
+    fun `given a dimension - when creating tokens - then should create a Dimension token - when dimension is grad`() =
+        `given a dimension - when creating tokens - then should create a Dimension token`(DimensionsParam.`when dimension is grad`)
+
+    @Test
+    fun `given a dimension - when creating tokens - then should create a Dimension token - when dimension is rad`() =
+        `given a dimension - when creating tokens - then should create a Dimension token`(DimensionsParam.`when dimension is rad`)
+
+    @Test
+    fun `given a dimension - when creating tokens - then should create a Dimension token - when dimension is turn`() =
+        `given a dimension - when creating tokens - then should create a Dimension token`(DimensionsParam.`when dimension is turn`)
+
+    @Test
+    fun `given a dimension - when creating tokens - then should create a Dimension token - when dimension is s`() =
+        `given a dimension - when creating tokens - then should create a Dimension token`(DimensionsParam.`when dimension is s`)
+
+    @Test
+    fun `given a dimension - when creating tokens - then should create a Dimension token - when dimension is ms`() =
+        `given a dimension - when creating tokens - then should create a Dimension token`(DimensionsParam.`when dimension is ms`)
+
+    @Test
+    fun `given a dimension - when creating tokens - then should create a Dimension token - when dimension is Hz`() =
+        `given a dimension - when creating tokens - then should create a Dimension token`(DimensionsParam.`when dimension is Hz`)
+
+    @Test
+    fun `given a dimension - when creating tokens - then should create a Dimension token - when dimension is kHz`() =
+        `given a dimension - when creating tokens - then should create a Dimension token`(DimensionsParam.`when dimension is kHz`)
+
+    @Test
+    fun `given a dimension - when creating tokens - then should create a Dimension token - when dimension is dpi`() =
+        `given a dimension - when creating tokens - then should create a Dimension token`(DimensionsParam.`when dimension is dpi`)
+
+    @Test
+    fun `given a dimension - when creating tokens - then should create a Dimension token - when dimension is dpcm`() =
+        `given a dimension - when creating tokens - then should create a Dimension token`(DimensionsParam.`when dimension is dpcm`)
+
+    @Test
+    fun `given a dimension - when creating tokens - then should create a Dimension token - when dimension is dppx`() =
+        `given a dimension - when creating tokens - then should create a Dimension token`(DimensionsParam.`when dimension is dppx`)
+
+    private fun `given a dimension - when creating tokens - then should create a Dimension token`(
         param: DimensionsParam,
     ) {
         // Arrange
@@ -842,27 +1132,27 @@ class CssTokenizerTest {
             Token(
                 kind = CssTokenKind.Dimension,
                 startOffset = valueStartOffset,
-                endOffset = valueEndOffset
+                endOffset = valueEndOffset,
             ),
             Token(
                 kind = CssTokenKind.Semicolon,
                 startOffset = valueEndOffset,
-                endOffset = valueEndOffset + 1
+                endOffset = valueEndOffset + 1,
             ),
             Token(
                 kind = CssTokenKind.WhiteSpace,
                 startOffset = valueEndOffset + 1,
-                endOffset = valueEndOffset + 2
+                endOffset = valueEndOffset + 2,
             ),
             Token(
                 kind = CssTokenKind.CloseCurlyBrace,
                 startOffset = valueEndOffset + 2,
-                endOffset = valueEndOffset + 3
+                endOffset = valueEndOffset + 3,
             ),
             Token(
                 kind = CssTokenKind.EndOfFile,
                 startOffset = valueEndOffset + 3,
-                endOffset = valueEndOffset + 3
+                endOffset = valueEndOffset + 3,
             ),
         )
 
@@ -871,8 +1161,14 @@ class CssTokenizerTest {
     }
 
     @Test
-    @Burst
-    fun `given a minified style - when creating tokens - then should create a valid token list`(
+    fun `given a minified style - when creating tokens - then should create a valid token list - no spaces`() =
+        `given a minified style - when creating tokens - then should create a valid token list`(MinifiedCssParams.`no spaces`)
+
+    @Test
+    fun `given a minified style - when creating tokens - then should create a valid token list - no spaces and dimensions starting with dot`() =
+        `given a minified style - when creating tokens - then should create a valid token list`(MinifiedCssParams.`no spaces and dimensions starting with dot`)
+
+    private fun `given a minified style - when creating tokens - then should create a valid token list`(
         params: MinifiedCssParams,
     ) {
         assertTokens(params.content, params.tokens)
@@ -945,7 +1241,7 @@ class CssTokenizerTest {
         `with a number with scientific notation starting with a plus`("+5e-3", CssTokenKind.Number),
         `with a number with scientific notation starting with a minus`(
             "-5e-3",
-            CssTokenKind.Number
+            CssTokenKind.Number,
         ),
         `with a number with scientific notation starting with a dot`(".5e-3", CssTokenKind.Number),
         `with a dimension starting with a dot`(".5px", CssTokenKind.Dimension),
@@ -957,15 +1253,15 @@ class CssTokenizerTest {
         `with a dimension with scientific notation and a plus`("5e+3px", CssTokenKind.Dimension),
         `with a dimension with scientific notation starting with a plus`(
             "+5e-3px",
-            CssTokenKind.Dimension
+            CssTokenKind.Dimension,
         ),
         `with a dimension with scientific notation starting with a minus`(
             "-5e-3px",
-            CssTokenKind.Dimension
+            CssTokenKind.Dimension,
         ),
         `with a dimension with scientific notation starting with a dot`(
             ".5e-3px",
-            CssTokenKind.Dimension
+            CssTokenKind.Dimension,
         ),
         ;
     }

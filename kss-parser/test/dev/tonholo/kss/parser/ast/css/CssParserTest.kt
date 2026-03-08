@@ -1,6 +1,5 @@
 package dev.tonholo.kss.parser.ast.css
 
-import app.cash.burst.Burst
 import dev.tonholo.kss.lexer.Token
 import dev.tonholo.kss.lexer.css.CssTokenKind
 import dev.tonholo.kss.parser.ast.css.consumer.CssConsumers
@@ -1634,10 +1633,14 @@ class CssParserTest {
         assert(content, tokens, expected)
     }
 
-    @Test
-    @Burst
-    fun `throw CssParserException when a BadUrl token is present`(
-        // Arrange
+    @Test fun `throw CssParserException when a BadUrl token is present - with an empty url`() = `throw CssParserException when a BadUrl token is present`(BadUrlParam.`with an empty url`)
+    @Test fun `throw CssParserException when a BadUrl token is present - with a hashed url`() = `throw CssParserException when a BadUrl token is present`(BadUrlParam.`with a hashed url`)
+    @Test fun `throw CssParserException when a BadUrl token is present - with a quoted url`() = `throw CssParserException when a BadUrl token is present`(BadUrlParam.`with a quoted url`)
+    @Test fun `throw CssParserException when a BadUrl token is present - with a space and quoted url`() = `throw CssParserException when a BadUrl token is present`(BadUrlParam.`with a space and quoted url`)
+    @Test fun `throw CssParserException when a BadUrl token is present - with an unquoted url`() = `throw CssParserException when a BadUrl token is present`(BadUrlParam.`with an unquoted url`)
+    @Test fun `throw CssParserException when a BadUrl token is present - with a spaced and unquoted url`() = `throw CssParserException when a BadUrl token is present`(BadUrlParam.`with a spaced and unquoted url`)
+    @Test fun `throw CssParserException when a BadUrl token is present - with a leading spaced unquote url`() = `throw CssParserException when a BadUrl token is present`(BadUrlParam.`with a leading spaced unquote url`)
+    private fun `throw CssParserException when a BadUrl token is present`(
         url: BadUrlParam,
     ) {
         println("url: $url")
