@@ -80,7 +80,10 @@ object NodeDetailExtractor {
                 }
                 details += "Type" to typeName
                 details += "Text" to cssNode.toString(indent = 0)
-                // Compute specificity based on selector type
+                // Simplified specificity based on selector type. Does not handle edge cases
+                // like universal selector (*) = (0,0,0), or functional pseudo-classes
+                // (:where() = (0,0,0), :not()/:is() = max of arguments).
+                // See CssSpecificity.calculateSpecificity() for the full algorithm.
                 val specificity = when (cssNode) {
                     is Selector.Id -> CssSpecificity(a = 1, b = 0, c = 0)
                     is Selector.Class,
@@ -144,6 +147,7 @@ object NodeDetailExtractor {
         range: IntRange,
     ): String {
         val filtered = tokens.filter { token ->
+            // range is inclusive (IntRange), token.endOffset is exclusive, hence +1
             token.startOffset >= range.first && token.endOffset <= range.last + 1
         }
         if (filtered.isEmpty()) return ""

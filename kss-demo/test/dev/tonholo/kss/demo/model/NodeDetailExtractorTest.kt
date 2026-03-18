@@ -6,7 +6,6 @@ import dev.tonholo.kss.lexer.css.CssTokenizer
 import dev.tonholo.kss.parser.ast.css.CssParser
 import dev.tonholo.kss.parser.ast.css.consumer.CssConsumers
 import kotlin.test.Test
-import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class NodeDetailExtractorTest {
