@@ -54,6 +54,42 @@ class AppViewModel : ViewModel() {
     fun clearSelection() {
         viewModelScope.launch { intents.emit(Intent.ClearSelection) }
     }
+
+    fun searchCss(query: String) {
+        viewModelScope.launch { intents.emit(Intent.SearchCss(query)) }
+    }
+
+    fun navigateSearchResult(forward: Boolean) {
+        viewModelScope.launch { intents.emit(Intent.NavigateSearchResult(forward)) }
+    }
+
+    fun clearSearch() {
+        viewModelScope.launch { intents.emit(Intent.ClearSearch) }
+    }
+
+    fun searchAstTree(query: String) {
+        viewModelScope.launch { intents.emit(Intent.SearchAstTree(query)) }
+    }
+
+    fun clearAstFilter() {
+        viewModelScope.launch { intents.emit(Intent.ClearAstFilter) }
+    }
+
+    fun toggleNodeDetails(nodeId: Int) {
+        viewModelScope.launch { intents.emit(Intent.ToggleNodeDetails(nodeId)) }
+    }
+
+    fun updateSplitRatio(ratio: Float) {
+        viewModelScope.launch { intents.emit(Intent.UpdateSplitRatio(ratio)) }
+    }
+
+    fun toggleEditorSearch() {
+        viewModelScope.launch { intents.emit(Intent.ToggleEditorSearch) }
+    }
+
+    fun toggleAstFilter() {
+        viewModelScope.launch { intents.emit(Intent.ToggleAstFilter) }
+    }
 }
 
 private sealed interface Intent {
@@ -62,6 +98,20 @@ private sealed interface Intent {
     data class AstNodeClicked(val cssRange: IntRange) : Intent
     data class ToggleCollapse(val nodeId: Int) : Intent
     data object ClearSelection : Intent
+    // Search
+    data class SearchCss(val query: String) : Intent
+    data class NavigateSearchResult(val forward: Boolean) : Intent
+    data object ClearSearch : Intent
+    // AST filter
+    data class SearchAstTree(val query: String) : Intent
+    data object ClearAstFilter : Intent
+    // Node details
+    data class ToggleNodeDetails(val nodeId: Int) : Intent
+    // Split pane
+    data class UpdateSplitRatio(val ratio: Float) : Intent
+    // Visibility toggles
+    data object ToggleEditorSearch : Intent
+    data object ToggleAstFilter : Intent
 }
 
 private fun reduce(state: UiState, intent: Intent): UiState = when (intent) {
@@ -111,6 +161,67 @@ private fun reduce(state: UiState, intent: Intent): UiState = when (intent) {
     }
 
     Intent.ClearSelection -> state.copy(selectedCssRange = null)
+
+    is Intent.SearchCss -> {
+        val matches = computeSearchMatches(state.cssText, intent.query)
+        val currentIndex = if (matches.isNotEmpty()) 0 else -1
+        state.copy(
+            editorSearchQuery = intent.query,
+            editorSearchMatches = matches,
+            editorSearchCurrentIndex = currentIndex,
+        )
+    }
+
+    is Intent.NavigateSearchResult -> {
+        val newIndex = navigateSearchIndex(
+            currentIndex = state.editorSearchCurrentIndex,
+            matchCount = state.editorSearchMatches.size,
+            forward = intent.forward,
+        )
+        state.copy(editorSearchCurrentIndex = newIndex)
+    }
+
+    Intent.ClearSearch -> state.copy(
+        editorSearchQuery = "",
+        editorSearchMatches = emptyList(),
+        editorSearchCurrentIndex = -1,
+        editorSearchVisible = false,
+    )
+
+    is Intent.SearchAstTree -> {
+        val matchIds = computeAstFilterMatches(state.flattenedNodes, intent.query)
+        state.copy(
+            astFilterQuery = intent.query,
+            astFilterMatchIds = matchIds,
+        )
+    }
+
+    Intent.ClearAstFilter -> state.copy(
+        astFilterQuery = "",
+        astFilterMatchIds = emptySet(),
+        astFilterVisible = false,
+    )
+
+    is Intent.ToggleNodeDetails -> {
+        val newExpanded = if (intent.nodeId in state.expandedDetailNodeIds) {
+            state.expandedDetailNodeIds - intent.nodeId
+        } else {
+            state.expandedDetailNodeIds + intent.nodeId
+        }
+        state.copy(expandedDetailNodeIds = newExpanded)
+    }
+
+    is Intent.UpdateSplitRatio -> state.copy(
+        splitRatio = clampSplitRatio(intent.ratio),
+    )
+
+    Intent.ToggleEditorSearch -> state.copy(
+        editorSearchVisible = !state.editorSearchVisible,
+    )
+
+    Intent.ToggleAstFilter -> state.copy(
+        astFilterVisible = !state.astFilterVisible,
+    )
 }
 
 private fun tokenize(
@@ -145,7 +256,61 @@ data class UiState(
     val flattenedNodes: List<AstDisplayNode> = emptyList(),
     val visibleNodes: List<AstDisplayNode> = emptyList(),
     val highlightedNodeIndex: Int? = null,
+    // Search state
+    val editorSearchQuery: String = "",
+    val editorSearchMatches: List<IntRange> = emptyList(),
+    val editorSearchCurrentIndex: Int = -1,
+    val editorSearchVisible: Boolean = false,
+    // AST filter state
+    val astFilterQuery: String = "",
+    val astFilterMatchIds: Set<Int> = emptySet(),
+    val astFilterVisible: Boolean = false,
+    // Node detail expansion
+    val expandedDetailNodeIds: Set<Int> = emptySet(),
+    // Split pane
+    val splitRatio: Float = 0.5f,
 )
+
+internal fun computeSearchMatches(text: String, query: String): List<IntRange> {
+    if (query.isBlank()) return emptyList()
+    val lowerText = text.lowercase()
+    val lowerQuery = query.lowercase()
+    val matches = mutableListOf<IntRange>()
+    var start = 0
+    while (true) {
+        val index = lowerText.indexOf(lowerQuery, start)
+        if (index < 0) break
+        matches += index..(index + lowerQuery.length - 1)
+        start = index + 1
+    }
+    return matches
+}
+
+internal fun navigateSearchIndex(currentIndex: Int, matchCount: Int, forward: Boolean): Int {
+    if (matchCount == 0) return -1
+    return if (forward) {
+        (currentIndex + 1) % matchCount
+    } else {
+        if (currentIndex <= 0) matchCount - 1 else currentIndex - 1
+    }
+}
+
+internal fun computeAstFilterMatches(
+    nodes: List<AstDisplayNode>,
+    query: String,
+): Set<Int> {
+    if (query.isBlank()) return emptySet()
+    val lowerQuery = query.lowercase()
+    return nodes
+        .filter { node ->
+            node.label.lowercase().contains(lowerQuery) ||
+                node.summary.lowercase().contains(lowerQuery)
+        }
+        .map { it.id }
+        .toSet()
+}
+
+internal fun clampSplitRatio(ratio: Float): Float = ratio.coerceIn(0.2f, 0.8f)
 
 private fun computeVisibleNodes(
     flattenedNodes: List<AstDisplayNode>,
