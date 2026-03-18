@@ -46,6 +46,7 @@ private class AstWalker {
         summary: String,
         cssRange: IntRange,
         hasChildren: Boolean,
+        nodeRef: CssNode,
     ) {
         nodes +=
             AstDisplayNode(
@@ -54,7 +55,8 @@ private class AstWalker {
                 label = label,
                 summary = summary,
                 cssRange = cssRange,
-                hasChildren = hasChildren
+                hasChildren = hasChildren,
+                nodeRef = nodeRef,
             )
     }
 
@@ -105,7 +107,8 @@ private class AstWalker {
             label = "StyleSheet",
             summary = "${node.children.size} children",
             cssRange = node.location.start..node.location.end,
-            hasChildren = node.children.isNotEmpty()
+            hasChildren = node.children.isNotEmpty(),
+            nodeRef = node,
         )
         node.children.forEach { walkNode(it, depth + 1) }
     }
@@ -122,7 +125,8 @@ private class AstWalker {
             label = "QualifiedRule",
             summary = selectorText,
             cssRange = node.location.start..node.location.end,
-            hasChildren = true
+            hasChildren = true,
+            nodeRef = node,
         )
         node.prelude.components.forEach { walkNode(it, depth + 1) }
         walkBlock(node.block, depth + 1)
@@ -140,7 +144,8 @@ private class AstWalker {
             label = "AtRule",
             summary = "@${node.name} $preludeText",
             cssRange = node.location.start..node.location.end,
-            hasChildren = true
+            hasChildren = true,
+            nodeRef = node,
         )
         walkBlock(node.block, depth + 1)
     }
@@ -158,7 +163,8 @@ private class AstWalker {
             label = "Declaration",
             summary = "${node.property}: $valuesText$important",
             cssRange = node.location.start..node.location.end,
-            hasChildren = node.values.isNotEmpty()
+            hasChildren = node.values.isNotEmpty(),
+            nodeRef = node,
         )
         node.values.forEach { walkNode(it, depth + 1) }
     }
@@ -175,7 +181,8 @@ private class AstWalker {
             label = "SelectorList",
             summary = text,
             cssRange = node.location.start..node.location.end,
-            hasChildren = node.selectors.isNotEmpty()
+            hasChildren = node.selectors.isNotEmpty(),
+            nodeRef = node,
         )
         node.selectors.forEach { walkNode(it, depth + 1) }
     }
@@ -198,7 +205,8 @@ private class AstWalker {
             label = prefix,
             summary = node.toString(indent = 0),
             cssRange = node.location.start..node.location.end,
-            hasChildren = false
+            hasChildren = false,
+            nodeRef = node,
         )
     }
 
@@ -223,7 +231,8 @@ private class AstWalker {
             label = prefix,
             summary = node.toString(indent = 0),
             cssRange = node.location.start..node.location.end,
-            hasChildren = hasKids
+            hasChildren = hasKids,
+            nodeRef = node,
         )
         if (node is Value.Function) {
             node.arguments.forEach { walkNode(it, depth + 1) }
@@ -239,7 +248,8 @@ private class AstWalker {
             label = "Comment",
             summary = node.value.take(COMMENT_PREVIEW_LENGTH),
             cssRange = node.location.start..node.location.end,
-            hasChildren = false
+            hasChildren = false,
+            nodeRef = node,
         )
     }
 
@@ -252,7 +262,8 @@ private class AstWalker {
             label = "AtRulePrelude",
             summary = node.value,
             cssRange = node.location.start..node.location.end,
-            hasChildren = false
+            hasChildren = false,
+            nodeRef = node,
         )
     }
 }

@@ -14,13 +14,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.tonholo.kss.demo.model.AstDisplayNode
+import dev.tonholo.kss.demo.model.NodeDetailExtractor
 import dev.tonholo.kss.demo.state.UiState
+import dev.tonholo.kss.lexer.Token
+import dev.tonholo.kss.lexer.css.CssTokenKind
 
 private val ErrorFontSize = 12.sp
 private const val ERROR_BANNER_ALPHA = 0.15f
@@ -91,6 +95,7 @@ fun AstTreePanel(
                 filterMatchIds = state.astFilterMatchIds,
                 isFilterActive = state.astFilterVisible && state.astFilterQuery.isNotEmpty(),
                 expandedDetailNodeIds = state.expandedDetailNodeIds,
+                tokens = state.tokens,
                 onToggleCollapse = onToggleCollapse,
                 onNodeClick = onNodeClick,
                 onToggleNodeDetails = onToggleNodeDetails,
@@ -146,6 +151,7 @@ private fun AstNodeList(
     filterMatchIds: Set<Int>,
     isFilterActive: Boolean,
     expandedDetailNodeIds: Set<Int>,
+    tokens: List<Token<out CssTokenKind>>,
     onToggleCollapse: (Int) -> Unit,
     onNodeClick: (AstDisplayNode) -> Unit,
     onToggleNodeDetails: (Int) -> Unit,
@@ -165,10 +171,25 @@ private fun AstNodeList(
                 isHighlighted = index == highlightedIndex,
                 isCollapsed = node.id in collapsedNodeIds,
                 onToggleCollapse = { onToggleCollapse(node.id) },
-                onClick = { onNodeClick(node) },
+                onClick = {
+                    if (index == highlightedIndex) {
+                        onToggleNodeDetails(node.id)
+                    } else {
+                        onNodeClick(node)
+                    }
+                },
                 isFilterMatch = node.id in filterMatchIds || filterMatchIds.isEmpty(),
                 isFilterActive = isFilterActive,
             )
+            if (node.id in expandedDetailNodeIds) {
+                val details = remember(node, tokens) {
+                    NodeDetailExtractor.extract(node, tokens)
+                }
+                AstNodeDetailPanel(
+                    details = details,
+                    indentDp = (node.depth * 16) + 20,
+                )
+            }
         }
     }
 }
