@@ -21,6 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextRange
@@ -47,6 +48,10 @@ private const val LINE_HEIGHT_MULTIPLIER = 1.5f
  * @param onCssTextChange Callback when the CSS text changes.
  * @param onCursorOffsetChange Callback when the cursor position changes.
  * @param onClearSelection Callback to clear the AST-driven selection.
+ * @param onSearchQueryChange Callback when the search query text changes.
+ * @param onNavigateSearchUp Callback to navigate to the previous search match.
+ * @param onNavigateSearchDown Callback to navigate to the next search match.
+ * @param onCloseSearch Callback to close the search bar and clear the search.
  * @param modifier Optional [Modifier] applied to the root layout.
  */
 @Composable
@@ -55,6 +60,10 @@ fun CssEditorPanel(
     onCssTextChange: (String) -> Unit,
     onCursorOffsetChange: (Int) -> Unit,
     onClearSelection: () -> Unit,
+    onSearchQueryChange: (String) -> Unit,
+    onNavigateSearchUp: () -> Unit,
+    onNavigateSearchDown: () -> Unit,
+    onCloseSearch: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var textFieldValue by remember(state.cssText) {
@@ -78,8 +87,14 @@ fun CssEditorPanel(
 
     val errorRange = state.errorInfo?.errorRange
     val highlightedText =
-        remember(state.cssText, state.tokens, errorRange) {
-            SyntaxHighlighter.highlight(state.cssText, state.tokens, errorRange)
+        remember(state.cssText, state.tokens, errorRange, state.editorSearchMatches, state.editorSearchCurrentIndex) {
+            SyntaxHighlighter.highlight(
+                text = state.cssText,
+                tokens = state.tokens,
+                errorRange = errorRange,
+                searchMatches = state.editorSearchMatches,
+                currentMatchIndex = state.editorSearchCurrentIndex,
+            )
         }
 
     val visualTransformation =
@@ -103,20 +118,37 @@ fun CssEditorPanel(
     ) {
         PanelHeader(title = "CSS Editor", shortcutHint = "Ctrl+F search")
 
-        Row(modifier = Modifier.weight(1f)) {
-            LineNumberGutter(lineCount = lineCount, verticalScroll = verticalScroll)
-            EditorTextField(
-                value = textFieldValue,
-                onValueChange = { newValue ->
-                    textFieldValue = newValue
-                    onCssTextChange(newValue.text)
-                    onCursorOffsetChange(newValue.selection.start)
-                    onClearSelection()
-                },
-                visualTransformation = visualTransformation,
-                verticalScroll = verticalScroll,
-                horizontalScroll = horizontalScroll,
-            )
+        Box(modifier = Modifier.weight(1f)) {
+            Row(modifier = Modifier.fillMaxSize()) {
+                LineNumberGutter(lineCount = lineCount, verticalScroll = verticalScroll)
+                EditorTextField(
+                    value = textFieldValue,
+                    onValueChange = { newValue ->
+                        textFieldValue = newValue
+                        onCssTextChange(newValue.text)
+                        onCursorOffsetChange(newValue.selection.start)
+                        onClearSelection()
+                    },
+                    visualTransformation = visualTransformation,
+                    verticalScroll = verticalScroll,
+                    horizontalScroll = horizontalScroll,
+                )
+            }
+
+            if (state.editorSearchVisible) {
+                EditorSearchBar(
+                    query = state.editorSearchQuery,
+                    onQueryChange = onSearchQueryChange,
+                    matchCount = state.editorSearchMatches.size,
+                    currentMatchIndex = state.editorSearchCurrentIndex,
+                    onNavigateUp = onNavigateSearchUp,
+                    onNavigateDown = onNavigateSearchDown,
+                    onClose = onCloseSearch,
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(end = 16.dp, top = 4.dp),
+                )
+            }
         }
     }
 }

@@ -31,6 +31,10 @@ fun App(modifier: Modifier = Modifier) {
                 onCssTextChange = viewModel::onCssTextChange,
                 onCursorOffsetChange = viewModel::onCursorOffsetChange,
                 onClearSelection = viewModel::clearSelection,
+                onSearchQueryChange = viewModel::searchCss,
+                onNavigateSearchUp = { viewModel.navigateSearchResult(forward = false) },
+                onNavigateSearchDown = { viewModel.navigateSearchResult(forward = true) },
+                onCloseSearch = viewModel::clearSearch,
                 modifier = panelModifier,
             )
         },
