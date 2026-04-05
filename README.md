@@ -2,25 +2,64 @@
 
 [![Build](https://github.com/rafaeltonholo/kss/actions/workflows/ci.yml/badge.svg)](https://github.com/rafaeltonholo/kss/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Kotlin](https://img.shields.io/badge/Kotlin-2.3.10-blue.svg?logo=kotlin)](https://kotlinlang.org)
+[![Maven Central](https://img.shields.io/maven-central/v/dev.tonholo.kss/kss-core)](https://central.sonatype.com/namespace/dev.tonholo.kss)
+[![Kotlin](https://img.shields.io/badge/Kotlin-2.3.20-blue.svg?logo=kotlin)](https://kotlinlang.org)
 
 A **Kotlin Multiplatform** CSS lexer and parser that produces a fully navigable Abstract Syntax Tree (AST) with
 source-position tracking.
 
 KSS tokenizes and parses CSS following the [W3C CSS Syntax Level 3](https://www.w3.org/TR/css-syntax-3/) specification,
-providing precise character offsets for every token and AST node. It runs on JVM, iOS, macOS, Linux, JS, and
-WebAssembly.
+providing precise character offsets for every token and AST node. It runs on JVM, macOS, Linux, JS, and WebAssembly.
 
 ## Modules
 
-| Module               | Description                                                                   |
-|----------------------|-------------------------------------------------------------------------------|
-| **kss-core**         | Shared abstractions: `Token`, `TokenKind`, `CssLocation`, AST node base types |
-| **kss-lexer**        | CSS tokenizer — turns a CSS string into `List<Token<out CssTokenKind>>`       |
-| **kss-parser**       | CSS parser — turns tokens into a `StyleSheet` AST                             |
-| **kss-demo**         | Shared Compose Multiplatform UI for the demo app                              |
-| **kss-demo-desktop** | Desktop (JVM) entry point for the demo                                        |
-| **kss-demo-web**     | Web (wasmJs) entry point for the demo                                         |
+| Module          | Description                                                                   |
+|-----------------|-------------------------------------------------------------------------------|
+| **core**        | Shared abstractions: `Token`, `TokenKind`, `CssLocation`, AST node base types |
+| **lexer**       | CSS tokenizer — turns a CSS string into `List<Token<out CssTokenKind>>`       |
+| **parser**      | CSS parser — turns tokens into a `StyleSheet` AST                             |
+| **bom**         | Bill of Materials for version alignment                                       |
+| **demo/shared** | Shared Compose Multiplatform UI for the demo app                              |
+| **demo/desktop**| Desktop (JVM) entry point for the demo                                        |
+| **demo/web**    | Web (wasmJs) entry point for the demo                                         |
+
+## Installation
+
+### Kotlin Multiplatform (Gradle Kotlin DSL)
+
+```kotlin
+// Use the BOM for version alignment
+dependencies {
+    implementation(platform("dev.tonholo.kss:kss-bom:1.0.0"))
+    implementation("dev.tonholo.kss:kss-parser")  // includes core + lexer transitively
+}
+```
+
+### Kotlin JVM (Gradle Kotlin DSL)
+
+```kotlin
+dependencies {
+    implementation(platform("dev.tonholo.kss:kss-bom:1.0.0"))
+    implementation("dev.tonholo.kss:kss-parser")
+}
+```
+
+### Amper
+
+In your `module.yaml`:
+
+```yaml
+dependencies:
+  - dev.tonholo.kss:kss-parser:1.0.0
+```
+
+Or with individual modules:
+
+```yaml
+dependencies:
+  - dev.tonholo.kss:kss-core:1.0.0
+  - dev.tonholo.kss:kss-lexer:1.0.0
+```
 
 ## Quick Start
 
@@ -64,7 +103,7 @@ synchronization.
 ### Run Desktop
 
 ```bash
-./amper run -m kss-demo-desktop
+./amper run -m demo/desktop
 ```
 
 ### Run Web
