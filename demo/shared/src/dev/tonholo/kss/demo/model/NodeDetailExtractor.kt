@@ -19,7 +19,6 @@ private const val COMMENT_DETAIL_LENGTH = 80
  * in the inline node detail panel.
  */
 object NodeDetailExtractor {
-
     /**
      * Extracts metadata from the given [node] as a list of label-value pairs.
      *
@@ -41,8 +40,9 @@ object NodeDetailExtractor {
             }
 
             is QualifiedRule -> {
-                val selectorText = cssNode.prelude.components
-                    .joinToString(", ") { it.toString(indent = 0) }
+                val selectorText =
+                    cssNode.prelude.components
+                        .joinToString(", ") { it.toString(indent = 0) }
                 details += "Selector" to selectorText
                 val declCount = cssNode.block.children.size
                 details += "Declaration count" to "$declCount"
@@ -50,8 +50,9 @@ object NodeDetailExtractor {
 
             is AtRule -> {
                 details += "Name" to cssNode.name
-                val preludeText = cssNode.prelude.components
-                    .joinToString(" ") { it.toString(indent = 0) }
+                val preludeText =
+                    cssNode.prelude.components
+                        .joinToString(" ") { it.toString(indent = 0) }
                 details += "Prelude" to preludeText
                 details += "Child count" to "${cssNode.block.children.size}"
             }
@@ -70,28 +71,34 @@ object NodeDetailExtractor {
             }
 
             is Selector -> {
-                val typeName = when (cssNode) {
-                    is Selector.Type -> "Type"
-                    is Selector.Class -> "Class"
-                    is Selector.Id -> "Id"
-                    is Selector.PseudoClass -> "PseudoClass"
-                    is Selector.PseudoElement -> "PseudoElement"
-                    is Selector.Attribute -> "Attribute"
-                }
+                val typeName =
+                    when (cssNode) {
+                        is Selector.Type -> "Type"
+                        is Selector.Class -> "Class"
+                        is Selector.Id -> "Id"
+                        is Selector.PseudoClass -> "PseudoClass"
+                        is Selector.PseudoElement -> "PseudoElement"
+                        is Selector.Attribute -> "Attribute"
+                    }
                 details += "Type" to typeName
                 details += "Text" to cssNode.toString(indent = 0)
                 // Simplified specificity based on selector type. Does not handle edge cases
                 // like universal selector (*) = (0,0,0), or functional pseudo-classes
                 // (:where() = (0,0,0), :not()/:is() = max of arguments).
                 // See CssSpecificity.calculateSpecificity() for the full algorithm.
-                val specificity = when (cssNode) {
-                    is Selector.Id -> CssSpecificity(a = 1, b = 0, c = 0)
-                    is Selector.Class,
-                    is Selector.Attribute,
-                    is Selector.PseudoClass -> CssSpecificity(a = 0, b = 1, c = 0)
-                    is Selector.Type,
-                    is Selector.PseudoElement -> CssSpecificity(a = 0, b = 0, c = 1)
-                }
+                val specificity =
+                    when (cssNode) {
+                        is Selector.Id -> CssSpecificity(a = 1, b = 0, c = 0)
+
+                        is Selector.Class,
+                        is Selector.Attribute,
+                        is Selector.PseudoClass,
+                            -> CssSpecificity(a = 0, b = 1, c = 0)
+
+                        is Selector.Type,
+                        is Selector.PseudoElement,
+                            -> CssSpecificity(a = 0, b = 0, c = 1)
+                    }
                 details += "Specificity" to "(${specificity.a}, ${specificity.b}, ${specificity.c})"
                 if (cssNode is Selector.Attribute) {
                     cssNode.matcher?.let { details += "Matcher" to it }
@@ -100,16 +107,17 @@ object NodeDetailExtractor {
             }
 
             is Value -> {
-                val typeName = when (cssNode) {
-                    is Value.Color -> "Color"
-                    is Value.String -> "String"
-                    is Value.Identifier -> "Identifier"
-                    is Value.Number -> "Number"
-                    is Value.Dimension -> "Dimension"
-                    is Value.Percentage -> "Percentage"
-                    is Value.Function -> "Function"
-                    is Value.Url -> "Url"
-                }
+                val typeName =
+                    when (cssNode) {
+                        is Value.Color -> "Color"
+                        is Value.String -> "String"
+                        is Value.Identifier -> "Identifier"
+                        is Value.Number -> "Number"
+                        is Value.Dimension -> "Dimension"
+                        is Value.Percentage -> "Percentage"
+                        is Value.Function -> "Function"
+                        is Value.Url -> "Url"
+                    }
                 details += "Type" to typeName
                 details += "Raw value" to cssNode.toString(indent = 0)
                 if (cssNode is Value.Dimension) {
@@ -146,10 +154,11 @@ object NodeDetailExtractor {
         tokens: List<Token<out CssTokenKind>>,
         range: IntRange,
     ): String {
-        val filtered = tokens.filter { token ->
-            // range is inclusive (IntRange), token.endOffset is exclusive, hence +1
-            token.startOffset >= range.first && token.endOffset <= range.last + 1
-        }
+        val filtered =
+            tokens.filter { token ->
+                // range is inclusive (IntRange), token.endOffset is exclusive, hence +1
+                token.startOffset >= range.first && token.endOffset <= range.last + 1
+            }
         if (filtered.isEmpty()) return ""
         return filtered
             .filter { it.kind != CssTokenKind.WhiteSpace && it.kind != CssTokenKind.EndOfFile }

@@ -18,7 +18,10 @@ import androidx.compose.ui.input.key.type
  * @param isMacOs Whether the current platform is macOS.
  * @return The matched [KeyAction], or `null`.
  */
-fun handleKeyEvent(event: KeyEvent, isMacOs: Boolean): KeyAction? {
+fun handleKeyEvent(
+    event: KeyEvent,
+    isMacOs: Boolean,
+): KeyAction? {
     if (event.type != KeyEventType.KeyDown) return null
 
     val isPrimaryModifier = if (isMacOs) event.isMetaPressed else event.isCtrlPressed

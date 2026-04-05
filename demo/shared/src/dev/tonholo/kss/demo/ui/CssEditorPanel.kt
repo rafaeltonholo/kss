@@ -93,7 +93,7 @@ fun CssEditorPanel(
                 tokens = state.tokens,
                 errorRange = errorRange,
                 searchMatches = state.editorSearchMatches,
-                currentMatchIndex = state.editorSearchCurrentIndex,
+                currentMatchIndex = state.editorSearchCurrentIndex
             )
         }
 
@@ -112,9 +112,10 @@ fun CssEditorPanel(
     val lineCount = remember(state.cssText) { state.cssText.count { it == '\n' } + 1 }
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
     ) {
         PanelHeader(title = "CSS Editor", shortcutHint = "Ctrl+F search")
 
@@ -131,7 +132,7 @@ fun CssEditorPanel(
                     },
                     visualTransformation = visualTransformation,
                     verticalScroll = verticalScroll,
-                    horizontalScroll = horizontalScroll,
+                    horizontalScroll = horizontalScroll
                 )
             }
 
@@ -144,9 +145,10 @@ fun CssEditorPanel(
                     onNavigateUp = onNavigateSearchUp,
                     onNavigateDown = onNavigateSearchDown,
                     onClose = onCloseSearch,
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(end = 16.dp, top = 4.dp),
+                    modifier =
+                        Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(end = 16.dp, top = 4.dp)
                 )
             }
         }

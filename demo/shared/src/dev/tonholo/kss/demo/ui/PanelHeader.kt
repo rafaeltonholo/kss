@@ -20,37 +20,40 @@ private val ShortcutFontSize = 11.sp
  * A small header bar for a panel, showing the panel name and an optional keyboard shortcut hint.
  *
  * @param title The panel name (e.g., "CSS Editor", "AST Tree").
- * @param shortcutHint An optional keyboard shortcut hint (e.g., "Ctrl+F to search").
  * @param modifier Optional [Modifier] applied to the root layout.
+ * @param shortcutHint An optional keyboard shortcut hint (e.g., "Ctrl+F to search").
  */
 @Composable
 fun PanelHeader(
     title: String,
-    shortcutHint: String = "",
     modifier: Modifier = Modifier,
+    shortcutHint: String = "",
 ) {
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surface)
-            .padding(horizontal = 12.dp, vertical = 6.dp),
-        verticalAlignment = Alignment.CenterVertically,
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.surface)
+                .padding(horizontal = 12.dp, vertical = 6.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             text = title,
-            style = MaterialTheme.typography.labelMedium.copy(
-                color = MaterialTheme.colorScheme.onSurface,
-            ),
+            style =
+                MaterialTheme.typography.labelMedium.copy(
+                    color = MaterialTheme.colorScheme.onSurface
+                )
         )
         Spacer(modifier = Modifier.weight(1f))
         if (shortcutHint.isNotEmpty()) {
             Text(
                 text = shortcutHint,
-                style = MaterialTheme.typography.labelSmall.copy(
-                    fontFamily = FontFamily.Monospace,
-                    fontSize = ShortcutFontSize,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                ),
+                style =
+                    MaterialTheme.typography.labelSmall.copy(
+                        fontFamily = FontFamily.Monospace,
+                        fontSize = ShortcutFontSize,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
             )
         }
     }

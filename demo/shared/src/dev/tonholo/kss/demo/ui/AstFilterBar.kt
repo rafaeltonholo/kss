@@ -44,19 +44,20 @@ fun AstFilterBar(
     modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surfaceVariant)
-            .padding(horizontal = 12.dp, vertical = 4.dp),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.surfaceVariant)
+                .padding(horizontal = 12.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         // Search icon
         Icon(
             imageVector = Icons.Default.Search,
             contentDescription = "Filter",
             modifier = Modifier.size(IconSize).padding(2.dp),
-            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
         BasicTextField(
@@ -64,21 +65,23 @@ fun AstFilterBar(
             onValueChange = onQueryChange,
             modifier = Modifier.weight(1f),
             singleLine = true,
-            textStyle = TextStyle(
-                fontFamily = FontFamily.Monospace,
-                fontSize = FilterFontSize,
-                color = MaterialTheme.colorScheme.onSurface,
-            ),
-            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
+            textStyle =
+                TextStyle(
+                    fontFamily = FontFamily.Monospace,
+                    fontSize = FilterFontSize,
+                    color = MaterialTheme.colorScheme.onSurface
+                ),
+            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary)
         )
 
         if (query.isNotEmpty()) {
             Text(
                 text = "$matchCount matches",
-                style = MaterialTheme.typography.labelSmall.copy(
-                    fontSize = FilterFontSize,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                ),
+                style =
+                    MaterialTheme.typography.labelSmall.copy(
+                        fontSize = FilterFontSize,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
             )
         }
 
@@ -86,11 +89,12 @@ fun AstFilterBar(
         Icon(
             imageVector = Icons.Default.Close,
             contentDescription = "Close filter",
-            modifier = Modifier
-                .size(IconSize)
-                .clickable(onClick = onClose)
-                .padding(4.dp),
-            tint = MaterialTheme.colorScheme.onSurface,
+            modifier =
+                Modifier
+                    .size(IconSize)
+                    .clickable(onClick = onClose)
+                    .padding(4.dp),
+            tint = MaterialTheme.colorScheme.onSurface
         )
     }
 }

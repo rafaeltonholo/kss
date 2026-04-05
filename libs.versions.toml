@@ -1,5 +1,5 @@
 [versions]
-androidx-lifecycle = "2.10.0-beta01"
+androidx-lifecycle = "2.10.0"
 kotlinx-coroutines = "1.10.2"
 material3 = "1.10.0-alpha05"
 

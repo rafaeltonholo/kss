@@ -41,56 +41,60 @@ fun AstNodeDetailPanel(
     val accentColor = MaterialTheme.colorScheme.primary
 
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(start = indentDp.dp)
-            .drawBehind {
-                // Left border accent
-                drawLine(
-                    color = accentColor,
-                    start = Offset(0f, 0f),
-                    end = Offset(0f, size.height),
-                    strokeWidth = AccentBorderWidth.toPx(),
-                )
-            }
-            .background(DetailBackground)
-            .padding(start = AccentBorderWidth + 8.dp, end = 8.dp, top = 6.dp, bottom = 6.dp),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(start = indentDp.dp)
+                .drawBehind {
+                    // Left border accent
+                    drawLine(
+                        color = accentColor,
+                        start = Offset(0f, 0f),
+                        end = Offset(0f, size.height),
+                        strokeWidth = AccentBorderWidth.toPx()
+                    )
+                }.background(DetailBackground)
+                .padding(start = AccentBorderWidth + 8.dp, end = 8.dp, top = 6.dp, bottom = 6.dp)
     ) {
         Text(
             text = "NODE DETAILS",
-            style = MaterialTheme.typography.labelSmall.copy(
-                fontFamily = FontFamily.Monospace,
-                fontSize = 10.sp,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                letterSpacing = 1.sp,
-            ),
+            style =
+                MaterialTheme.typography.labelSmall.copy(
+                    fontFamily = FontFamily.Monospace,
+                    fontSize = 10.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    letterSpacing = 1.sp
+                )
         )
         Spacer(modifier = Modifier.height(4.dp))
 
         for ((label, value) in details) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 1.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 1.dp)
             ) {
                 Text(
                     text = label,
                     modifier = Modifier.width(DetailLabelWidth),
-                    style = MaterialTheme.typography.bodySmall.copy(
-                        fontFamily = FontFamily.Monospace,
-                        fontSize = DetailFontSize,
-                        fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    ),
+                    style =
+                        MaterialTheme.typography.bodySmall.copy(
+                            fontFamily = FontFamily.Monospace,
+                            fontSize = DetailFontSize,
+                            fontWeight = FontWeight.Medium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                 )
                 Text(
                     text = value,
-                    style = MaterialTheme.typography.bodySmall.copy(
-                        fontFamily = FontFamily.Monospace,
-                        fontSize = DetailFontSize,
-                        color = MaterialTheme.colorScheme.onSurface,
-                    ),
+                    style =
+                        MaterialTheme.typography.bodySmall.copy(
+                            fontFamily = FontFamily.Monospace,
+                            fontSize = DetailFontSize,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
                 )
             }
         }

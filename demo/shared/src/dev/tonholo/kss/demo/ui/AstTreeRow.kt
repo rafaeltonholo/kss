@@ -66,8 +66,7 @@ fun AstTreeRow(
                         isFilterActive && isFilterMatch -> mod.background(filterMatchBackground)
                         else -> mod
                     }
-                }
-                .let { if (isFilterActive && !isFilterMatch) it.alpha(0.4f) else it }
+                }.let { if (isFilterActive && !isFilterMatch) it.alpha(0.4f) else it }
                 .clickable(onClick = onClick)
                 .padding(start = IndentStep * node.depth, end = 8.dp)
                 .padding(vertical = 2.dp),
@@ -75,14 +74,15 @@ fun AstTreeRow(
     ) {
         if (node.hasChildren) {
             Icon(
-                imageVector = if (isCollapsed) Icons.AutoMirrored.Default.KeyboardArrowRight else Icons.Default.KeyboardArrowDown,
+                imageVector =
+                    if (isCollapsed) Icons.AutoMirrored.Default.KeyboardArrowRight else Icons.Default.KeyboardArrowDown,
                 contentDescription = if (isCollapsed) "Expand" else "Collapse",
                 modifier =
                     Modifier
                         .size(CollapseToggleSize)
                         .clickable(onClick = onToggleCollapse)
                         .padding(2.dp),
-                tint = MaterialTheme.colorScheme.onSurface,
+                tint = MaterialTheme.colorScheme.onSurface
             )
         } else {
             Spacer(modifier = Modifier.width(CollapseToggleSize))

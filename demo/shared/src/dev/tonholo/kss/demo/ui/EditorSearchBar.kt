@@ -41,48 +41,50 @@ fun EditorSearchBar(
     modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier
-            .widthIn(max = 320.dp)
-            .background(
-                color = MaterialTheme.colorScheme.surfaceVariant,
-                shape = RoundedCornerShape(4.dp),
-            )
-            .border(
-                width = 1.dp,
-                color = MaterialTheme.colorScheme.outline,
-                shape = RoundedCornerShape(4.dp),
-            )
-            .padding(horizontal = 8.dp, vertical = 4.dp),
+        modifier =
+            modifier
+                .widthIn(max = 320.dp)
+                .background(
+                    color = MaterialTheme.colorScheme.surfaceVariant,
+                    shape = RoundedCornerShape(4.dp)
+                ).border(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.outline,
+                    shape = RoundedCornerShape(4.dp)
+                ).padding(horizontal = 8.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(6.dp),
+        horizontalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         BasicTextField(
             value = query,
             onValueChange = onQueryChange,
             modifier = Modifier.weight(1f),
             singleLine = true,
-            textStyle = TextStyle(
-                fontFamily = FontFamily.Monospace,
-                fontSize = SearchBarFontSize,
-                color = MaterialTheme.colorScheme.onSurface,
-            ),
-            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
+            textStyle =
+                TextStyle(
+                    fontFamily = FontFamily.Monospace,
+                    fontSize = SearchBarFontSize,
+                    color = MaterialTheme.colorScheme.onSurface
+                ),
+            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary)
         )
 
-        val counterText = if (matchCount > 0) {
-            "${currentMatchIndex + 1} of $matchCount"
-        } else if (query.isNotEmpty()) {
-            "No results"
-        } else {
-            ""
-        }
+        val counterText =
+            if (matchCount > 0) {
+                "${currentMatchIndex + 1} of $matchCount"
+            } else if (query.isNotEmpty()) {
+                "No results"
+            } else {
+                ""
+            }
         if (counterText.isNotEmpty()) {
             Text(
                 text = counterText,
-                style = MaterialTheme.typography.labelSmall.copy(
-                    fontSize = SearchBarFontSize,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                ),
+                style =
+                    MaterialTheme.typography.labelSmall.copy(
+                        fontSize = SearchBarFontSize,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
             )
         }
 
@@ -90,33 +92,36 @@ fun EditorSearchBar(
         Icon(
             imageVector = Icons.Default.KeyboardArrowUp,
             contentDescription = "Previous match",
-            modifier = Modifier
-                .size(ButtonSize)
-                .clickable(onClick = onNavigateUp)
-                .padding(4.dp),
-            tint = MaterialTheme.colorScheme.onSurface,
+            modifier =
+                Modifier
+                    .size(ButtonSize)
+                    .clickable(onClick = onNavigateUp)
+                    .padding(4.dp),
+            tint = MaterialTheme.colorScheme.onSurface
         )
 
         // Down button
         Icon(
             imageVector = Icons.Default.KeyboardArrowDown,
             contentDescription = "Next match",
-            modifier = Modifier
-                .size(ButtonSize)
-                .clickable(onClick = onNavigateDown)
-                .padding(4.dp),
-            tint = MaterialTheme.colorScheme.onSurface,
+            modifier =
+                Modifier
+                    .size(ButtonSize)
+                    .clickable(onClick = onNavigateDown)
+                    .padding(4.dp),
+            tint = MaterialTheme.colorScheme.onSurface
         )
 
         // Close button
         Icon(
             imageVector = Icons.Default.Close,
             contentDescription = "Close search",
-            modifier = Modifier
-                .size(ButtonSize)
-                .clickable(onClick = onClose)
-                .padding(4.dp),
-            tint = MaterialTheme.colorScheme.onSurface,
+            modifier =
+                Modifier
+                    .size(ButtonSize)
+                    .clickable(onClick = onClose)
+                    .padding(4.dp),
+            tint = MaterialTheme.colorScheme.onSurface
         )
     }
 }

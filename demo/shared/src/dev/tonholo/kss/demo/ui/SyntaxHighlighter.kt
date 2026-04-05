@@ -18,10 +18,11 @@ private val ErrorUnderlineStyle =
     )
 
 private val SearchMatchBackground = SpanStyle(background = Color(0xFF5A3A1A))
-private val CurrentSearchMatchStyle = SpanStyle(
-    background = Color(0xFF7A5A2A),
-    textDecoration = TextDecoration.Underline,
-)
+private val CurrentSearchMatchStyle =
+    SpanStyle(
+        background = Color(0xFF7A5A2A),
+        textDecoration = TextDecoration.Underline
+    )
 
 /**
  * Converts plain CSS text and its token stream into a syntax-highlighted [AnnotatedString].
@@ -55,7 +56,7 @@ object SyntaxHighlighter {
                     addStyle(
                         style = SpanStyle(color = SyntaxColors.colorFor(token.kind)),
                         start = start,
-                        end = end,
+                        end = end
                     )
                 }
             }
@@ -63,11 +64,12 @@ object SyntaxHighlighter {
                 val start = range.first.coerceIn(0, text.length)
                 val end = (range.last + 1).coerceIn(start, text.length)
                 if (start < end) {
-                    val style = if (index == currentMatchIndex) {
-                        CurrentSearchMatchStyle
-                    } else {
-                        SearchMatchBackground
-                    }
+                    val style =
+                        if (index == currentMatchIndex) {
+                            CurrentSearchMatchStyle
+                        } else {
+                            SearchMatchBackground
+                        }
                     addStyle(style = style, start = start, end = end)
                 }
             }

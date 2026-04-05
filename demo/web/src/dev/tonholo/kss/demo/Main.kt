@@ -19,10 +19,11 @@ fun main() {
     // which already hosts a shadow tree."
     document.getElementById(COMPOSE_ROOT_ID)?.remove()
 
-    val root = document.createElement("div").apply {
-        id = COMPOSE_ROOT_ID
-        setAttribute("style", "width: 100%; height: 100%;")
-    }
+    val root =
+        document.createElement("div").apply {
+            id = COMPOSE_ROOT_ID
+            setAttribute("style", "width: 100%; height: 100%;")
+        }
     body.appendChild(root)
 
     ComposeViewport(root) {

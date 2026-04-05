@@ -1,9 +1,9 @@
 settings:
   kotlin:
-    version: 2.3.10
+    version: 2.3.20
     languageVersion: "2.3"
   compose:
-    version: 1.10.2
+    version: 1.10.3
 
 test-dependencies:
   - $kotlin.test

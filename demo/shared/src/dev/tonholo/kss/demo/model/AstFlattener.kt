@@ -56,7 +56,7 @@ private class AstWalker {
                 summary = summary,
                 cssRange = cssRange,
                 hasChildren = hasChildren,
-                nodeRef = nodeRef,
+                nodeRef = nodeRef
             )
     }
 
@@ -108,7 +108,7 @@ private class AstWalker {
             summary = "${node.children.size} children",
             cssRange = node.location.start..node.location.end,
             hasChildren = node.children.isNotEmpty(),
-            nodeRef = node,
+            nodeRef = node
         )
         node.children.forEach { walkNode(it, depth + 1) }
     }
@@ -126,7 +126,7 @@ private class AstWalker {
             summary = selectorText,
             cssRange = node.location.start..node.location.end,
             hasChildren = true,
-            nodeRef = node,
+            nodeRef = node
         )
         node.prelude.components.forEach { walkNode(it, depth + 1) }
         walkBlock(node.block, depth + 1)
@@ -145,7 +145,7 @@ private class AstWalker {
             summary = "@${node.name} $preludeText",
             cssRange = node.location.start..node.location.end,
             hasChildren = true,
-            nodeRef = node,
+            nodeRef = node
         )
         walkBlock(node.block, depth + 1)
     }
@@ -164,7 +164,7 @@ private class AstWalker {
             summary = "${node.property}: $valuesText$important",
             cssRange = node.location.start..node.location.end,
             hasChildren = node.values.isNotEmpty(),
-            nodeRef = node,
+            nodeRef = node
         )
         node.values.forEach { walkNode(it, depth + 1) }
     }
@@ -182,7 +182,7 @@ private class AstWalker {
             summary = text,
             cssRange = node.location.start..node.location.end,
             hasChildren = node.selectors.isNotEmpty(),
-            nodeRef = node,
+            nodeRef = node
         )
         node.selectors.forEach { walkNode(it, depth + 1) }
     }
@@ -206,7 +206,7 @@ private class AstWalker {
             summary = node.toString(indent = 0),
             cssRange = node.location.start..node.location.end,
             hasChildren = false,
-            nodeRef = node,
+            nodeRef = node
         )
     }
 
@@ -232,7 +232,7 @@ private class AstWalker {
             summary = node.toString(indent = 0),
             cssRange = node.location.start..node.location.end,
             hasChildren = hasKids,
-            nodeRef = node,
+            nodeRef = node
         )
         if (node is Value.Function) {
             node.arguments.forEach { walkNode(it, depth + 1) }
@@ -249,7 +249,7 @@ private class AstWalker {
             summary = node.value.take(COMMENT_PREVIEW_LENGTH),
             cssRange = node.location.start..node.location.end,
             hasChildren = false,
-            nodeRef = node,
+            nodeRef = node
         )
     }
 
@@ -263,7 +263,7 @@ private class AstWalker {
             summary = node.value,
             cssRange = node.location.start..node.location.end,
             hasChildren = false,
-            nodeRef = node,
+            nodeRef = node
         )
     }
 }

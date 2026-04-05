@@ -51,53 +51,56 @@ internal fun calculateNewRatio(
  *
  * @param ratio The current split ratio (0..1), controlling how much space the left panel gets.
  * @param onRatioChange Callback invoked with the new ratio when the divider is dragged.
- * @param modifier Optional [Modifier] applied to the root layout.
  * @param leftContent The composable content for the left panel.
+ * @param modifier Optional [Modifier] applied to the root layout.
  * @param rightContent The composable content for the right panel.
  */
 @Composable
 fun SplitPane(
     ratio: Float,
     onRatioChange: (Float) -> Unit,
-    modifier: Modifier = Modifier,
     leftContent: @Composable (Modifier) -> Unit,
+    modifier: Modifier = Modifier,
     rightContent: @Composable (Modifier) -> Unit,
 ) {
     var totalWidthPx by remember { mutableFloatStateOf(0f) }
     val currentRatio by rememberUpdatedState(ratio)
 
     Row(
-        modifier = modifier
-            .fillMaxSize()
-            .onSizeChanged { totalWidthPx = it.width.toFloat() },
+        modifier =
+            modifier
+                .fillMaxSize()
+                .onSizeChanged { totalWidthPx = it.width.toFloat() }
     ) {
         leftContent(Modifier.weight(ratio))
 
         // Divider with grip
         Box(
-            modifier = Modifier
-                .width(DividerWidth)
-                .fillMaxHeight()
-                .background(MaterialTheme.colorScheme.outline)
-                .pointerHoverIcon(PointerIcon.Crosshair)
-                .pointerInput(Unit) {
-                    detectDragGestures { change, dragAmount ->
-                        change.consume()
-                        val newRatio = calculateNewRatio(currentRatio, dragAmount.x, totalWidthPx)
-                        onRatioChange(newRatio)
-                    }
-                },
-            contentAlignment = Alignment.Center,
+            modifier =
+                Modifier
+                    .width(DividerWidth)
+                    .fillMaxHeight()
+                    .background(MaterialTheme.colorScheme.outline)
+                    .pointerHoverIcon(PointerIcon.Crosshair)
+                    .pointerInput(Unit) {
+                        detectDragGestures { change, dragAmount ->
+                            change.consume()
+                            val newRatio = calculateNewRatio(currentRatio, dragAmount.x, totalWidthPx)
+                            onRatioChange(newRatio)
+                        }
+                    },
+            contentAlignment = Alignment.Center
         ) {
             // Grip indicator
             Box(
-                modifier = Modifier
-                    .width(GripWidth)
-                    .height(GripHeight)
-                    .background(
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        shape = RoundedCornerShape(1.dp),
-                    )
+                modifier =
+                    Modifier
+                        .width(GripWidth)
+                        .height(GripHeight)
+                        .background(
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            shape = RoundedCornerShape(1.dp)
+                        )
             )
         }
 

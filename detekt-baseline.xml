@@ -3,13 +3,22 @@
   <ManuallySuppressedIssues/>
   <CurrentIssues>
     <ID>ComplexCondition:CommentTokenConsumer.kt:CommentTokenConsumer$char == '-' &amp;&amp; iterator.peek(1) == '-' &amp;&amp; iterator.peek(2) == '!' &amp;&amp; iterator.peek(offset = 3) == '&gt;'</ID>
+    <ID>CyclomaticComplexMethod:AppState.kt:private fun reduce: UiState</ID>
+    <ID>CyclomaticComplexMethod:NodeDetailExtractor.kt:NodeDetailExtractor$fun extract: List&lt;Pair&lt;String, String&gt;&gt;</ID>
+    <ID>LongMethod:App.kt:@Composable fun App</ID>
+    <ID>LongMethod:AppState.kt:private fun reduce: UiState</ID>
     <ID>LongMethod:AtRuleConsumer.kt:AtRuleConsumer$override fun consume: AtRule</ID>
+    <ID>LongMethod:CssEditorPanel.kt:@Composable fun CssEditorPanel</ID>
+    <ID>LongMethod:EditorSearchBar.kt:@Composable fun EditorSearchBar</ID>
+    <ID>LongMethod:NodeDetailExtractor.kt:NodeDetailExtractor$fun extract: List&lt;Pair&lt;String, String&gt;&gt;</ID>
     <ID>LongMethod:SimpleSelectorConsumer.kt:SimpleSelectorConsumer$override fun consume: Selector</ID>
     <ID>LoopWithTooManyJumpStatements:SelectorListItemConsumer.kt:SelectorListItemConsumer$while</ID>
     <ID>LoopWithTooManyJumpStatements:ValueConsumer.kt:ValueConsumer$do</ID>
+    <ID>MagicNumber:AppState.kt:0.2f</ID>
+    <ID>MagicNumber:AppState.kt:0.8f</ID>
     <ID>MagicNumber:AstParserException.kt:AstParserException$4</ID>
+    <ID>MagicNumber:AstTreeRow.kt:0.4f</ID>
     <ID>MagicNumber:UrlTokenConsumer.kt:UrlTokenConsumer$4</ID>
     <ID>MagicNumber:ValueConsumer.kt:ValueConsumer$4</ID>
-    <ID>TopLevelPropertyNaming:StringTokenConsumer.kt:private const val ESCAPE_CHAR = '\\'</ID>
   </CurrentIssues>
 </SmellBaseline>

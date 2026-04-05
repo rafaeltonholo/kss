@@ -31,9 +31,10 @@ class AppViewModel : ViewModel() {
 
     private val initialState: UiState = reduce(UiState(), Intent.CssTextChanged(DEFAULT_CSS.trimIndent()))
 
-    val uiState: StateFlow<UiState> = intents
-        .scan(initialState) { state, intent -> reduce(state, intent) }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), initialState)
+    val uiState: StateFlow<UiState> =
+        intents
+            .scan(initialState) { state, intent -> reduce(state, intent) }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), initialState)
 
     fun onCssTextChange(text: String) {
         viewModelScope.launch { intents.emit(Intent.CssTextChanged(text)) }
@@ -93,155 +94,208 @@ class AppViewModel : ViewModel() {
 }
 
 private sealed interface Intent {
-    data class CssTextChanged(val text: String) : Intent
-    data class CursorOffsetChanged(val offset: Int) : Intent
-    data class AstNodeClicked(val cssRange: IntRange) : Intent
-    data class ToggleCollapse(val nodeId: Int) : Intent
+    data class CssTextChanged(
+        val text: String,
+    ) : Intent
+
+    data class CursorOffsetChanged(
+        val offset: Int,
+    ) : Intent
+
+    data class AstNodeClicked(
+        val cssRange: IntRange,
+    ) : Intent
+
+    data class ToggleCollapse(
+        val nodeId: Int,
+    ) : Intent
+
     data object ClearSelection : Intent
+
     // Search
-    data class SearchCss(val query: String) : Intent
-    data class NavigateSearchResult(val forward: Boolean) : Intent
+    data class SearchCss(
+        val query: String,
+    ) : Intent
+
+    data class NavigateSearchResult(
+        val forward: Boolean,
+    ) : Intent
+
     data object ClearSearch : Intent
+
     // AST filter
-    data class SearchAstTree(val query: String) : Intent
+    data class SearchAstTree(
+        val query: String,
+    ) : Intent
+
     data object ClearAstFilter : Intent
+
     // Node details
-    data class ToggleNodeDetails(val nodeId: Int) : Intent
+    data class ToggleNodeDetails(
+        val nodeId: Int,
+    ) : Intent
+
     // Split pane
-    data class UpdateSplitRatio(val ratio: Float) : Intent
+    data class UpdateSplitRatio(
+        val ratio: Float,
+    ) : Intent
+
     // Visibility toggles
     data object ToggleEditorSearch : Intent
+
     data object ToggleAstFilter : Intent
 }
 
-private fun reduce(state: UiState, intent: Intent): UiState = when (intent) {
-    is Intent.CssTextChanged -> {
-        val text = intent.text
-        val (tokens, tokenizeError) = tokenize(text)
-        val (styleSheet, parseError) = if (tokens.isNotEmpty()) {
-            parse(text, tokens)
-        } else {
-            null to tokenizeError
+private fun reduce(
+    state: UiState,
+    intent: Intent,
+): UiState =
+    when (intent) {
+        is Intent.CssTextChanged -> {
+            val text = intent.text
+            val (tokens, tokenizeError) = tokenize(text)
+            val (styleSheet, parseError) =
+                if (tokens.isNotEmpty()) {
+                    parse(text, tokens)
+                } else {
+                    null to tokenizeError
+                }
+            val flattenedNodes = AstFlattener.flatten(styleSheet)
+            val visibleNodes = computeVisibleNodes(flattenedNodes, state.collapsedNodeIds)
+            state.copy(
+                cssText = text,
+                tokens = tokens,
+                styleSheet = styleSheet,
+                errorInfo = parseError,
+                parseError = parseError?.message,
+                flattenedNodes = flattenedNodes,
+                visibleNodes = visibleNodes,
+                highlightedNodeIndex = findDeepestNodeAtOffset(visibleNodes, state.cursorOffset)
+            )
         }
-        val flattenedNodes = AstFlattener.flatten(styleSheet)
-        val visibleNodes = computeVisibleNodes(flattenedNodes, state.collapsedNodeIds)
-        state.copy(
-            cssText = text,
-            tokens = tokens,
-            styleSheet = styleSheet,
-            errorInfo = parseError,
-            parseError = parseError?.message,
-            flattenedNodes = flattenedNodes,
-            visibleNodes = visibleNodes,
-            highlightedNodeIndex = findDeepestNodeAtOffset(visibleNodes, state.cursorOffset),
-        )
-    }
 
-    is Intent.CursorOffsetChanged -> {
-        state.copy(
-            cursorOffset = intent.offset,
-            highlightedNodeIndex = findDeepestNodeAtOffset(state.visibleNodes, intent.offset),
-        )
-    }
-
-    is Intent.AstNodeClicked -> state.copy(selectedCssRange = intent.cssRange)
-
-    is Intent.ToggleCollapse -> {
-        val newCollapsed = if (intent.nodeId in state.collapsedNodeIds) {
-            state.collapsedNodeIds - intent.nodeId
-        } else {
-            state.collapsedNodeIds + intent.nodeId
+        is Intent.CursorOffsetChanged -> {
+            state.copy(
+                cursorOffset = intent.offset,
+                highlightedNodeIndex = findDeepestNodeAtOffset(state.visibleNodes, intent.offset)
+            )
         }
-        val visibleNodes = computeVisibleNodes(state.flattenedNodes, newCollapsed)
-        state.copy(
-            collapsedNodeIds = newCollapsed,
-            visibleNodes = visibleNodes,
-            highlightedNodeIndex = findDeepestNodeAtOffset(visibleNodes, state.cursorOffset),
-        )
-    }
 
-    Intent.ClearSelection -> state.copy(selectedCssRange = null)
-
-    is Intent.SearchCss -> {
-        val matches = computeSearchMatches(state.cssText, intent.query)
-        val currentIndex = if (matches.isNotEmpty()) 0 else -1
-        state.copy(
-            editorSearchQuery = intent.query,
-            editorSearchMatches = matches,
-            editorSearchCurrentIndex = currentIndex,
-        )
-    }
-
-    is Intent.NavigateSearchResult -> {
-        val newIndex = navigateSearchIndex(
-            currentIndex = state.editorSearchCurrentIndex,
-            matchCount = state.editorSearchMatches.size,
-            forward = intent.forward,
-        )
-        state.copy(editorSearchCurrentIndex = newIndex)
-    }
-
-    Intent.ClearSearch -> state.copy(
-        editorSearchQuery = "",
-        editorSearchMatches = emptyList(),
-        editorSearchCurrentIndex = -1,
-        editorSearchVisible = false,
-    )
-
-    is Intent.SearchAstTree -> {
-        val matchIds = computeAstFilterMatches(state.flattenedNodes, intent.query)
-        state.copy(
-            astFilterQuery = intent.query,
-            astFilterMatchIds = matchIds,
-        )
-    }
-
-    Intent.ClearAstFilter -> state.copy(
-        astFilterQuery = "",
-        astFilterMatchIds = emptySet(),
-        astFilterVisible = false,
-    )
-
-    is Intent.ToggleNodeDetails -> {
-        val newExpanded = if (intent.nodeId in state.expandedDetailNodeIds) {
-            state.expandedDetailNodeIds - intent.nodeId
-        } else {
-            state.expandedDetailNodeIds + intent.nodeId
+        is Intent.AstNodeClicked -> {
+            state.copy(selectedCssRange = intent.cssRange)
         }
-        state.copy(expandedDetailNodeIds = newExpanded)
+
+        is Intent.ToggleCollapse -> {
+            val newCollapsed =
+                if (intent.nodeId in state.collapsedNodeIds) {
+                    state.collapsedNodeIds - intent.nodeId
+                } else {
+                    state.collapsedNodeIds + intent.nodeId
+                }
+            val visibleNodes = computeVisibleNodes(state.flattenedNodes, newCollapsed)
+            state.copy(
+                collapsedNodeIds = newCollapsed,
+                visibleNodes = visibleNodes,
+                highlightedNodeIndex = findDeepestNodeAtOffset(visibleNodes, state.cursorOffset)
+            )
+        }
+
+        Intent.ClearSelection -> {
+            state.copy(selectedCssRange = null)
+        }
+
+        is Intent.SearchCss -> {
+            val matches = computeSearchMatches(state.cssText, intent.query)
+            val currentIndex = if (matches.isNotEmpty()) 0 else -1
+            state.copy(
+                editorSearchQuery = intent.query,
+                editorSearchMatches = matches,
+                editorSearchCurrentIndex = currentIndex
+            )
+        }
+
+        is Intent.NavigateSearchResult -> {
+            val newIndex =
+                navigateSearchIndex(
+                    currentIndex = state.editorSearchCurrentIndex,
+                    matchCount = state.editorSearchMatches.size,
+                    forward = intent.forward
+                )
+            state.copy(editorSearchCurrentIndex = newIndex)
+        }
+
+        Intent.ClearSearch -> {
+            state.copy(
+                editorSearchQuery = "",
+                editorSearchMatches = emptyList(),
+                editorSearchCurrentIndex = -1,
+                editorSearchVisible = false
+            )
+        }
+
+        is Intent.SearchAstTree -> {
+            val matchIds = computeAstFilterMatches(state.flattenedNodes, intent.query)
+            state.copy(
+                astFilterQuery = intent.query,
+                astFilterMatchIds = matchIds
+            )
+        }
+
+        Intent.ClearAstFilter -> {
+            state.copy(
+                astFilterQuery = "",
+                astFilterMatchIds = emptySet(),
+                astFilterVisible = false
+            )
+        }
+
+        is Intent.ToggleNodeDetails -> {
+            val newExpanded =
+                if (intent.nodeId in state.expandedDetailNodeIds) {
+                    state.expandedDetailNodeIds - intent.nodeId
+                } else {
+                    state.expandedDetailNodeIds + intent.nodeId
+                }
+            state.copy(expandedDetailNodeIds = newExpanded)
+        }
+
+        is Intent.UpdateSplitRatio -> {
+            state.copy(
+                splitRatio = clampSplitRatio(intent.ratio)
+            )
+        }
+
+        Intent.ToggleEditorSearch -> {
+            state.copy(
+                editorSearchVisible = !state.editorSearchVisible
+            )
+        }
+
+        Intent.ToggleAstFilter -> {
+            state.copy(
+                astFilterVisible = !state.astFilterVisible
+            )
+        }
     }
 
-    is Intent.UpdateSplitRatio -> state.copy(
-        splitRatio = clampSplitRatio(intent.ratio),
-    )
-
-    Intent.ToggleEditorSearch -> state.copy(
-        editorSearchVisible = !state.editorSearchVisible,
-    )
-
-    Intent.ToggleAstFilter -> state.copy(
-        astFilterVisible = !state.astFilterVisible,
-    )
-}
-
-private fun tokenize(
-    css: String,
-): Pair<List<Token<out CssTokenKind>>, ParseErrorInfo?> = try {
-    CssTokenizer().tokenize(css) to null
-} catch (expected: Exception) {
-    emptyList<Token<out CssTokenKind>>() to ParseErrorInfo.from(expected)
-}
+private fun tokenize(css: String): Pair<List<Token<out CssTokenKind>>, ParseErrorInfo?> =
+    try {
+        CssTokenizer().tokenize(css) to null
+    } catch (expected: Exception) {
+        emptyList<Token<out CssTokenKind>>() to ParseErrorInfo.from(expected)
+    }
 
 private fun parse(
     css: String,
     tokens: List<Token<out CssTokenKind>>,
-): Pair<StyleSheet?, ParseErrorInfo?> = try {
-    val consumers = CssConsumers(css)
-    val styleSheet = CssParser(consumers).parse(tokens)
-    styleSheet to null
-} catch (expected: Exception) {
-    null to ParseErrorInfo.from(expected)
-}
+): Pair<StyleSheet?, ParseErrorInfo?> =
+    try {
+        val consumers = CssConsumers(css)
+        val styleSheet = CssParser(consumers).parse(tokens)
+        styleSheet to null
+    } catch (expected: Exception) {
+        null to ParseErrorInfo.from(expected)
+    }
 
 @Immutable
 data class UiState(
@@ -271,7 +325,10 @@ data class UiState(
     val splitRatio: Float = 0.5f,
 )
 
-internal fun computeSearchMatches(text: String, query: String): List<IntRange> {
+internal fun computeSearchMatches(
+    text: String,
+    query: String,
+): List<IntRange> {
     if (query.isBlank()) return emptyList()
     val lowerText = text.lowercase()
     val lowerQuery = query.lowercase()
@@ -286,7 +343,11 @@ internal fun computeSearchMatches(text: String, query: String): List<IntRange> {
     return matches
 }
 
-internal fun navigateSearchIndex(currentIndex: Int, matchCount: Int, forward: Boolean): Int {
+internal fun navigateSearchIndex(
+    currentIndex: Int,
+    matchCount: Int,
+    forward: Boolean,
+): Int {
     if (matchCount == 0) return -1
     return if (forward) {
         (currentIndex + 1) % matchCount
@@ -305,8 +366,7 @@ internal fun computeAstFilterMatches(
         .filter { node ->
             node.label.lowercase().contains(lowerQuery) ||
                 node.summary.lowercase().contains(lowerQuery)
-        }
-        .map { it.id }
+        }.map { it.id }
         .toSet()
 }
 

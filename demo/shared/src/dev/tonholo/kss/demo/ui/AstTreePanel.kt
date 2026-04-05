@@ -75,7 +75,7 @@ fun AstTreePanel(
                 query = state.astFilterQuery,
                 onQueryChange = onFilterQueryChange,
                 matchCount = state.astFilterMatchIds.size,
-                onClose = onCloseFilter,
+                onClose = onCloseFilter
             )
         }
 
@@ -99,7 +99,7 @@ fun AstTreePanel(
                 onToggleCollapse = onToggleCollapse,
                 onNodeClick = onNodeClick,
                 onToggleNodeDetails = onToggleNodeDetails,
-                lazyListState = lazyListState,
+                lazyListState = lazyListState
             )
         }
     }
@@ -176,15 +176,16 @@ private fun AstNodeList(
                     onToggleNodeDetails(node.id)
                 },
                 isFilterMatch = node.id in filterMatchIds || filterMatchIds.isEmpty(),
-                isFilterActive = isFilterActive,
+                isFilterActive = isFilterActive
             )
             if (node.id in expandedDetailNodeIds) {
-                val details = remember(node, tokens) {
-                    NodeDetailExtractor.extract(node, tokens)
-                }
+                val details =
+                    remember(node, tokens) {
+                        NodeDetailExtractor.extract(node, tokens)
+                    }
                 AstNodeDetailPanel(
                     details = details,
-                    indentDp = (node.depth * 16) + 20,
+                    indentDp = (node.depth * 16) + 20
                 )
             }
         }

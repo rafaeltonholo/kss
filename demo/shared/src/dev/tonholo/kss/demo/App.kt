@@ -24,56 +24,67 @@ import dev.tonholo.kss.demo.ui.isMacOs
  * and an [AstTreePanel] on the right, separated by a draggable divider.
  */
 @Composable
-fun App(modifier: Modifier = Modifier) {
-    val viewModel = viewModel { AppViewModel() }
+fun App(
+    modifier: Modifier = Modifier,
+    viewModel: AppViewModel = viewModel { AppViewModel() },
+) {
     val state by viewModel.uiState.collectAsState()
     val macOs = remember { isMacOs() }
 
     Box(
-        modifier = modifier
-            .fillMaxSize()
-            .onPreviewKeyEvent { event ->
-                val action = handleKeyEvent(event, macOs) ?: return@onPreviewKeyEvent false
-                when (action) {
-                    KeyAction.ToggleEditorSearch -> {
-                        viewModel.toggleEditorSearch()
-                        true
-                    }
-                    KeyAction.ToggleAstFilter -> {
-                        viewModel.toggleAstFilter()
-                        true
-                    }
-                    KeyAction.NextSearchMatch -> {
-                        if (state.editorSearchVisible) {
-                            viewModel.navigateSearchResult(forward = true)
+        modifier =
+            modifier
+                .fillMaxSize()
+                .onPreviewKeyEvent { event ->
+                    val action = handleKeyEvent(event, macOs) ?: return@onPreviewKeyEvent false
+                    when (action) {
+                        KeyAction.ToggleEditorSearch -> {
+                            viewModel.toggleEditorSearch()
                             true
-                        } else {
-                            false
                         }
-                    }
-                    KeyAction.PreviousSearchMatch -> {
-                        if (state.editorSearchVisible) {
-                            viewModel.navigateSearchResult(forward = false)
+
+                        KeyAction.ToggleAstFilter -> {
+                            viewModel.toggleAstFilter()
                             true
-                        } else {
-                            false
                         }
-                    }
-                    KeyAction.Escape -> {
-                        when {
-                            state.editorSearchVisible -> {
-                                viewModel.clearSearch()
+
+                        KeyAction.NextSearchMatch -> {
+                            if (state.editorSearchVisible) {
+                                viewModel.navigateSearchResult(forward = true)
                                 true
+                            } else {
+                                false
                             }
-                            state.astFilterVisible -> {
-                                viewModel.clearAstFilter()
+                        }
+
+                        KeyAction.PreviousSearchMatch -> {
+                            if (state.editorSearchVisible) {
+                                viewModel.navigateSearchResult(forward = false)
                                 true
+                            } else {
+                                false
                             }
-                            else -> false
+                        }
+
+                        KeyAction.Escape -> {
+                            when {
+                                state.editorSearchVisible -> {
+                                    viewModel.clearSearch()
+                                    true
+                                }
+
+                                state.astFilterVisible -> {
+                                    viewModel.clearAstFilter()
+                                    true
+                                }
+
+                                else -> {
+                                    false
+                                }
+                            }
                         }
                     }
                 }
-            },
     ) {
         SplitPane(
             ratio = state.splitRatio,
@@ -88,7 +99,7 @@ fun App(modifier: Modifier = Modifier) {
                     onNavigateSearchUp = { viewModel.navigateSearchResult(forward = false) },
                     onNavigateSearchDown = { viewModel.navigateSearchResult(forward = true) },
                     onCloseSearch = viewModel::clearSearch,
-                    modifier = panelModifier,
+                    modifier = panelModifier
                 )
             },
             rightContent = { panelModifier ->
@@ -99,9 +110,9 @@ fun App(modifier: Modifier = Modifier) {
                     onFilterQueryChange = viewModel::searchAstTree,
                     onCloseFilter = viewModel::clearAstFilter,
                     onToggleNodeDetails = viewModel::toggleNodeDetails,
-                    modifier = panelModifier,
+                    modifier = panelModifier
                 )
-            },
+            }
         )
     }
 }
