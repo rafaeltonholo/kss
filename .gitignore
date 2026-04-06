@@ -24,3 +24,7 @@ local.properties
 publishing/build/
 publishing/.gradle/
 publishing/local.properties
+
+.claude/*.local.json
+.superpowers
+**/superpowers/**
