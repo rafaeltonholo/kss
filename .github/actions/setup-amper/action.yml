@@ -1,0 +1,31 @@
+name: Setup Amper
+description: Set up JDK, cache Amper distribution, and create local.properties stub for CI builds.
+
+inputs:
+  java-version:
+    description: JDK version to install
+    required: false
+    default: '17'
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-java@c1e323688fd81a25caa38c78aa6df2d33d3e20d9 # v4.8.0
+      with:
+        distribution: temurin
+        java-version: ${{ inputs.java-version }}
+
+    - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+      with:
+        path: .amper/
+        key: amper-${{ runner.os }}-${{ hashFiles('amper') }}
+
+    - name: Create local.properties
+      shell: bash
+      run: |
+        cat <<'PROPS' > local.properties
+        sonatype.username=unused
+        sonatype.password=unused
+        github.username=unused
+        github.token=unused
+        PROPS
