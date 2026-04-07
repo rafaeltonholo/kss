@@ -158,14 +158,14 @@ chore/<short-topic>
 
 Before modifying code in a module, read its `AGENTS.md`:
 
-| Module         | Docs                                                   |
-|----------------|--------------------------------------------------------|
-| `core`         | [core/AGENTS.md](../core/AGENTS.md)                   |
-| `lexer`        | [lexer/AGENTS.md](../lexer/AGENTS.md)                 |
-| `parser`       | [parser/AGENTS.md](../parser/AGENTS.md)               |
-| `demo/shared`  | [demo/shared/AGENTS.md](../demo/shared/AGENTS.md)     |
-| `demo/desktop` | [demo/desktop/AGENTS.md](../demo/desktop/AGENTS.md)   |
-| `demo/web`     | [demo/web/AGENTS.md](../demo/web/AGENTS.md)           |
+| Module         | Docs                                                |
+|----------------|-----------------------------------------------------|
+| `core`         | [core/AGENTS.md](../core/AGENTS.md)                 |
+| `lexer`        | [lexer/AGENTS.md](../lexer/AGENTS.md)               |
+| `parser`       | [parser/AGENTS.md](../parser/AGENTS.md)             |
+| `demo/shared`  | [demo/shared/AGENTS.md](../demo/shared/AGENTS.md)   |
+| `demo/desktop` | [demo/desktop/AGENTS.md](../demo/desktop/AGENTS.md) |
+| `demo/web`     | [demo/web/AGENTS.md](../demo/web/AGENTS.md)         |
 
 ## Key Architectural Decisions
 

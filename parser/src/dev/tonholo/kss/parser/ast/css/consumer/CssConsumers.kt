@@ -1,6 +1,13 @@
 package dev.tonholo.kss.parser.ast.css.consumer
 
-import dev.tonholo.kss.parser.ast.css.syntax.node.*
+import dev.tonholo.kss.parser.ast.css.syntax.node.AtRule
+import dev.tonholo.kss.parser.ast.css.syntax.node.Declaration
+import dev.tonholo.kss.parser.ast.css.syntax.node.QualifiedRule
+import dev.tonholo.kss.parser.ast.css.syntax.node.Rule
+import dev.tonholo.kss.parser.ast.css.syntax.node.Selector
+import dev.tonholo.kss.parser.ast.css.syntax.node.SelectorListItem
+import dev.tonholo.kss.parser.ast.css.syntax.node.StyleSheet
+import dev.tonholo.kss.parser.ast.css.syntax.node.Value
 
 /**
  * DSL marker for CssConsumers DSL.

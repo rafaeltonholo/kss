@@ -35,15 +35,15 @@ Artifacts are written to `~/.m2/repository/dev/tonholo/kss/`.
 The CI workflow invokes this Gradle project to publish to Maven Central and GitHub Packages.
 Credentials are provided via environment variables:
 
-| Variable                                      | Purpose                         |
-|-----------------------------------------------|---------------------------------|
-| `ORG_GRADLE_PROJECT_mavenCentralUsername`      | Maven Central (Central Portal)  |
-| `ORG_GRADLE_PROJECT_mavenCentralPassword`      | Maven Central (Central Portal)  |
-| `GITHUB_ACTOR`                                 | GitHub Packages                 |
-| `GITHUB_TOKEN`                                 | GitHub Packages                 |
-| `ORG_GRADLE_PROJECT_signingInMemoryKey`        | Artifact signing (GPG key)      |
-| `ORG_GRADLE_PROJECT_signingInMemoryKeyId`      | Artifact signing (GPG key ID)   |
-| `ORG_GRADLE_PROJECT_signingInMemoryKeyPassword`| Artifact signing (GPG password) |
+| Variable                                        | Purpose                         |
+|-------------------------------------------------|---------------------------------|
+| `ORG_GRADLE_PROJECT_mavenCentralUsername`       | Maven Central (Central Portal)  |
+| `ORG_GRADLE_PROJECT_mavenCentralPassword`       | Maven Central (Central Portal)  |
+| `GITHUB_ACTOR`                                  | GitHub Packages                 |
+| `GITHUB_TOKEN`                                  | GitHub Packages                 |
+| `ORG_GRADLE_PROJECT_signingInMemoryKey`         | Artifact signing (GPG key)      |
+| `ORG_GRADLE_PROJECT_signingInMemoryKeyId`       | Artifact signing (GPG key ID)   |
+| `ORG_GRADLE_PROJECT_signingInMemoryKeyPassword` | Artifact signing (GPG password) |
 
 ### Published artifacts
 

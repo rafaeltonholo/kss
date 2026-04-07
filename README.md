@@ -13,15 +13,15 @@ providing precise character offsets for every token and AST node. It runs on JVM
 
 ## Modules
 
-| Module          | Description                                                                   |
-|-----------------|-------------------------------------------------------------------------------|
-| **core**        | Shared abstractions: `Token`, `TokenKind`, `CssLocation`, AST node base types |
-| **lexer**       | CSS tokenizer — turns a CSS string into `List<Token<out CssTokenKind>>`       |
-| **parser**      | CSS parser — turns tokens into a `StyleSheet` AST                             |
-| **bom**         | Bill of Materials for version alignment                                       |
-| **demo/shared** | Shared Compose Multiplatform UI for the demo app                              |
-| **demo/desktop**| Desktop (JVM) entry point for the demo                                        |
-| **demo/web**    | Web (wasmJs) entry point for the demo                                         |
+| Module           | Description                                                                   |
+|------------------|-------------------------------------------------------------------------------|
+| **core**         | Shared abstractions: `Token`, `TokenKind`, `CssLocation`, AST node base types |
+| **lexer**        | CSS tokenizer — turns a CSS string into `List<Token<out CssTokenKind>>`       |
+| **parser**       | CSS parser — turns tokens into a `StyleSheet` AST                             |
+| **bom**          | Bill of Materials for version alignment                                       |
+| **demo/shared**  | Shared Compose Multiplatform UI for the demo app                              |
+| **demo/desktop** | Desktop (JVM) entry point for the demo                                        |
+| **demo/web**     | Web (wasmJs) entry point for the demo                                         |
 
 ## Installation
 
@@ -50,15 +50,15 @@ In your `module.yaml`:
 
 ```yaml
 dependencies:
-  - dev.tonholo.kss:kss-parser:1.0.0
+    - dev.tonholo.kss:kss-parser:1.0.0
 ```
 
 Or with individual modules:
 
 ```yaml
 dependencies:
-  - dev.tonholo.kss:kss-core:1.0.0
-  - dev.tonholo.kss:kss-lexer:1.0.0
+    - dev.tonholo.kss:kss-core:1.0.0
+    - dev.tonholo.kss:kss-lexer:1.0.0
 ```
 
 ## Quick Start

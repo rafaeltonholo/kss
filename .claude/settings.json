@@ -1,15 +1,15 @@
 {
-  "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "if echo \"$CLAUDE_FILE_PATHS\" | grep -q '\\.kt$'; then ./scripts/check.sh detekt; fi"
-          }
+    "hooks": {
+        "PostToolUse": [
+            {
+                "matcher": "Edit|Write",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "if echo \"$CLAUDE_FILE_PATHS\" | grep -q '\\.kt$'; then ./scripts/check.sh detekt; fi"
+                    }
+                ]
+            }
         ]
-      }
-    ]
-  }
+    }
 }

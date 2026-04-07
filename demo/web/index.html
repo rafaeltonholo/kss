@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>KSS — CSS AST Explorer</title>
     <style>
         html, body {
@@ -12,9 +12,11 @@
             height: 100%;
             overflow: hidden;
         }
+
         body {
             visibility: hidden;
         }
+
         #loading-container {
             visibility: visible;
             position: fixed;
@@ -29,6 +31,7 @@
             background: #1e1e1e;
             z-index: 9999;
         }
+
         #loading-container p {
             margin-top: 16px;
             color: #858585;
@@ -39,18 +42,19 @@
 </head>
 <body>
 <div id="loading-container">
-    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 50 50" role="presentation">
-        <circle cx="25" cy="25" r="20" stroke="#3e3e42" stroke-width="4" fill="none"/>
-        <circle cx="25" cy="25" r="20" stroke="#569cd6" stroke-width="4" fill="none" stroke-linecap="round"
-                stroke-dasharray="90 125">
-            <animateTransform attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="1s"
-                              repeatCount="indefinite"/>
+    <svg height="40" role="presentation" viewBox="0 0 50 50" width="40" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="25" cy="25" fill="none" r="20" stroke="#3e3e42" stroke-width="4"/>
+        <circle cx="25" cy="25" fill="none" r="20" stroke="#569cd6" stroke-dasharray="90 125" stroke-linecap="round"
+                stroke-width="4">
+            <animateTransform attributeName="transform" dur="1s" from="0 25 25" repeatCount="indefinite" to="360 25 25"
+                              type="rotate"/>
         </circle>
     </svg>
     <p>Loading KSS Explorer...</p>
 </div>
 <script type="module">
-    import { _initialize } from './web.mjs';
+    import {_initialize} from './web.mjs';
+
     await _initialize();
     document.getElementById('loading-container')?.remove();
     document.body.style.visibility = 'visible';

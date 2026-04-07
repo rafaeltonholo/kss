@@ -1906,25 +1906,32 @@ class CssParserTest {
         assert(content, tokens, expected)
     }
 
-    @Test fun `throw CssParserException when a BadUrl token is present - with an empty url`() =
+    @Test
+    fun `throw CssParserException when a BadUrl token is present - with an empty url`() =
         `throw CssParserException when a BadUrl token is present`(BadUrlParam.`with an empty url`)
 
-    @Test fun `throw CssParserException when a BadUrl token is present - with a hashed url`() =
+    @Test
+    fun `throw CssParserException when a BadUrl token is present - with a hashed url`() =
         `throw CssParserException when a BadUrl token is present`(BadUrlParam.`with a hashed url`)
 
-    @Test fun `throw CssParserException when a BadUrl token is present - with a quoted url`() =
+    @Test
+    fun `throw CssParserException when a BadUrl token is present - with a quoted url`() =
         `throw CssParserException when a BadUrl token is present`(BadUrlParam.`with a quoted url`)
 
-    @Test fun `throw CssParserException when a BadUrl token is present - with a space and quoted url`() =
+    @Test
+    fun `throw CssParserException when a BadUrl token is present - with a space and quoted url`() =
         `throw CssParserException when a BadUrl token is present`(BadUrlParam.`with a space and quoted url`)
 
-    @Test fun `throw CssParserException when a BadUrl token is present - with an unquoted url`() =
+    @Test
+    fun `throw CssParserException when a BadUrl token is present - with an unquoted url`() =
         `throw CssParserException when a BadUrl token is present`(BadUrlParam.`with an unquoted url`)
 
-    @Test fun `throw CssParserException when a BadUrl token is present - with a spaced and unquoted url`() =
+    @Test
+    fun `throw CssParserException when a BadUrl token is present - with a spaced and unquoted url`() =
         `throw CssParserException when a BadUrl token is present`(BadUrlParam.`with a spaced and unquoted url`)
 
-    @Test fun `throw CssParserException when a BadUrl token is present - with a leading spaced unquote url`() =
+    @Test
+    fun `throw CssParserException when a BadUrl token is present - with a leading spaced unquote url`() =
         `throw CssParserException when a BadUrl token is present`(BadUrlParam.`with a leading spaced unquote url`)
 
     private fun `throw CssParserException when a BadUrl token is present`(url: BadUrlParam) {

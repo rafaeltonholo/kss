@@ -1,6 +1,6 @@
 product:
   type: lib
-  platforms: [jvm, wasmJs]
+  platforms: [ jvm, wasmJs ]
 
 apply:
   - ../../kss.module-template.yaml

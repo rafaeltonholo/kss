@@ -1,6 +1,5 @@
 package dev.tonholo.kss.demo.ui
 
-import dev.tonholo.kss.demo.state.clampSplitRatio
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
