@@ -35,23 +35,24 @@ Artifacts are written to `~/.m2/repository/dev/tonholo/kss/`.
 The CI workflow invokes this Gradle project to publish to Maven Central and GitHub Packages.
 Credentials are provided via environment variables:
 
-| Variable            | Purpose                        |
-|---------------------|--------------------------------|
-| `SONATYPE_USERNAME` | Maven Central (Sonatype OSSRH) |
-| `SONATYPE_PASSWORD` | Maven Central (Sonatype OSSRH) |
-| `GITHUB_ACTOR`      | GitHub Packages                |
-| `GITHUB_TOKEN`      | GitHub Packages                |
-| `GPG_PRIVATE_KEY`   | Artifact signing               |
-| `GPG_PASSPHRASE`    | Artifact signing               |
+| Variable                                      | Purpose                         |
+|-----------------------------------------------|---------------------------------|
+| `ORG_GRADLE_PROJECT_mavenCentralUsername`      | Maven Central (Central Portal)  |
+| `ORG_GRADLE_PROJECT_mavenCentralPassword`      | Maven Central (Central Portal)  |
+| `GITHUB_ACTOR`                                 | GitHub Packages                 |
+| `GITHUB_TOKEN`                                 | GitHub Packages                 |
+| `ORG_GRADLE_PROJECT_signingInMemoryKey`        | Artifact signing (GPG key)      |
+| `ORG_GRADLE_PROJECT_signingInMemoryKeyId`      | Artifact signing (GPG key ID)   |
+| `ORG_GRADLE_PROJECT_signingInMemoryKeyPassword`| Artifact signing (GPG password) |
 
 ### Published artifacts
 
-| Artifact ID   | Description              |
-|---------------|--------------------------|
-| `kss-core`    | Core abstractions        |
-| `kss-lexer`   | CSS tokenizer            |
-| `kss-parser`  | CSS parser               |
-| `kss-bom`     | Bill of Materials (BOM)  |
+| Artifact ID  | Description             |
+|--------------|-------------------------|
+| `kss-core`   | Core abstractions       |
+| `kss-lexer`  | CSS tokenizer           |
+| `kss-parser` | CSS parser              |
+| `kss-bom`    | Bill of Materials (BOM) |
 
 Each library module publishes platform-specific artifacts automatically (e.g.,
 `kss-core-jvm`, `kss-core-js`, `kss-core-wasmjs`, etc.).

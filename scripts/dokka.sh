@@ -76,7 +76,7 @@ generate_config() {
   "sourceLinks": [
     {
       "localDirectory": "$PROJECT_DIR",
-      "remoteUrl": "https://github.com/rafaeltonholo/kss/tree/main",
+      "remoteUrl": "https://github.com/dev-tonholo/kss/tree/main",
       "remoteLineSuffix": "#L"
     }
   ],

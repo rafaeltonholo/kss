@@ -28,3 +28,5 @@ publishing/local.properties
 .claude/*.local.json
 .superpowers
 **/superpowers/**
+
+**/.kotlin

@@ -1,22 +1,3 @@
-repositories:
-  - id: mavenLocal
-    url: mavenLocal
-    publish: true
-  - id: mavenCentral
-    url: https://oss.sonatype.org/service/local/staging/deploy/maven2/
-    publish: true
-    credentials:
-      file: ./local.properties
-      usernameKey: sonatype.username
-      passwordKey: sonatype.password
-  - id: githubPackages
-    url: https://maven.pkg.github.com/rafaeltonholo/kss
-    publish: true
-    credentials:
-      file: ./local.properties
-      usernameKey: github.username
-      passwordKey: github.token
-
 settings:
   kotlin:
     version: 2.3.20

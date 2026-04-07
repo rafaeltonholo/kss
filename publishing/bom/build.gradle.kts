@@ -1,7 +1,6 @@
 plugins {
     `java-platform`
-    `maven-publish`
-    signing
+    id("com.vanniktech.maven.publish")
 }
 
 javaPlatform {
@@ -16,15 +15,10 @@ dependencies {
     }
 }
 
-publishing {
-    publications {
-        create<MavenPublication>("bom") {
-            from(components["javaPlatform"])
-            artifactId = "kss-bom"
-            pom {
-                name.set("KSS BOM")
-                description.set("Bill of Materials for KSS — Kotlin Style Sheets")
-            }
-        }
+mavenPublishing {
+    coordinates(artifactId = "kss-bom")
+    pom {
+        name.set("KSS BOM")
+        description.set("Bill of Materials for KSS - Kotlin Style Sheets")
     }
 }

@@ -1,7 +1,6 @@
 plugins {
     kotlin("multiplatform")
-    `maven-publish`
-    signing
+    id("com.vanniktech.maven.publish")
 }
 
 kotlin {
@@ -24,21 +23,12 @@ kotlin {
         }
     }
 
-    targets.configureEach {
-        mavenPublication {
-            artifactId = "kss-core-${targetName.lowercase()}"
-        }
-    }
 }
 
-publishing {
-    publications.withType<MavenPublication> {
-        if (name == "kotlinMultiplatform") {
-            artifactId = "kss-core"
-        }
-        pom {
-            name.set("KSS Core")
-            description.set("Core abstractions for KSS — Kotlin Style Sheets")
-        }
+mavenPublishing {
+    coordinates(artifactId = "kss-core")
+    pom {
+        name.set("KSS Core")
+        description.set("Core abstractions for KSS - Kotlin Style Sheets")
     }
 }

@@ -1,6 +1,6 @@
 # KSS — Kotlin Style Sheets
 
-[![Build](https://github.com/rafaeltonholo/kss/actions/workflows/ci.yml/badge.svg)](https://github.com/rafaeltonholo/kss/actions/workflows/ci.yml)
+[![Build](https://github.com/dev-tonholo/kss/actions/workflows/ci.yml/badge.svg)](https://github.com/dev-tonholo/kss/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Maven Central](https://img.shields.io/maven-central/v/dev.tonholo.kss/kss-core)](https://central.sonatype.com/namespace/dev.tonholo.kss)
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.3.20-blue.svg?logo=kotlin)](https://kotlinlang.org)
