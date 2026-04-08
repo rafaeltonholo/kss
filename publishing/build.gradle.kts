@@ -15,7 +15,12 @@ subprojects {
     afterEvaluate {
         extensions.findByType<com.vanniktech.maven.publish.MavenPublishBaseExtension>()?.apply {
             publishToMavenCentral()
-            signAllPublications()
+
+            val signingKey = findProperty("signingInMemoryKey") as String?
+                ?: System.getenv("ORG_GRADLE_PROJECT_signingInMemoryKey")
+            if (!signingKey.isNullOrBlank()) {
+                signAllPublications()
+            }
 
             pom {
                 url.set("https://github.com/dev-tonholo/kss")
