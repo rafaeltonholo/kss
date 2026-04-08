@@ -11,6 +11,7 @@ import dev.tonholo.kss.parser.ast.css.syntax.node.Selector
 import dev.tonholo.kss.parser.ast.css.syntax.node.SelectorListItem
 import dev.tonholo.kss.parser.ast.css.syntax.node.StyleSheet
 import dev.tonholo.kss.parser.ast.css.syntax.node.Value
+import dev.tonholo.kss.parser.ast.css.syntax.node.typeName
 
 private const val COMMENT_PREVIEW_LENGTH = 40
 
@@ -214,21 +215,10 @@ private class AstWalker {
         node: Value,
         depth: Int,
     ) {
-        val prefix =
-            when (node) {
-                is Value.Color -> "Color"
-                is Value.String -> "String"
-                is Value.Identifier -> "Identifier"
-                is Value.Number -> "Number"
-                is Value.Dimension -> "Dimension"
-                is Value.Percentage -> "Percentage"
-                is Value.Function -> "Function"
-                is Value.Url -> "Url"
-            }
         val hasKids = node is Value.Function && node.arguments.isNotEmpty()
         emit(
             depth = depth,
-            label = prefix,
+            label = node.typeName,
             summary = node.toString(indent = 0),
             cssRange = node.location.start..node.location.end,
             hasChildren = hasKids,

@@ -1,7 +1,6 @@
 plugins {
     kotlin("multiplatform")
-    `maven-publish`
-    signing
+    id("com.vanniktech.maven.publish")
 }
 
 kotlin {
@@ -33,21 +32,12 @@ kotlin {
         }
     }
 
-    targets.configureEach {
-        mavenPublication {
-            artifactId = "kss-lexer-${targetName.lowercase()}"
-        }
-    }
 }
 
-publishing {
-    publications.withType<MavenPublication> {
-        if (name == "kotlinMultiplatform") {
-            artifactId = "kss-lexer"
-        }
-        pom {
-            name.set("KSS Lexer")
-            description.set("CSS tokenizer for KSS — Kotlin Style Sheets")
-        }
+mavenPublishing {
+    coordinates(artifactId = "kss-lexer")
+    pom {
+        name.set("KSS Lexer")
+        description.set("CSS tokenizer for KSS - Kotlin Style Sheets")
     }
 }

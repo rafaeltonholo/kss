@@ -116,7 +116,8 @@ class CssSpecificityTest {
         assertEquals(expected, actual.toString())
     }
 
-    @Test fun `when 2 ids selectors then specificity is 2 0 0`() =
+    @Test
+    fun `when 2 ids selectors then specificity is 2 0 0`() =
         `when multiple ids selectors then specificity is n 0 0 where n is number of selectors`(
             listOf(
                 Selector.Id(location = CssLocation.Undefined, name = "my-id-0"),
@@ -124,7 +125,8 @@ class CssSpecificityTest {
             )
         )
 
-    @Test fun `when 3 ids selectors then specificity is 3 0 0`() =
+    @Test
+    fun `when 3 ids selectors then specificity is 3 0 0`() =
         `when multiple ids selectors then specificity is n 0 0 where n is number of selectors`(
             listOf(
                 Selector.Id(location = CssLocation.Undefined, name = "my-id-0"),
@@ -133,7 +135,8 @@ class CssSpecificityTest {
             )
         )
 
-    @Test fun `when 4 ids selectors then specificity is 4 0 0`() =
+    @Test
+    fun `when 4 ids selectors then specificity is 4 0 0`() =
         `when multiple ids selectors then specificity is n 0 0 where n is number of selectors`(
             listOf(
                 Selector.Id(location = CssLocation.Undefined, name = "my-id-0"),
@@ -162,7 +165,8 @@ class CssSpecificityTest {
         assertEquals(expected, actual.toString())
     }
 
-    @Test fun `when 2 class selectors then specificity is 0 2 0`() =
+    @Test
+    fun `when 2 class selectors then specificity is 0 2 0`() =
         `when multiple class selectors then specificity is 0 n 0 where n is number of selectors`(
             listOf(
                 Selector.Class(location = CssLocation.Undefined, name = "my-class-0"),
@@ -170,7 +174,8 @@ class CssSpecificityTest {
             )
         )
 
-    @Test fun `when 3 class selectors then specificity is 0 3 0`() =
+    @Test
+    fun `when 3 class selectors then specificity is 0 3 0`() =
         `when multiple class selectors then specificity is 0 n 0 where n is number of selectors`(
             listOf(
                 Selector.Class(location = CssLocation.Undefined, name = "my-class-0"),
@@ -179,7 +184,8 @@ class CssSpecificityTest {
             )
         )
 
-    @Test fun `when 4 class selectors then specificity is 0 4 0`() =
+    @Test
+    fun `when 4 class selectors then specificity is 0 4 0`() =
         `when multiple class selectors then specificity is 0 n 0 where n is number of selectors`(
             listOf(
                 Selector.Class(location = CssLocation.Undefined, name = "my-class-0"),
@@ -208,7 +214,8 @@ class CssSpecificityTest {
         assertEquals(expected, actual.toString())
     }
 
-    @Test fun `when 2 tag selectors then specificity is 0 0 2`() =
+    @Test
+    fun `when 2 tag selectors then specificity is 0 0 2`() =
         `when multiple tag selectors then specificity is 0 0 n where n is number of selectors`(
             listOf(
                 Selector.Type(location = CssLocation.Undefined, name = "ul"),
@@ -216,7 +223,8 @@ class CssSpecificityTest {
             )
         )
 
-    @Test fun `when 3 tag selectors then specificity is 0 0 3`() =
+    @Test
+    fun `when 3 tag selectors then specificity is 0 0 3`() =
         `when multiple tag selectors then specificity is 0 0 n where n is number of selectors`(
             listOf(
                 Selector.Type(location = CssLocation.Undefined, name = "div"),
@@ -225,7 +233,8 @@ class CssSpecificityTest {
             )
         )
 
-    @Test fun `when 4 tag selectors then specificity is 0 0 4`() =
+    @Test
+    fun `when 4 tag selectors then specificity is 0 0 4`() =
         `when multiple tag selectors then specificity is 0 0 n where n is number of selectors`(
             listOf(
                 Selector.Type(location = CssLocation.Undefined, name = "div"),
@@ -254,7 +263,8 @@ class CssSpecificityTest {
         assertEquals(expected, actual.toString())
     }
 
-    @Test fun `should calculate specificity for li with two classes`() =
+    @Test
+    fun `should calculate specificity for li with two classes`() =
         `should calculate specificity for multiple selectors`(
             listOf(
                 Selector.Type(location = CssLocation.Undefined, name = "li"),
@@ -263,7 +273,8 @@ class CssSpecificityTest {
             ) to "[(0, 2, 1)]"
         )
 
-    @Test fun `should calculate specificity for ol universal and class`() =
+    @Test
+    fun `should calculate specificity for ol universal and class`() =
         `should calculate specificity for multiple selectors`(
             listOf(
                 Selector.Type(
@@ -280,7 +291,8 @@ class CssSpecificityTest {
             ) to "[(0, 1, 1)]"
         )
 
-    @Test fun `should calculate specificity for id with not pseudo-class`() =
+    @Test
+    fun `should calculate specificity for id with not pseudo-class`() =
         `should calculate specificity for multiple selectors`(
             listOf(
                 Selector.Id(location = CssLocation.Undefined, name = "s12"),
@@ -295,7 +307,8 @@ class CssSpecificityTest {
             ) to "[(1, 0, 1)]"
         )
 
-    @Test fun `should calculate specificity for class and id`() =
+    @Test
+    fun `should calculate specificity for class and id`() =
         `should calculate specificity for multiple selectors`(
             listOf(
                 Selector.Class(location = CssLocation.Undefined, name = "bar"),
@@ -303,14 +316,16 @@ class CssSpecificityTest {
             ) to "[(1, 1, 0)]"
         )
 
-    @Test fun `should calculate specificity for universal selector`() =
+    @Test
+    fun `should calculate specificity for universal selector`() =
         `should calculate specificity for multiple selectors`(
             listOf(
                 Selector.Type(location = CssLocation.Undefined, name = "*")
             ) to "[(0, 0, 0)]"
         )
 
-    @Test fun `should calculate specificity for h1 sibling universal and attribute`() =
+    @Test
+    fun `should calculate specificity for h1 sibling universal and attribute`() =
         `should calculate specificity for multiple selectors`(
             listOf(
                 Selector.Type(

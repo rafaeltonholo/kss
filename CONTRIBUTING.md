@@ -4,15 +4,18 @@ Thank you for your interest in contributing to KSS! This document provides guide
 
 ## Code of Conduct
 
-This project follows the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior by opening an issue.
+This project follows the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected
+to uphold this code. Please report unacceptable behavior by opening an issue.
 
 ## How to Contribute
 
 ### Reporting Bugs
 
-Before creating a bug report, please check [existing issues](https://github.com/rafaeltonholo/kss/issues) to avoid duplicates.
+Before creating a bug report, please check [existing issues](https://github.com/dev-tonholo/kss/issues) to avoid
+duplicates.
 
 When filing a bug report, include:
+
 - A clear, descriptive title
 - Steps to reproduce the issue
 - Expected vs. actual behavior
@@ -21,7 +24,9 @@ When filing a bug report, include:
 
 ### Suggesting Enhancements
 
-Enhancement suggestions are tracked as [GitHub issues](https://github.com/rafaeltonholo/kss/issues). When creating an enhancement suggestion, include:
+Enhancement suggestions are tracked as [GitHub issues](https://github.com/dev-tonholo/kss/issues). When creating an
+enhancement suggestion, include:
+
 - A clear, descriptive title
 - A detailed description of the proposed enhancement
 - An explanation of why this would be useful
@@ -60,7 +65,9 @@ Enhancement suggestions are tracked as [GitHub issues](https://github.com/rafael
 
 ### Code Quality
 
-The project uses [ktlint](https://github.com/pinterest/ktlint) for formatting and [detekt](https://github.com/detekt/detekt) for static analysis, with [compose-rules](https://github.com/mrmans0n/compose-rules) for Compose-specific linting.
+The project uses [ktlint](https://github.com/pinterest/ktlint) for formatting
+and [detekt](https://github.com/detekt/detekt) for static analysis,
+with [compose-rules](https://github.com/mrmans0n/compose-rules) for Compose-specific linting.
 
 ```bash
 # Run all checks
@@ -98,6 +105,7 @@ This project follows [Conventional Commits](https://www.conventionalcommits.org/
 **Scopes**: `kss-core`, `kss-lexer`, `kss-parser`, `kss-demo`
 
 Examples:
+
 - `feat(kss-lexer): add support for @layer at-rule tokenization`
 - `fix(kss-parser): handle empty declaration blocks without crashing`
 - `docs: update README with new API examples`

@@ -123,7 +123,6 @@ class CssConsumersBuilder {
  * @param builder A lambda for configuring custom consumers.
  * @return An instance of [CssConsumers].
  */
-@CssConsumersDslMarker
 fun CssConsumers(
     content: String,
     builder: CssConsumersBuilder.() -> Unit = {},

@@ -95,3 +95,15 @@ sealed interface Value : CssComponentValueNode {
         }
     }
 }
+
+val Value.typeName: String
+    get() = when (this) {
+        is Value.Color -> "Color"
+        is Value.String -> "String"
+        is Value.Identifier -> "Identifier"
+        is Value.Number -> "Number"
+        is Value.Dimension -> "Dimension"
+        is Value.Percentage -> "Percentage"
+        is Value.Function -> "Function"
+        is Value.Url -> "Url"
+    }

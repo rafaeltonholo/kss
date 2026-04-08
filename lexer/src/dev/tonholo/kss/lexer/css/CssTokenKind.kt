@@ -1,7 +1,6 @@
 package dev.tonholo.kss.lexer.css
 
 import dev.tonholo.kss.lexer.TokenKind
-import dev.tonholo.kss.lexer.css.CssTokenKind.entries
 
 /**
  * Represents the different kinds of tokens that can be encountered

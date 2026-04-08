@@ -3,7 +3,6 @@ product:
   platforms:
     - jvm
     - macosArm64
-    - macosX64
     - linuxX64
     - js
     - wasmJs

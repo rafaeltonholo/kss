@@ -28,7 +28,7 @@ class CommentTokenConsumer(
         iterator.nextOffset(steps = 3) // skips '<' and '!'
         while (iterator.hasNext()) {
             val char = iterator.next()
-            if (char == '-' && iterator.peek(1) == '-' && iterator.peek(2) == '!' && iterator.peek(offset = 3) == '>') {
+            if (char == '-' && isHtmlCommentEnd()) {
                 iterator.nextOffset(steps = 4) // skips '-', '!' and '>'
                 break
             }
@@ -36,6 +36,9 @@ class CommentTokenConsumer(
 
         return Token(CssTokenKind.Comment, start, iterator.offset)
     }
+
+    private fun isHtmlCommentEnd(): Boolean =
+        iterator.peek(1) == '-' && iterator.peek(2) == '!' && iterator.peek(offset = 3) == '>'
 
     private fun consumeCssComment(): Token<CssTokenKind> {
         val start = iterator.offset

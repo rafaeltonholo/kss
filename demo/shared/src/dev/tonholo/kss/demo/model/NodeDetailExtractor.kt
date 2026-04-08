@@ -5,12 +5,14 @@ import dev.tonholo.kss.lexer.css.CssTokenKind
 import dev.tonholo.kss.parser.ast.css.CssSpecificity
 import dev.tonholo.kss.parser.ast.css.syntax.node.AtRule
 import dev.tonholo.kss.parser.ast.css.syntax.node.Comment
+import dev.tonholo.kss.parser.ast.css.syntax.node.CssNode
 import dev.tonholo.kss.parser.ast.css.syntax.node.Declaration
 import dev.tonholo.kss.parser.ast.css.syntax.node.QualifiedRule
 import dev.tonholo.kss.parser.ast.css.syntax.node.Selector
 import dev.tonholo.kss.parser.ast.css.syntax.node.SelectorListItem
 import dev.tonholo.kss.parser.ast.css.syntax.node.StyleSheet
 import dev.tonholo.kss.parser.ast.css.syntax.node.Value
+import dev.tonholo.kss.parser.ast.css.syntax.node.typeName
 
 private const val COMMENT_DETAIL_LENGTH = 80
 
@@ -31,122 +33,125 @@ object NodeDetailExtractor {
         tokens: List<Token<out CssTokenKind>>,
     ): List<Pair<String, String>> {
         val cssNode = node.nodeRef ?: return listOf("Error" to "No AST node reference")
-        val details = mutableListOf<Pair<String, String>>()
+        val details = extractNodeDetails(cssNode, node.label)
 
-        when (cssNode) {
-            is StyleSheet -> {
-                details += "Child count" to "${cssNode.children.size}"
-                details += "Source length" to "${cssNode.location.end - cssNode.location.start} chars"
-            }
-
-            is QualifiedRule -> {
-                val selectorText =
-                    cssNode.prelude.components
-                        .joinToString(", ") { it.toString(indent = 0) }
-                details += "Selector" to selectorText
-                val declCount = cssNode.block.children.size
-                details += "Declaration count" to "$declCount"
-            }
-
-            is AtRule -> {
-                details += "Name" to cssNode.name
-                val preludeText =
-                    cssNode.prelude.components
-                        .joinToString(" ") { it.toString(indent = 0) }
-                details += "Prelude" to preludeText
-                details += "Child count" to "${cssNode.block.children.size}"
-            }
-
-            is Declaration -> {
-                details += "Property" to cssNode.property
-                val valuesText = cssNode.values.joinToString(" ") { it.toString(indent = 0) }
-                details += "Value" to valuesText
-                details += "Important" to "${cssNode.important}"
-            }
-
-            is SelectorListItem -> {
-                val text = cssNode.selectors.joinToString("") { it.toString(indent = 0) }
-                details += "Text" to text
-                details += "Selector count" to "${cssNode.selectors.size}"
-            }
-
-            is Selector -> {
-                val typeName =
-                    when (cssNode) {
-                        is Selector.Type -> "Type"
-                        is Selector.Class -> "Class"
-                        is Selector.Id -> "Id"
-                        is Selector.PseudoClass -> "PseudoClass"
-                        is Selector.PseudoElement -> "PseudoElement"
-                        is Selector.Attribute -> "Attribute"
-                    }
-                details += "Type" to typeName
-                details += "Text" to cssNode.toString(indent = 0)
-                // Simplified specificity based on selector type. Does not handle edge cases
-                // like universal selector (*) = (0,0,0), or functional pseudo-classes
-                // (:where() = (0,0,0), :not()/:is() = max of arguments).
-                // See CssSpecificity.calculateSpecificity() for the full algorithm.
-                val specificity =
-                    when (cssNode) {
-                        is Selector.Id -> CssSpecificity(a = 1, b = 0, c = 0)
-
-                        is Selector.Class,
-                        is Selector.Attribute,
-                        is Selector.PseudoClass,
-                            -> CssSpecificity(a = 0, b = 1, c = 0)
-
-                        is Selector.Type,
-                        is Selector.PseudoElement,
-                            -> CssSpecificity(a = 0, b = 0, c = 1)
-                    }
-                details += "Specificity" to "(${specificity.a}, ${specificity.b}, ${specificity.c})"
-                if (cssNode is Selector.Attribute) {
-                    cssNode.matcher?.let { details += "Matcher" to it }
-                    cssNode.value?.let { details += "Attr value" to it }
-                }
-            }
-
-            is Value -> {
-                val typeName =
-                    when (cssNode) {
-                        is Value.Color -> "Color"
-                        is Value.String -> "String"
-                        is Value.Identifier -> "Identifier"
-                        is Value.Number -> "Number"
-                        is Value.Dimension -> "Dimension"
-                        is Value.Percentage -> "Percentage"
-                        is Value.Function -> "Function"
-                        is Value.Url -> "Url"
-                    }
-                details += "Type" to typeName
-                details += "Raw value" to cssNode.toString(indent = 0)
-                if (cssNode is Value.Dimension) {
-                    details += "Unit" to cssNode.unit
-                }
-                if (cssNode is Value.Function) {
-                    details += "Name" to cssNode.name
-                    details += "Arg count" to "${cssNode.arguments.size}"
-                }
-            }
-
-            is Comment -> {
-                details += "Content" to cssNode.value.take(COMMENT_DETAIL_LENGTH)
-            }
-
-            else -> {
-                details += "Type" to node.label
-            }
-        }
-
-        // Common fields
         details += "Source offsets" to "${cssNode.location.start}..${cssNode.location.end}"
 
-        // Token sequence (for Declaration and other leaf-ish nodes)
         val tokenSeq = tokensInRange(tokens, node.cssRange)
         if (tokenSeq.isNotEmpty()) {
             details += "Token sequence" to tokenSeq
         }
 
+        return details
+    }
+
+    private fun extractNodeDetails(
+        cssNode: CssNode,
+        label: String,
+    ): MutableList<Pair<String, String>> =
+        when (cssNode) {
+            is StyleSheet -> extractStyleSheet(cssNode)
+            is QualifiedRule -> extractQualifiedRule(cssNode)
+            is AtRule -> extractAtRule(cssNode)
+            is Declaration -> extractDeclaration(cssNode)
+            is SelectorListItem -> extractSelectorListItem(cssNode)
+            is Selector -> extractSelector(cssNode)
+            is Value -> extractValue(cssNode)
+            is Comment -> mutableListOf("Content" to cssNode.value.take(COMMENT_DETAIL_LENGTH))
+            else -> mutableListOf("Type" to label)
+        }
+
+    private fun extractStyleSheet(node: StyleSheet) =
+        mutableListOf(
+            "Child count" to "${node.children.size}",
+            "Source length" to "${node.location.end - node.location.start} chars"
+        )
+
+    private fun extractQualifiedRule(node: QualifiedRule): MutableList<Pair<String, String>> {
+        val selectorText =
+            node.prelude.components
+                .joinToString(", ") { it.toString(indent = 0) }
+        return mutableListOf(
+            "Selector" to selectorText,
+            "Declaration count" to "${node.block.children.size}"
+        )
+    }
+
+    private fun extractAtRule(node: AtRule): MutableList<Pair<String, String>> {
+        val preludeText =
+            node.prelude.components
+                .joinToString(" ") { it.toString(indent = 0) }
+        return mutableListOf(
+            "Name" to node.name,
+            "Prelude" to preludeText,
+            "Child count" to "${node.block.children.size}"
+        )
+    }
+
+    private fun extractDeclaration(node: Declaration) =
+        mutableListOf(
+            "Property" to node.property,
+            "Value" to node.values.joinToString(" ") { it.toString(indent = 0) },
+            "Important" to "${node.important}"
+        )
+
+    private fun extractSelectorListItem(node: SelectorListItem) =
+        mutableListOf(
+            "Text" to node.selectors.joinToString("") { it.toString(indent = 0) },
+            "Selector count" to "${node.selectors.size}"
+        )
+
+    private fun extractSelector(node: Selector): MutableList<Pair<String, String>> {
+        val typeName = when (node) {
+            is Selector.Type -> "Type"
+            is Selector.Class -> "Class"
+            is Selector.Id -> "Id"
+            is Selector.PseudoClass -> "PseudoClass"
+            is Selector.PseudoElement -> "PseudoElement"
+            is Selector.Attribute -> "Attribute"
+        }
+        // Simplified specificity based on selector type. Does not handle edge cases
+        // like universal selector (*) = (0,0,0), or functional pseudo-classes
+        // (:where() = (0,0,0), :not()/:is() = max of arguments).
+        // See CssSpecificity.calculateSpecificity() for the full algorithm.
+        val specificity =
+            when (node) {
+                is Selector.Id -> CssSpecificity(a = 1, b = 0, c = 0)
+
+                is Selector.Class,
+                is Selector.Attribute,
+                is Selector.PseudoClass,
+                    -> CssSpecificity(a = 0, b = 1, c = 0)
+
+                is Selector.Type,
+                is Selector.PseudoElement,
+                    -> CssSpecificity(a = 0, b = 0, c = 1)
+            }
+        val details = mutableListOf(
+            "Type" to typeName,
+            "Text" to node.toString(indent = 0),
+            "Specificity" to "(${specificity.a}, ${specificity.b}, ${specificity.c})"
+        )
+        if (node is Selector.Attribute) {
+            node.matcher?.let { details += "Matcher" to it }
+            node.value?.let { details += "Attr value" to it }
+        }
+        return details
+    }
+
+    private fun extractValue(node: Value): MutableList<Pair<String, String>> {
+        val details =
+            mutableListOf(
+                "Type" to node.typeName,
+                "Raw value" to node.toString(indent = 0)
+            )
+        if (node is Value.Dimension) {
+            details += "Unit" to node.unit
+        }
+        if (node is Value.Function) {
+            details += "Name" to node.name
+            details += "Arg count" to "${node.arguments.size}"
+        }
         return details
     }
 
