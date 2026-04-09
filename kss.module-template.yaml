@@ -4,6 +4,9 @@ settings:
     languageVersion: "2.3"
   compose:
     version: 1.10.3
+  publishing:
+    group: "dev.tonholo.kss"
+    version: "1.0.1-SNAPSHOT"
 
 test-dependencies:
   - $kotlin.test
