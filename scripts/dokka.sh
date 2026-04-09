@@ -67,7 +67,7 @@ generate_config() {
     cat > "$CACHE_DIR/dokka-config.json" <<JSONEOF
 {
   "moduleName": "kss",
-  "moduleVersion": "1.0.0",
+  "moduleVersion": "1.0.1-SNAPSHOT",
   "outputDir": "$OUTPUT_DIR",
   "failOnWarning": false,
   "suppressObviousFunctions": true,

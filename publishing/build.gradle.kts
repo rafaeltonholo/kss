@@ -4,7 +4,7 @@ plugins {
 }
 
 val kssGroup = "dev.tonholo.kss"
-val kssVersion = "1.0.0"
+val kssVersion = "1.0.1-SNAPSHOT"
 
 subprojects {
     group = kssGroup
