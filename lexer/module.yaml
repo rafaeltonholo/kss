@@ -6,6 +6,7 @@ product:
     - linuxX64
     - js
     - wasmJs
+    - mingwX64
 
 apply:
   - ../kss.module-template.yaml
