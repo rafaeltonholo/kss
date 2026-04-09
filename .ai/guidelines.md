@@ -14,7 +14,7 @@ library. It provides:
 3. **Shared abstractions** (`core`) — `Token`, `TokenKind`, `Element`, and AST
    base types used across modules.
 
-**Current version**: `1.0.1-SNAPSHOT` (defined in `kss.module-template.yaml`).
+**Current version**: `1.0.1` (defined in `kss.module-template.yaml`).
 
 ## Project Structure
 

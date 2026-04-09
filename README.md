@@ -30,7 +30,7 @@ providing precise character offsets for every token and AST node. It runs on JVM
 ```kotlin
 // Use the BOM for version alignment
 dependencies {
-    implementation(platform("dev.tonholo.kss:kss-bom:1.0.1-SNAPSHOT"))
+    implementation(platform("dev.tonholo.kss:kss-bom:1.0.1"))
     implementation("dev.tonholo.kss:kss-parser")  // includes core + lexer transitively
 }
 ```
@@ -39,7 +39,7 @@ dependencies {
 
 ```kotlin
 dependencies {
-    implementation(platform("dev.tonholo.kss:kss-bom:1.0.1-SNAPSHOT"))
+    implementation(platform("dev.tonholo.kss:kss-bom:1.0.1"))
     implementation("dev.tonholo.kss:kss-parser")
 }
 ```
@@ -50,15 +50,15 @@ In your `module.yaml`:
 
 ```yaml
 dependencies:
-    - dev.tonholo.kss:kss-parser:1.0.1-SNAPSHOT
+    - dev.tonholo.kss:kss-parser:1.0.1
 ```
 
 Or with individual modules:
 
 ```yaml
 dependencies:
-    - dev.tonholo.kss:kss-core:1.0.1-SNAPSHOT
-    - dev.tonholo.kss:kss-lexer:1.0.1-SNAPSHOT
+    - dev.tonholo.kss:kss-core:1.0.1
+    - dev.tonholo.kss:kss-lexer:1.0.1
 ```
 
 ## Quick Start
