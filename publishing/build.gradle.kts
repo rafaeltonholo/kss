@@ -3,8 +3,13 @@ plugins {
     id("com.vanniktech.maven.publish") version "0.36.0" apply false
 }
 
-val kssGroup = "dev.tonholo.kss"
-val kssVersion = "1.0.0"
+// Read group and version from the shared Amper template (single source of truth).
+val templateFile = rootProject.file("../kss.module-template.yaml")
+val publishingMatch = Regex("""publishing:\s*\n\s+group:\s*"(.+?)"\s*\n\s+version:\s*"(.+?)"""")
+    .find(templateFile.readText())
+    ?: error("Could not read publishing settings from kss.module-template.yaml")
+val kssGroup = publishingMatch.groupValues[1]
+val kssVersion = publishingMatch.groupValues[2]
 
 subprojects {
     group = kssGroup

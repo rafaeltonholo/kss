@@ -6,6 +6,7 @@ product:
     - linuxX64
     - js
     - wasmJs
+    - mingwX64
 
 apply:
   - ../kss.module-template.yaml
@@ -13,8 +14,6 @@ apply:
 settings:
   publishing:
     enabled: true
-    group: "dev.tonholo.kss"
-    version: "1.0.0"
     name: "kss-parser"
 
 dependencies:

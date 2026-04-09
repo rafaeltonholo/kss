@@ -863,6 +863,624 @@ class StyleSheetConsumerTest {
         assertEquals(expected, actual)
     }
 
+    @Test
+    fun `given pseudo-class with attribute selector - when consuming - then creates Attribute`() {
+        // Arrange
+        val content =
+            """
+            |path:not([fill=blue]) {
+            |    stroke: purple;
+            |}
+            """.trimMargin()
+        val tokens =
+            listOf(
+                Token(kind = CssTokenKind.Ident, startOffset = 0, endOffset = 4),
+                Token(kind = CssTokenKind.Colon, startOffset = 4, endOffset = 5),
+                Token(kind = CssTokenKind.Ident, startOffset = 5, endOffset = 8),
+                Token(kind = CssTokenKind.OpenParenthesis, startOffset = 8, endOffset = 9),
+                Token(kind = CssTokenKind.OpenSquareBracket, startOffset = 9, endOffset = 10),
+                Token(kind = CssTokenKind.Ident, startOffset = 10, endOffset = 14),
+                Token(kind = CssTokenKind.Equals, startOffset = 14, endOffset = 15),
+                Token(kind = CssTokenKind.Ident, startOffset = 15, endOffset = 19),
+                Token(kind = CssTokenKind.CloseSquareBracket, startOffset = 19, endOffset = 20),
+                Token(kind = CssTokenKind.CloseParenthesis, startOffset = 20, endOffset = 21),
+                Token(kind = CssTokenKind.WhiteSpace, startOffset = 21, endOffset = 22),
+                Token(kind = CssTokenKind.OpenCurlyBrace, startOffset = 22, endOffset = 23),
+                Token(kind = CssTokenKind.WhiteSpace, startOffset = 23, endOffset = 28),
+                Token(kind = CssTokenKind.Ident, startOffset = 28, endOffset = 34),
+                Token(kind = CssTokenKind.Colon, startOffset = 34, endOffset = 35),
+                Token(kind = CssTokenKind.WhiteSpace, startOffset = 35, endOffset = 36),
+                Token(kind = CssTokenKind.Ident, startOffset = 36, endOffset = 42),
+                Token(kind = CssTokenKind.Semicolon, startOffset = 42, endOffset = 43),
+                Token(kind = CssTokenKind.WhiteSpace, startOffset = 43, endOffset = 44),
+                Token(kind = CssTokenKind.CloseCurlyBrace, startOffset = 44, endOffset = 45),
+                Token(kind = CssTokenKind.EndOfFile, startOffset = 45, endOffset = 45)
+            )
+        val consumer = buildStyleSheetConsumer(content = content)
+        val iterator = CssIterator(tokens)
+        val expected =
+            StyleSheet(
+                location =
+                    CssLocation(
+                        source = content,
+                        start = 0,
+                        end = content.length
+                    ),
+                children =
+                    listOf(
+                        QualifiedRule(
+                            location =
+                                CssLocation(
+                                    source = content,
+                                    start = 0,
+                                    end = content.length
+                                ),
+                            prelude =
+                                Prelude.Selector(
+                                    components =
+                                        listOf(
+                                            SelectorListItem(
+                                                location =
+                                                    CssLocation(
+                                                        source = content.substring(0, 21),
+                                                        start = 0,
+                                                        end = 21
+                                                    ),
+                                                selectors =
+                                                    listOf(
+                                                        Selector.Type(
+                                                            location =
+                                                                CssLocation(
+                                                                    source = content.substring(0, 4),
+                                                                    start = 0,
+                                                                    end = 4
+                                                                ),
+                                                            name = "path"
+                                                        ),
+                                                        Selector.PseudoClass(
+                                                            location =
+                                                                CssLocation(
+                                                                    source = content.substring(4, 21),
+                                                                    start = 4,
+                                                                    end = 21
+                                                                ),
+                                                            name = "not",
+                                                            parameters =
+                                                                listOf(
+                                                                    Selector.Attribute(
+                                                                        location =
+                                                                            CssLocation(
+                                                                                source = content.substring(9, 20),
+                                                                                start = 9,
+                                                                                end = 20
+                                                                            ),
+                                                                        name = "fill",
+                                                                        matcher = "=",
+                                                                        value = "blue"
+                                                                    )
+                                                                )
+                                                        )
+                                                    )
+                                            )
+                                        )
+                                ),
+                            block =
+                                Block.SimpleBlock(
+                                    location =
+                                        CssLocation(
+                                            source = content.substring(22),
+                                            start = 22,
+                                            end = content.length
+                                        ),
+                                    children =
+                                        listOf(
+                                            Declaration(
+                                                location =
+                                                    CssLocation(
+                                                        source = content.substring(28, 43),
+                                                        start = 28,
+                                                        end = 43
+                                                    ),
+                                                property = "stroke",
+                                                important = false,
+                                                values =
+                                                    listOf(
+                                                        Value.Identifier(
+                                                            location =
+                                                                CssLocation(
+                                                                    source = content.substring(36, 42),
+                                                                    start = 36,
+                                                                    end = 42
+                                                                ),
+                                                            name = "purple"
+                                                        )
+                                                    )
+                                            )
+                                        )
+                                )
+                        )
+                    )
+            )
+
+        // Act
+        val actual = consumer.consume(iterator)
+
+        // Assert
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `given attribute selector with quoted value - when consuming - then creates Attribute with value`() {
+        // Arrange
+        // input[type="password"] { color: red; }
+        val content = """input[type="password"] { color: red; }"""
+        val tokens =
+            listOf(
+                Token(kind = CssTokenKind.Ident, startOffset = 0, endOffset = 5),
+                Token(kind = CssTokenKind.OpenSquareBracket, startOffset = 5, endOffset = 6),
+                Token(kind = CssTokenKind.Ident, startOffset = 6, endOffset = 10),
+                Token(kind = CssTokenKind.Equals, startOffset = 10, endOffset = 11),
+                Token(kind = CssTokenKind.String, startOffset = 11, endOffset = 21),
+                Token(kind = CssTokenKind.CloseSquareBracket, startOffset = 21, endOffset = 22),
+                Token(kind = CssTokenKind.WhiteSpace, startOffset = 22, endOffset = 23),
+                Token(kind = CssTokenKind.OpenCurlyBrace, startOffset = 23, endOffset = 24),
+                Token(kind = CssTokenKind.WhiteSpace, startOffset = 24, endOffset = 25),
+                Token(kind = CssTokenKind.Ident, startOffset = 25, endOffset = 30),
+                Token(kind = CssTokenKind.Colon, startOffset = 30, endOffset = 31),
+                Token(kind = CssTokenKind.WhiteSpace, startOffset = 31, endOffset = 32),
+                Token(kind = CssTokenKind.Ident, startOffset = 32, endOffset = 35),
+                Token(kind = CssTokenKind.Semicolon, startOffset = 35, endOffset = 36),
+                Token(kind = CssTokenKind.WhiteSpace, startOffset = 36, endOffset = 37),
+                Token(kind = CssTokenKind.CloseCurlyBrace, startOffset = 37, endOffset = 38),
+                Token(kind = CssTokenKind.EndOfFile, startOffset = 38, endOffset = 38)
+            )
+        val consumer = buildStyleSheetConsumer(content = content)
+        val iterator = CssIterator(tokens)
+        val expected =
+            StyleSheet(
+                location =
+                    CssLocation(
+                        source = content,
+                        start = 0,
+                        end = content.length
+                    ),
+                children =
+                    listOf(
+                        QualifiedRule(
+                            location =
+                                CssLocation(
+                                    source = content,
+                                    start = 0,
+                                    end = content.length
+                                ),
+                            prelude =
+                                Prelude.Selector(
+                                    components =
+                                        listOf(
+                                            SelectorListItem(
+                                                location =
+                                                    CssLocation(
+                                                        source = content.substring(0, 22),
+                                                        start = 0,
+                                                        end = 22
+                                                    ),
+                                                selectors =
+                                                    listOf(
+                                                        Selector.Type(
+                                                            location =
+                                                                CssLocation(
+                                                                    source = content.substring(0, 5),
+                                                                    start = 0,
+                                                                    end = 5
+                                                                ),
+                                                            name = "input"
+                                                        ),
+                                                        Selector.Attribute(
+                                                            location =
+                                                                CssLocation(
+                                                                    source = content.substring(5, 22),
+                                                                    start = 5,
+                                                                    end = 22
+                                                                ),
+                                                            name = "type",
+                                                            matcher = "=",
+                                                            value = "password"
+                                                        )
+                                                    )
+                                            )
+                                        )
+                                ),
+                            block =
+                                Block.SimpleBlock(
+                                    location =
+                                        CssLocation(
+                                            source = content.substring(23),
+                                            start = 23,
+                                            end = content.length
+                                        ),
+                                    children =
+                                        listOf(
+                                            Declaration(
+                                                location =
+                                                    CssLocation(
+                                                        source = content.substring(25, 36),
+                                                        start = 25,
+                                                        end = 36
+                                                    ),
+                                                property = "color",
+                                                important = false,
+                                                values =
+                                                    listOf(
+                                                        Value.Identifier(
+                                                            location =
+                                                                CssLocation(
+                                                                    source = content.substring(32, 35),
+                                                                    start = 32,
+                                                                    end = 35
+                                                                ),
+                                                            name = "red"
+                                                        )
+                                                    )
+                                            )
+                                        )
+                                )
+                        )
+                    )
+            )
+
+        // Act
+        val actual = consumer.consume(iterator)
+
+        // Assert
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `given function with no arguments - when consuming - then creates Function with empty args`() {
+        // Arrange
+        val content = "div { content: attr(); }"
+        val tokens =
+            listOf(
+                Token(kind = CssTokenKind.Ident, startOffset = 0, endOffset = 3),
+                Token(kind = CssTokenKind.WhiteSpace, startOffset = 3, endOffset = 4),
+                Token(kind = CssTokenKind.OpenCurlyBrace, startOffset = 4, endOffset = 5),
+                Token(kind = CssTokenKind.WhiteSpace, startOffset = 5, endOffset = 6),
+                Token(kind = CssTokenKind.Ident, startOffset = 6, endOffset = 13),
+                Token(kind = CssTokenKind.Colon, startOffset = 13, endOffset = 14),
+                Token(kind = CssTokenKind.WhiteSpace, startOffset = 14, endOffset = 15),
+                Token(kind = CssTokenKind.Function, startOffset = 15, endOffset = 19),
+                Token(kind = CssTokenKind.OpenParenthesis, startOffset = 19, endOffset = 20),
+                Token(kind = CssTokenKind.CloseParenthesis, startOffset = 20, endOffset = 21),
+                Token(kind = CssTokenKind.Semicolon, startOffset = 21, endOffset = 22),
+                Token(kind = CssTokenKind.WhiteSpace, startOffset = 22, endOffset = 23),
+                Token(kind = CssTokenKind.CloseCurlyBrace, startOffset = 23, endOffset = 24),
+                Token(kind = CssTokenKind.EndOfFile, startOffset = 24, endOffset = 24)
+            )
+        val consumer = buildStyleSheetConsumer(content = content)
+        val iterator = CssIterator(tokens)
+        val expected =
+            StyleSheet(
+                location =
+                    CssLocation(
+                        source = content,
+                        start = 0,
+                        end = content.length
+                    ),
+                children =
+                    listOf(
+                        QualifiedRule(
+                            location =
+                                CssLocation(
+                                    source = content,
+                                    start = 0,
+                                    end = content.length
+                                ),
+                            prelude =
+                                Prelude.Selector(
+                                    components =
+                                        listOf(
+                                            SelectorListItem(
+                                                location =
+                                                    CssLocation(
+                                                        source = content.substring(0, 3),
+                                                        start = 0,
+                                                        end = 3
+                                                    ),
+                                                selectors =
+                                                    listOf(
+                                                        Selector.Type(
+                                                            location =
+                                                                CssLocation(
+                                                                    source = content.substring(0, 3),
+                                                                    start = 0,
+                                                                    end = 3
+                                                                ),
+                                                            name = "div"
+                                                        )
+                                                    )
+                                            )
+                                        )
+                                ),
+                            block =
+                                Block.SimpleBlock(
+                                    location =
+                                        CssLocation(
+                                            source = content.substring(4),
+                                            start = 4,
+                                            end = content.length
+                                        ),
+                                    children =
+                                        listOf(
+                                            Declaration(
+                                                location =
+                                                    CssLocation(
+                                                        source = content.substring(6, 22),
+                                                        start = 6,
+                                                        end = 22
+                                                    ),
+                                                property = "content",
+                                                important = false,
+                                                values =
+                                                    listOf(
+                                                        Value.Function(
+                                                            location =
+                                                                CssLocation(
+                                                                    source = content.substring(15, 21),
+                                                                    start = 15,
+                                                                    end = 21
+                                                                ),
+                                                            name = "attr",
+                                                            arguments = emptyList()
+                                                        )
+                                                    )
+                                            )
+                                        )
+                                )
+                        )
+                    )
+            )
+
+        // Act
+        val actual = consumer.consume(iterator)
+
+        // Assert
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `given attribute selector with tilde-equals matcher - when consuming - then creates Attribute`() {
+        // Arrange
+        // [class~=warning] { color: orange; }
+        val content = """[class~=warning] { color: orange; }"""
+        val tokens =
+            listOf(
+                Token(kind = CssTokenKind.OpenSquareBracket, startOffset = 0, endOffset = 1),
+                Token(kind = CssTokenKind.Ident, startOffset = 1, endOffset = 6),
+                Token(kind = CssTokenKind.Tilde, startOffset = 6, endOffset = 7),
+                Token(kind = CssTokenKind.Equals, startOffset = 7, endOffset = 8),
+                Token(kind = CssTokenKind.Ident, startOffset = 8, endOffset = 15),
+                Token(kind = CssTokenKind.CloseSquareBracket, startOffset = 15, endOffset = 16),
+                Token(kind = CssTokenKind.WhiteSpace, startOffset = 16, endOffset = 17),
+                Token(kind = CssTokenKind.OpenCurlyBrace, startOffset = 17, endOffset = 18),
+                Token(kind = CssTokenKind.WhiteSpace, startOffset = 18, endOffset = 19),
+                Token(kind = CssTokenKind.Ident, startOffset = 19, endOffset = 24),
+                Token(kind = CssTokenKind.Colon, startOffset = 24, endOffset = 25),
+                Token(kind = CssTokenKind.WhiteSpace, startOffset = 25, endOffset = 26),
+                Token(kind = CssTokenKind.Ident, startOffset = 26, endOffset = 32),
+                Token(kind = CssTokenKind.Semicolon, startOffset = 32, endOffset = 33),
+                Token(kind = CssTokenKind.WhiteSpace, startOffset = 33, endOffset = 34),
+                Token(kind = CssTokenKind.CloseCurlyBrace, startOffset = 34, endOffset = 35),
+                Token(kind = CssTokenKind.EndOfFile, startOffset = 35, endOffset = 35)
+            )
+        val consumer = buildStyleSheetConsumer(content = content)
+        val iterator = CssIterator(tokens)
+        val expected =
+            StyleSheet(
+                location =
+                    CssLocation(
+                        source = content,
+                        start = 0,
+                        end = content.length
+                    ),
+                children =
+                    listOf(
+                        QualifiedRule(
+                            location =
+                                CssLocation(
+                                    source = content,
+                                    start = 0,
+                                    end = content.length
+                                ),
+                            prelude =
+                                Prelude.Selector(
+                                    components =
+                                        listOf(
+                                            SelectorListItem(
+                                                location =
+                                                    CssLocation(
+                                                        source = content.substring(0, 16),
+                                                        start = 0,
+                                                        end = 16
+                                                    ),
+                                                selectors =
+                                                    listOf(
+                                                        Selector.Attribute(
+                                                            location =
+                                                                CssLocation(
+                                                                    source = content.substring(0, 16),
+                                                                    start = 0,
+                                                                    end = 16
+                                                                ),
+                                                            name = "class",
+                                                            matcher = "~=",
+                                                            value = "warning"
+                                                        )
+                                                    )
+                                            )
+                                        )
+                                ),
+                            block =
+                                Block.SimpleBlock(
+                                    location =
+                                        CssLocation(
+                                            source = content.substring(17),
+                                            start = 17,
+                                            end = content.length
+                                        ),
+                                    children =
+                                        listOf(
+                                            Declaration(
+                                                location =
+                                                    CssLocation(
+                                                        source = content.substring(19, 33),
+                                                        start = 19,
+                                                        end = 33
+                                                    ),
+                                                property = "color",
+                                                important = false,
+                                                values =
+                                                    listOf(
+                                                        Value.Identifier(
+                                                            location =
+                                                                CssLocation(
+                                                                    source = content.substring(26, 32),
+                                                                    start = 26,
+                                                                    end = 32
+                                                                ),
+                                                            name = "orange"
+                                                        )
+                                                    )
+                                            )
+                                        )
+                                )
+                        )
+                    )
+            )
+
+        // Act
+        val actual = consumer.consume(iterator)
+
+        // Assert
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `given attribute selector with pipe-equals matcher - when consuming - then creates Attribute`() {
+        // Arrange
+        // [lang|=en] { direction: ltr; }
+        val content = """[lang|=en] { direction: ltr; }"""
+        val tokens =
+            listOf(
+                Token(kind = CssTokenKind.OpenSquareBracket, startOffset = 0, endOffset = 1),
+                Token(kind = CssTokenKind.Ident, startOffset = 1, endOffset = 5),
+                Token(kind = CssTokenKind.Pipe, startOffset = 5, endOffset = 6),
+                Token(kind = CssTokenKind.Equals, startOffset = 6, endOffset = 7),
+                Token(kind = CssTokenKind.Ident, startOffset = 7, endOffset = 9),
+                Token(kind = CssTokenKind.CloseSquareBracket, startOffset = 9, endOffset = 10),
+                Token(kind = CssTokenKind.WhiteSpace, startOffset = 10, endOffset = 11),
+                Token(kind = CssTokenKind.OpenCurlyBrace, startOffset = 11, endOffset = 12),
+                Token(kind = CssTokenKind.WhiteSpace, startOffset = 12, endOffset = 13),
+                Token(kind = CssTokenKind.Ident, startOffset = 13, endOffset = 22),
+                Token(kind = CssTokenKind.Colon, startOffset = 22, endOffset = 23),
+                Token(kind = CssTokenKind.WhiteSpace, startOffset = 23, endOffset = 24),
+                Token(kind = CssTokenKind.Ident, startOffset = 24, endOffset = 27),
+                Token(kind = CssTokenKind.Semicolon, startOffset = 27, endOffset = 28),
+                Token(kind = CssTokenKind.WhiteSpace, startOffset = 28, endOffset = 29),
+                Token(kind = CssTokenKind.CloseCurlyBrace, startOffset = 29, endOffset = 30),
+                Token(kind = CssTokenKind.EndOfFile, startOffset = 30, endOffset = 30)
+            )
+        val consumer = buildStyleSheetConsumer(content = content)
+        val iterator = CssIterator(tokens)
+        val expected =
+            StyleSheet(
+                location =
+                    CssLocation(
+                        source = content,
+                        start = 0,
+                        end = content.length
+                    ),
+                children =
+                    listOf(
+                        QualifiedRule(
+                            location =
+                                CssLocation(
+                                    source = content,
+                                    start = 0,
+                                    end = content.length
+                                ),
+                            prelude =
+                                Prelude.Selector(
+                                    components =
+                                        listOf(
+                                            SelectorListItem(
+                                                location =
+                                                    CssLocation(
+                                                        source = content.substring(0, 10),
+                                                        start = 0,
+                                                        end = 10
+                                                    ),
+                                                selectors =
+                                                    listOf(
+                                                        Selector.Attribute(
+                                                            location =
+                                                                CssLocation(
+                                                                    source = content.substring(0, 10),
+                                                                    start = 0,
+                                                                    end = 10
+                                                                ),
+                                                            name = "lang",
+                                                            matcher = "|=",
+                                                            value = "en"
+                                                        )
+                                                    )
+                                            )
+                                        )
+                                ),
+                            block =
+                                Block.SimpleBlock(
+                                    location =
+                                        CssLocation(
+                                            source = content.substring(11),
+                                            start = 11,
+                                            end = content.length
+                                        ),
+                                    children =
+                                        listOf(
+                                            Declaration(
+                                                location =
+                                                    CssLocation(
+                                                        source = content.substring(13, 28),
+                                                        start = 13,
+                                                        end = 28
+                                                    ),
+                                                property = "direction",
+                                                important = false,
+                                                values =
+                                                    listOf(
+                                                        Value.Identifier(
+                                                            location =
+                                                                CssLocation(
+                                                                    source = content.substring(24, 27),
+                                                                    start = 24,
+                                                                    end = 27
+                                                                ),
+                                                            name = "ltr"
+                                                        )
+                                                    )
+                                            )
+                                        )
+                                )
+                        )
+                    )
+            )
+
+        // Act
+        val actual = consumer.consume(iterator)
+
+        // Assert
+        assertEquals(expected, actual)
+    }
+
     private fun buildStyleSheetConsumer(content: String): StyleSheetConsumer {
         val simpleSelectorConsumer =
             SimpleSelectorConsumer(

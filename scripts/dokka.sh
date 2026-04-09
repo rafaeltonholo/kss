@@ -16,6 +16,7 @@ KOTLINX_HTML_VERSION="0.8.0"
 FREEMARKER_VERSION="2.3.31"
 
 PROJECT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+KSS_VERSION="$(grep -A2 'publishing:' "$PROJECT_DIR/kss.module-template.yaml" | grep 'version:' | sed 's/.*version: *"\(.*\)"/\1/')"
 CACHE_DIR="$PROJECT_DIR/.cache/dokka"
 OUTPUT_DIR="$PROJECT_DIR/build/dokka/html"
 
@@ -67,7 +68,7 @@ generate_config() {
     cat > "$CACHE_DIR/dokka-config.json" <<JSONEOF
 {
   "moduleName": "kss",
-  "moduleVersion": "1.0.0",
+  "moduleVersion": "$KSS_VERSION",
   "outputDir": "$OUTPUT_DIR",
   "failOnWarning": false,
   "suppressObviousFunctions": true,

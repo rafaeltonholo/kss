@@ -17,7 +17,18 @@ class DirectTokenConsumer(
             CssTokenKind.OpenCurlyBrace,
             CssTokenKind.CloseCurlyBrace,
             CssTokenKind.OpenParenthesis,
-            CssTokenKind.CloseParenthesis
+            CssTokenKind.CloseParenthesis,
+            CssTokenKind.OpenSquareBracket,
+            CssTokenKind.CloseSquareBracket,
+            CssTokenKind.Equals,
+            CssTokenKind.Asterisk,
+            CssTokenKind.Tilde,
+            CssTokenKind.Plus,
+            CssTokenKind.Bang,
+            CssTokenKind.Percent,
+            CssTokenKind.Pipe,
+            CssTokenKind.Caret,
+            CssTokenKind.Dollar
         )
 
     override fun accept(kind: CssTokenKind): Boolean =
@@ -34,8 +45,11 @@ class DirectTokenConsumer(
 
     override fun consume(kind: CssTokenKind): List<Token<out CssTokenKind>> {
         val start = iterator.offset
+        if (kind == CssTokenKind.Colon && iterator.peek(offset = 1) in CssTokenKind.Colon) {
+            iterator.nextOffset(steps = 2)
+            return listOf(Token(CssTokenKind.DoubleColon, start, start + 2))
+        }
         val end = iterator.nextOffset()
-        val token = Token(kind, start, end)
-        return listOf(token)
+        return listOf(Token(kind, start, end))
     }
 }

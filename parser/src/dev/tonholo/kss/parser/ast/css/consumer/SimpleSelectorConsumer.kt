@@ -51,12 +51,39 @@ class SimpleSelectorConsumer(
             }
 
             CssTokenKind.OpenSquareBracket -> {
-                val next = iterator.expectNextToken(kind = CssTokenKind.Ident)
+                val nameToken = iterator.expectNextToken(kind = CssTokenKind.Ident)
+                val name = content.substring(nameToken.startOffset, endIndex = nameToken.endOffset)
+                var afterName = iterator.expectNextTokenNotNull()
+                if (afterName.kind == CssTokenKind.WhiteSpace) {
+                    afterName = iterator.expectNextTokenNotNull()
+                }
+                val matcher: String?
+                val value: String?
+                val endToken: Token<out CssTokenKind>
+                if (afterName.kind == CssTokenKind.CloseSquareBracket) {
+                    matcher = null
+                    value = null
+                    endToken = afterName
+                } else {
+                    matcher = buildAttributeMatcher(afterName, iterator)
+                    var valueToken = iterator.expectNextTokenNotNull()
+                    if (valueToken.kind == CssTokenKind.WhiteSpace) {
+                        valueToken = iterator.expectNextTokenNotNull()
+                    }
+                    value = extractAttributeValue(valueToken)
+                    val nextToken = iterator.expectNextTokenNotNull()
+                    if (nextToken.kind == CssTokenKind.WhiteSpace) {
+                        endToken = iterator.expectNextToken(kind = CssTokenKind.CloseSquareBracket)
+                    } else {
+                        iterator.expectToken(kind = CssTokenKind.CloseSquareBracket)
+                        endToken = nextToken
+                    }
+                }
                 Selector.Attribute(
-                    location = calculateLocation(current, next),
-                    name = content.substring(next.startOffset, endIndex = next.endOffset),
-                    matcher = null,
-                    value = null,
+                    location = calculateLocation(current.startOffset, endToken.endOffset),
+                    name = name,
+                    matcher = matcher,
+                    value = value,
                     combinator = lookupForCombinator(iterator)
                 )
             }
@@ -98,6 +125,36 @@ class SimpleSelectorConsumer(
             else -> {
                 iterator.parserError(content, "Unexpected token ${current.kind}")
             }
+        }
+    }
+
+    private val compoundMatcherPrefixes =
+        setOf(
+            CssTokenKind.Tilde,
+            CssTokenKind.Pipe,
+            CssTokenKind.Caret,
+            CssTokenKind.Dollar,
+            CssTokenKind.Asterisk
+        )
+
+    private fun buildAttributeMatcher(
+        firstToken: Token<out CssTokenKind>,
+        iterator: AstParserIterator<CssTokenKind>,
+    ): String {
+        val prefix = content.substring(firstToken.startOffset, endIndex = firstToken.endOffset)
+        if (firstToken.kind in compoundMatcherPrefixes) {
+            val equalsToken = iterator.expectNextToken(kind = CssTokenKind.Equals)
+            return prefix + content.substring(equalsToken.startOffset, endIndex = equalsToken.endOffset)
+        }
+        return prefix
+    }
+
+    private fun extractAttributeValue(token: Token<out CssTokenKind>): String {
+        val raw = content.substring(token.startOffset, endIndex = token.endOffset)
+        return when (token.kind) {
+            CssTokenKind.String -> raw.removeSurrounding("\"").removeSurrounding("'")
+            CssTokenKind.Ident -> raw
+            else -> raw
         }
     }
 

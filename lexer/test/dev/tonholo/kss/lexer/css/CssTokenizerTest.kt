@@ -1289,6 +1289,222 @@ class CssTokenizerTest {
         assertTokens(params.content, params.tokens)
     }
 
+    @Test
+    fun `given attribute selector with equals - when tokenizing - then creates valid tokens`() {
+        // Arrange
+        val content = "[fill=blue]"
+        val expected =
+            listOf(
+                Token(kind = CssTokenKind.OpenSquareBracket, startOffset = 0, endOffset = 1),
+                Token(kind = CssTokenKind.Ident, startOffset = 1, endOffset = 5),
+                Token(kind = CssTokenKind.Equals, startOffset = 5, endOffset = 6),
+                Token(kind = CssTokenKind.Ident, startOffset = 6, endOffset = 10),
+                Token(kind = CssTokenKind.CloseSquareBracket, startOffset = 10, endOffset = 11),
+                Token(kind = CssTokenKind.EndOfFile, startOffset = 11, endOffset = 11)
+            )
+
+        // Act / Assert
+        assertTokens(content, expected)
+    }
+
+    @Test
+    fun `given pseudo-class with attribute selector - when tokenizing - then creates correct token sequence`() {
+        // Arrange
+        val content = "path:not([fill=blue])"
+        val expected =
+            listOf(
+                Token(kind = CssTokenKind.Ident, startOffset = 0, endOffset = 4),
+                Token(kind = CssTokenKind.Colon, startOffset = 4, endOffset = 5),
+                Token(kind = CssTokenKind.Ident, startOffset = 5, endOffset = 8),
+                Token(kind = CssTokenKind.OpenParenthesis, startOffset = 8, endOffset = 9),
+                Token(kind = CssTokenKind.OpenSquareBracket, startOffset = 9, endOffset = 10),
+                Token(kind = CssTokenKind.Ident, startOffset = 10, endOffset = 14),
+                Token(kind = CssTokenKind.Equals, startOffset = 14, endOffset = 15),
+                Token(kind = CssTokenKind.Ident, startOffset = 15, endOffset = 19),
+                Token(kind = CssTokenKind.CloseSquareBracket, startOffset = 19, endOffset = 20),
+                Token(kind = CssTokenKind.CloseParenthesis, startOffset = 20, endOffset = 21),
+                Token(kind = CssTokenKind.EndOfFile, startOffset = 21, endOffset = 21)
+            )
+
+        // Act / Assert
+        assertTokens(content, expected)
+    }
+
+    @Test
+    fun `given attribute selector with quoted value - when tokenizing - then creates valid tokens`() {
+        // Arrange
+        val content = """[type="password"]"""
+        val expected =
+            listOf(
+                Token(kind = CssTokenKind.OpenSquareBracket, startOffset = 0, endOffset = 1),
+                Token(kind = CssTokenKind.Ident, startOffset = 1, endOffset = 5),
+                Token(kind = CssTokenKind.Equals, startOffset = 5, endOffset = 6),
+                Token(kind = CssTokenKind.String, startOffset = 6, endOffset = 16),
+                Token(kind = CssTokenKind.CloseSquareBracket, startOffset = 16, endOffset = 17),
+                Token(kind = CssTokenKind.EndOfFile, startOffset = 17, endOffset = 17)
+            )
+
+        // Act / Assert
+        assertTokens(content, expected)
+    }
+
+    @Test
+    fun `given universal selector - when tokenizing - then creates Asterisk token`() {
+        // Arrange
+        val content = "* {}"
+        val expected =
+            listOf(
+                Token(kind = CssTokenKind.Asterisk, startOffset = 0, endOffset = 1),
+                Token(kind = CssTokenKind.WhiteSpace, startOffset = 1, endOffset = 2),
+                Token(kind = CssTokenKind.OpenCurlyBrace, startOffset = 2, endOffset = 3),
+                Token(kind = CssTokenKind.CloseCurlyBrace, startOffset = 3, endOffset = 4),
+                Token(kind = CssTokenKind.EndOfFile, startOffset = 4, endOffset = 4)
+            )
+
+        // Act / Assert
+        assertTokens(content, expected)
+    }
+
+    @Test
+    fun `given general sibling combinator - when tokenizing - then creates Tilde token`() {
+        // Arrange
+        val content = "p ~ span"
+        val expected =
+            listOf(
+                Token(kind = CssTokenKind.Ident, startOffset = 0, endOffset = 1),
+                Token(kind = CssTokenKind.WhiteSpace, startOffset = 1, endOffset = 2),
+                Token(kind = CssTokenKind.Tilde, startOffset = 2, endOffset = 3),
+                Token(kind = CssTokenKind.WhiteSpace, startOffset = 3, endOffset = 4),
+                Token(kind = CssTokenKind.Ident, startOffset = 4, endOffset = 8),
+                Token(kind = CssTokenKind.EndOfFile, startOffset = 8, endOffset = 8)
+            )
+
+        // Act / Assert
+        assertTokens(content, expected)
+    }
+
+    @Test
+    fun `given adjacent sibling combinator - when tokenizing - then creates Plus token`() {
+        // Arrange
+        val content = "p + span"
+        val expected =
+            listOf(
+                Token(kind = CssTokenKind.Ident, startOffset = 0, endOffset = 1),
+                Token(kind = CssTokenKind.WhiteSpace, startOffset = 1, endOffset = 2),
+                Token(kind = CssTokenKind.Plus, startOffset = 2, endOffset = 3),
+                Token(kind = CssTokenKind.WhiteSpace, startOffset = 3, endOffset = 4),
+                Token(kind = CssTokenKind.Ident, startOffset = 4, endOffset = 8),
+                Token(kind = CssTokenKind.EndOfFile, startOffset = 8, endOffset = 8)
+            )
+
+        // Act / Assert
+        assertTokens(content, expected)
+    }
+
+    @Test
+    fun `given important declaration - when tokenizing - then creates Bang token`() {
+        // Arrange
+        val content = "!important"
+        val expected =
+            listOf(
+                Token(kind = CssTokenKind.Bang, startOffset = 0, endOffset = 1),
+                Token(kind = CssTokenKind.Ident, startOffset = 1, endOffset = 10),
+                Token(kind = CssTokenKind.EndOfFile, startOffset = 10, endOffset = 10)
+            )
+
+        // Act / Assert
+        assertTokens(content, expected)
+    }
+
+    @Test
+    fun `given pseudo-element selector - when tokenizing - then creates DoubleColon token`() {
+        // Arrange
+        val content = "a::after"
+        val expected =
+            listOf(
+                Token(kind = CssTokenKind.Ident, startOffset = 0, endOffset = 1),
+                Token(kind = CssTokenKind.DoubleColon, startOffset = 1, endOffset = 3),
+                Token(kind = CssTokenKind.Ident, startOffset = 3, endOffset = 8),
+                Token(kind = CssTokenKind.EndOfFile, startOffset = 8, endOffset = 8)
+            )
+
+        // Act / Assert
+        assertTokens(content, expected)
+    }
+
+    @Test
+    fun `given single colon pseudo-class - when tokenizing - then creates Colon token`() {
+        // Arrange
+        val content = "a:hover"
+        val expected =
+            listOf(
+                Token(kind = CssTokenKind.Ident, startOffset = 0, endOffset = 1),
+                Token(kind = CssTokenKind.Colon, startOffset = 1, endOffset = 2),
+                Token(kind = CssTokenKind.Ident, startOffset = 2, endOffset = 7),
+                Token(kind = CssTokenKind.EndOfFile, startOffset = 7, endOffset = 7)
+            )
+
+        // Act / Assert
+        assertTokens(content, expected)
+    }
+
+    @Test
+    fun `given attribute selector with pipe operator - when tokenizing - then creates Pipe token`() {
+        // Arrange
+        val content = "[lang|=en]"
+        val expected =
+            listOf(
+                Token(kind = CssTokenKind.OpenSquareBracket, startOffset = 0, endOffset = 1),
+                Token(kind = CssTokenKind.Ident, startOffset = 1, endOffset = 5),
+                Token(kind = CssTokenKind.Pipe, startOffset = 5, endOffset = 6),
+                Token(kind = CssTokenKind.Equals, startOffset = 6, endOffset = 7),
+                Token(kind = CssTokenKind.Ident, startOffset = 7, endOffset = 9),
+                Token(kind = CssTokenKind.CloseSquareBracket, startOffset = 9, endOffset = 10),
+                Token(kind = CssTokenKind.EndOfFile, startOffset = 10, endOffset = 10)
+            )
+
+        // Act / Assert
+        assertTokens(content, expected)
+    }
+
+    @Test
+    fun `given attribute selector with caret operator - when tokenizing - then creates Caret token`() {
+        // Arrange
+        val content = "[class^=btn]"
+        val expected =
+            listOf(
+                Token(kind = CssTokenKind.OpenSquareBracket, startOffset = 0, endOffset = 1),
+                Token(kind = CssTokenKind.Ident, startOffset = 1, endOffset = 6),
+                Token(kind = CssTokenKind.Caret, startOffset = 6, endOffset = 7),
+                Token(kind = CssTokenKind.Equals, startOffset = 7, endOffset = 8),
+                Token(kind = CssTokenKind.Ident, startOffset = 8, endOffset = 11),
+                Token(kind = CssTokenKind.CloseSquareBracket, startOffset = 11, endOffset = 12),
+                Token(kind = CssTokenKind.EndOfFile, startOffset = 12, endOffset = 12)
+            )
+
+        // Act / Assert
+        assertTokens(content, expected)
+    }
+
+    @Test
+    fun `given attribute selector with dollar operator - when tokenizing - then creates Dollar token`() {
+        // Arrange
+        val content = "[src$=png]"
+        val expected =
+            listOf(
+                Token(kind = CssTokenKind.OpenSquareBracket, startOffset = 0, endOffset = 1),
+                Token(kind = CssTokenKind.Ident, startOffset = 1, endOffset = 4),
+                Token(kind = CssTokenKind.Dollar, startOffset = 4, endOffset = 5),
+                Token(kind = CssTokenKind.Equals, startOffset = 5, endOffset = 6),
+                Token(kind = CssTokenKind.Ident, startOffset = 6, endOffset = 9),
+                Token(kind = CssTokenKind.CloseSquareBracket, startOffset = 9, endOffset = 10),
+                Token(kind = CssTokenKind.EndOfFile, startOffset = 10, endOffset = 10)
+            )
+
+        // Act / Assert
+        assertTokens(content, expected)
+    }
+
     private fun assertTokens(
         content: String,
         tokens: List<Token<out CssTokenKind>>,

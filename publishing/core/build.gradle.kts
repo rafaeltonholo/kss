@@ -14,6 +14,7 @@ kotlin {
         nodejs()
     }
     linuxX64()
+    mingwX64()
     macosArm64()
     macosX64()
 
