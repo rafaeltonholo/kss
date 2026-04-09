@@ -1348,6 +1348,74 @@ class CssTokenizerTest {
         assertTokens(content, expected)
     }
 
+    @Test
+    fun `given universal selector - when tokenizing - then creates Asterisk token`() {
+        // Arrange
+        val content = "* {}"
+        val expected =
+            listOf(
+                Token(kind = CssTokenKind.Asterisk, startOffset = 0, endOffset = 1),
+                Token(kind = CssTokenKind.WhiteSpace, startOffset = 1, endOffset = 2),
+                Token(kind = CssTokenKind.OpenCurlyBrace, startOffset = 2, endOffset = 3),
+                Token(kind = CssTokenKind.CloseCurlyBrace, startOffset = 3, endOffset = 4),
+                Token(kind = CssTokenKind.EndOfFile, startOffset = 4, endOffset = 4)
+            )
+
+        // Act / Assert
+        assertTokens(content, expected)
+    }
+
+    @Test
+    fun `given general sibling combinator - when tokenizing - then creates Tilde token`() {
+        // Arrange
+        val content = "p ~ span"
+        val expected =
+            listOf(
+                Token(kind = CssTokenKind.Ident, startOffset = 0, endOffset = 1),
+                Token(kind = CssTokenKind.WhiteSpace, startOffset = 1, endOffset = 2),
+                Token(kind = CssTokenKind.Tilde, startOffset = 2, endOffset = 3),
+                Token(kind = CssTokenKind.WhiteSpace, startOffset = 3, endOffset = 4),
+                Token(kind = CssTokenKind.Ident, startOffset = 4, endOffset = 8),
+                Token(kind = CssTokenKind.EndOfFile, startOffset = 8, endOffset = 8)
+            )
+
+        // Act / Assert
+        assertTokens(content, expected)
+    }
+
+    @Test
+    fun `given adjacent sibling combinator - when tokenizing - then creates Plus token`() {
+        // Arrange
+        val content = "p + span"
+        val expected =
+            listOf(
+                Token(kind = CssTokenKind.Ident, startOffset = 0, endOffset = 1),
+                Token(kind = CssTokenKind.WhiteSpace, startOffset = 1, endOffset = 2),
+                Token(kind = CssTokenKind.Plus, startOffset = 2, endOffset = 3),
+                Token(kind = CssTokenKind.WhiteSpace, startOffset = 3, endOffset = 4),
+                Token(kind = CssTokenKind.Ident, startOffset = 4, endOffset = 8),
+                Token(kind = CssTokenKind.EndOfFile, startOffset = 8, endOffset = 8)
+            )
+
+        // Act / Assert
+        assertTokens(content, expected)
+    }
+
+    @Test
+    fun `given important declaration - when tokenizing - then creates Bang token`() {
+        // Arrange
+        val content = "!important"
+        val expected =
+            listOf(
+                Token(kind = CssTokenKind.Bang, startOffset = 0, endOffset = 1),
+                Token(kind = CssTokenKind.Ident, startOffset = 1, endOffset = 10),
+                Token(kind = CssTokenKind.EndOfFile, startOffset = 10, endOffset = 10)
+            )
+
+        // Act / Assert
+        assertTokens(content, expected)
+    }
+
     private fun assertTokens(
         content: String,
         tokens: List<Token<out CssTokenKind>>,
