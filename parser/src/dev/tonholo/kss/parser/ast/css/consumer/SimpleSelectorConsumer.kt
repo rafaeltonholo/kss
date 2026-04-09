@@ -51,12 +51,27 @@ class SimpleSelectorConsumer(
             }
 
             CssTokenKind.OpenSquareBracket -> {
-                val next = iterator.expectNextToken(kind = CssTokenKind.Ident)
+                val nameToken = iterator.expectNextToken(kind = CssTokenKind.Ident)
+                val name = content.substring(nameToken.startOffset, endIndex = nameToken.endOffset)
+                val afterName = iterator.expectNextTokenNotNull()
+                val matcher: String?
+                val value: String?
+                val endToken: Token<out CssTokenKind>
+                if (afterName.kind == CssTokenKind.CloseSquareBracket) {
+                    matcher = null
+                    value = null
+                    endToken = afterName
+                } else {
+                    matcher = content.substring(afterName.startOffset, endIndex = afterName.endOffset)
+                    val valueToken = iterator.expectNextTokenNotNull()
+                    value = extractAttributeValue(valueToken)
+                    endToken = iterator.expectNextToken(kind = CssTokenKind.CloseSquareBracket)
+                }
                 Selector.Attribute(
-                    location = calculateLocation(current, next),
-                    name = content.substring(next.startOffset, endIndex = next.endOffset),
-                    matcher = null,
-                    value = null,
+                    location = calculateLocation(current.startOffset, endToken.endOffset),
+                    name = name,
+                    matcher = matcher,
+                    value = value,
                     combinator = lookupForCombinator(iterator)
                 )
             }
@@ -98,6 +113,15 @@ class SimpleSelectorConsumer(
             else -> {
                 iterator.parserError(content, "Unexpected token ${current.kind}")
             }
+        }
+    }
+
+    private fun extractAttributeValue(token: Token<out CssTokenKind>): String {
+        val raw = content.substring(token.startOffset, endIndex = token.endOffset)
+        return when (token.kind) {
+            CssTokenKind.String -> raw.removeSurrounding("\"").removeSurrounding("'")
+            CssTokenKind.Ident -> raw
+            else -> raw
         }
     }
 
