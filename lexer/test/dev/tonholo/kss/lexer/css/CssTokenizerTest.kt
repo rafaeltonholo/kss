@@ -1416,6 +1416,38 @@ class CssTokenizerTest {
         assertTokens(content, expected)
     }
 
+    @Test
+    fun `given pseudo-element selector - when tokenizing - then creates DoubleColon token`() {
+        // Arrange
+        val content = "a::after"
+        val expected =
+            listOf(
+                Token(kind = CssTokenKind.Ident, startOffset = 0, endOffset = 1),
+                Token(kind = CssTokenKind.DoubleColon, startOffset = 1, endOffset = 3),
+                Token(kind = CssTokenKind.Ident, startOffset = 3, endOffset = 8),
+                Token(kind = CssTokenKind.EndOfFile, startOffset = 8, endOffset = 8)
+            )
+
+        // Act / Assert
+        assertTokens(content, expected)
+    }
+
+    @Test
+    fun `given single colon pseudo-class - when tokenizing - then creates Colon token`() {
+        // Arrange
+        val content = "a:hover"
+        val expected =
+            listOf(
+                Token(kind = CssTokenKind.Ident, startOffset = 0, endOffset = 1),
+                Token(kind = CssTokenKind.Colon, startOffset = 1, endOffset = 2),
+                Token(kind = CssTokenKind.Ident, startOffset = 2, endOffset = 7),
+                Token(kind = CssTokenKind.EndOfFile, startOffset = 7, endOffset = 7)
+            )
+
+        // Act / Assert
+        assertTokens(content, expected)
+    }
+
     private fun assertTokens(
         content: String,
         tokens: List<Token<out CssTokenKind>>,
