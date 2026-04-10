@@ -177,6 +177,7 @@ class SimpleSelectorConsumer(
         )
 
     private fun buildParameters(iterator: AstParserIterator<CssTokenKind>): List<Selector> {
+        if (!iterator.hasNext()) return emptyList()
         if (iterator.expectNextTokenNotNull().kind != CssTokenKind.OpenParenthesis) {
             iterator.rewind()
             return emptyList()

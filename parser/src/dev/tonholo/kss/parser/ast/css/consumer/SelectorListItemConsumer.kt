@@ -6,6 +6,7 @@ import dev.tonholo.kss.parser.ast.css.syntax.node.CssLocation
 import dev.tonholo.kss.parser.ast.css.syntax.node.Selector
 import dev.tonholo.kss.parser.ast.css.syntax.node.SelectorListItem
 import dev.tonholo.kss.parser.ast.iterator.AstParserIterator
+import dev.tonholo.kss.parser.ast.iterator.parserError
 
 val selectorTokens =
     setOf(
@@ -49,26 +50,45 @@ class SelectorListItemConsumer(
 
         // re-consume current token.
         iterator.rewind()
+        var pendingCombinator = false
         while (iterator.hasNext()) {
             val next = iterator.expectNextTokenNotNull()
             when (next.kind) {
                 CssTokenKind.Comma -> {
+                    if (pendingCombinator) {
+                        iterator.parserError(content, "Trailing combinator before ','")
+                    }
                     break
                 }
 
                 CssTokenKind.OpenCurlyBrace -> {
+                    if (pendingCombinator) {
+                        iterator.parserError(content, "Trailing combinator before '{'")
+                    }
+                    iterator.rewind()
+                    break
+                }
+
+                CssTokenKind.EndOfFile -> {
+                    if (pendingCombinator) {
+                        iterator.parserError(content, "Trailing combinator at end of selector")
+                    }
                     iterator.rewind()
                     break
                 }
 
                 in CssCombinator.tokens -> {
-                    Unit
+                    pendingCombinator = true
                 }
 
                 else -> {
+                    pendingCombinator = false
                     selectors += simpleSelectorConsumer.consume(iterator)
                 }
             }
+        }
+        if (pendingCombinator) {
+            iterator.parserError(content, "Trailing combinator at end of selector")
         }
 
         return selectorListItem.copy(
