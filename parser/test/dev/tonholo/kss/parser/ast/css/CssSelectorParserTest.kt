@@ -1,5 +1,6 @@
 package dev.tonholo.kss.parser.ast.css
 
+import dev.tonholo.kss.parser.ast.css.CssCombinator
 import dev.tonholo.kss.parser.ast.css.syntax.node.Selector
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -226,5 +227,89 @@ class CssSelectorParserTest {
 
         // Assert
         assertTrue(actual = result.isEmpty())
+    }
+
+    @Test
+    fun `given mixed comma-separated selectors - when parse is called - then returns all items`() {
+        // Arrange
+        val selector = "#id, .class, div"
+
+        // Act
+        val result = parser.parse(selector)
+
+        // Assert
+        assertEquals(expected = 3, actual = result.size)
+        assertIs<Selector.Id>(result[0].selectors.first())
+        assertIs<Selector.Class>(result[1].selectors.first())
+        assertIs<Selector.Type>(result[2].selectors.first())
+    }
+
+    @Test
+    fun `given complex compound with attribute and pseudo - when parse is called - then returns full selector chain`() {
+        // Arrange
+        val selector = """input[type="text"]:focus"""
+
+        // Act
+        val result = parser.parse(selector)
+
+        // Assert
+        assertEquals(expected = 1, actual = result.size)
+        val selectors = result.first().selectors
+        assertEquals(expected = 3, actual = selectors.size)
+        assertIs<Selector.Type>(selectors[0])
+        assertIs<Selector.Attribute>(selectors[1])
+        assertIs<Selector.PseudoClass>(selectors[2])
+    }
+
+    @Test
+    fun `given general sibling combinator - when parse is called - then selector has NextSiblingCombinator`() {
+        // Arrange
+        val selector = "h1 ~ p"
+
+        // Act
+        val result = parser.parse(selector)
+
+        // Assert
+        assertEquals(expected = 1, actual = result.size)
+        val selectors = result.first().selectors
+        assertEquals(expected = 2, actual = selectors.size)
+        assertEquals(
+            expected = CssCombinator.NextSiblingCombinator,
+            actual = selectors[0].combinator
+        )
+    }
+
+    @Test
+    fun `given adjacent sibling combinator - when parse is called - then selector has SubsequentSiblingCombinator`() {
+        // Arrange
+        val selector = "h1 + p"
+
+        // Act
+        val result = parser.parse(selector)
+
+        // Assert
+        assertEquals(expected = 1, actual = result.size)
+        val selectors = result.first().selectors
+        assertEquals(expected = 2, actual = selectors.size)
+        assertEquals(
+            expected = CssCombinator.SubsequentSiblingCombinator,
+            actual = selectors[0].combinator
+        )
+    }
+
+    @Test
+    fun `given presence attribute selector - when parse is called - then returns Attribute with null matcher`() {
+        // Arrange
+        val selector = "[disabled]"
+
+        // Act
+        val result = parser.parse(selector)
+
+        // Assert
+        assertEquals(expected = 1, actual = result.size)
+        val sel = assertIs<Selector.Attribute>(result.first().selectors.first())
+        assertEquals(expected = "disabled", actual = sel.name)
+        assertEquals(expected = null, actual = sel.matcher)
+        assertEquals(expected = null, actual = sel.value)
     }
 }
