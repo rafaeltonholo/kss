@@ -61,6 +61,11 @@ class SelectorListItemConsumer(
                     break
                 }
 
+                CssTokenKind.EndOfFile -> {
+                    iterator.rewind()
+                    break
+                }
+
                 in CssCombinator.tokens -> {
                     Unit
                 }
