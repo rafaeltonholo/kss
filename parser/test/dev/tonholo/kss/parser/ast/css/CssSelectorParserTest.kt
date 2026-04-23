@@ -316,6 +316,58 @@ class CssSelectorParserTest {
     }
 
     @Test
+    fun `given type-to-type deep combinator - when parse - then DeepCombinator links both types`() {
+        // Arrange
+        val selector = "html /deep/ body"
+
+        // Act
+        val result = parser.parse(selector)
+
+        // Assert
+        assertEquals(expected = 1, actual = result.size)
+        val selectors = result.first().selectors
+        assertEquals(expected = 2, actual = selectors.size)
+        val html = assertIs<Selector.Type>(selectors[0])
+        val body = assertIs<Selector.Type>(selectors[1])
+        assertEquals(expected = "html", actual = html.name)
+        assertEquals(expected = "body", actual = body.name)
+        assertEquals(expected = CssCombinator.DeepCombinator, actual = html.combinator)
+    }
+
+    @Test
+    fun `given universal to class deep combinator - when parse - then DeepCombinator links universal and class`() {
+        // Arrange
+        val selector = "* /deep/ .foo"
+
+        // Act
+        val result = parser.parse(selector)
+
+        // Assert
+        assertEquals(expected = 1, actual = result.size)
+        val selectors = result.first().selectors
+        assertEquals(expected = 2, actual = selectors.size)
+        val universal = assertIs<Selector.Type>(selectors[0])
+        val cls = assertIs<Selector.Class>(selectors[1])
+        assertEquals(expected = "*", actual = universal.name)
+        assertEquals(expected = "foo", actual = cls.name)
+        assertEquals(expected = CssCombinator.DeepCombinator, actual = universal.combinator)
+    }
+
+    @Test
+    fun `given parsed deep combinator - when rendered via toString - then round-trips with spaced deep combinator`() {
+        // Arrange
+        val selector = "html/deep/body"
+
+        // Act
+        val rendered = parser.parse(selector).first().toString(indent = 0)
+
+        // Assert
+        // The pretty-printer normalizes the combinator to " /deep/ " regardless of
+        // whether the input had surrounding whitespace.
+        assertEquals(expected = "html /deep/ body", actual = rendered)
+    }
+
+    @Test
     fun `given presence attribute selector - when parse is called - then returns Attribute with null matcher`() {
         // Arrange
         val selector = "[disabled]"
