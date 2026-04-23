@@ -4,8 +4,6 @@ import dev.tonholo.kss.extensions.EMPTY
 import dev.tonholo.kss.lexer.TokenIterator
 import dev.tonholo.kss.lexer.css.constants.CssFunctionConstants
 
-internal const val DEEP_COMBINATOR = "/deep/"
-
 /**
  * Iterator for CSS tokens.
  */
@@ -89,7 +87,12 @@ class CssTokenIterator : TokenIterator<CssTokenKind>() {
     private fun Char.isCommentStart(): Boolean = this == '/' && peek(1) == '*'
 
     private fun Char.isDeepCombinatorStart(): Boolean =
-        this == '/' && partialContent(offset, offset + DEEP_COMBINATOR.length) == DEEP_COMBINATOR
+        this == '/' &&
+            peek(offset = 1) == 'd' &&
+            peek(offset = 2) == 'e' &&
+            peek(offset = 3) == 'e' &&
+            peek(offset = 4) == 'p' &&
+            peek(offset = 5) == '/'
 
     private fun Char.isCDOToken(): Boolean = this == '<' && peek(1) == '!' && peek(2) == '-' && peek(offset = 3) == '-'
 

@@ -3,7 +3,6 @@ package dev.tonholo.kss.lexer.css.token.consumer
 import dev.tonholo.kss.lexer.Token
 import dev.tonholo.kss.lexer.TokenIterator
 import dev.tonholo.kss.lexer.css.CssTokenKind
-import dev.tonholo.kss.lexer.css.DEEP_COMBINATOR
 
 /**
  * Consumes the legacy `/deep/` Shadow DOM piercing descendant combinator
@@ -20,7 +19,12 @@ class DeepCombinatorTokenConsumer(
 
     override fun consume(kind: CssTokenKind): List<Token<out CssTokenKind>> {
         val start = iterator.offset
-        val end = iterator.nextOffset(steps = DEEP_COMBINATOR.length)
+        val end = iterator.nextOffset(steps = DEEP_COMBINATOR_LENGTH)
         return listOf(Token(CssTokenKind.DeepCombinator, start, end))
+    }
+
+    private companion object {
+        /** Length of the literal `/deep/` sequence in code units. */
+        const val DEEP_COMBINATOR_LENGTH = 6
     }
 }
