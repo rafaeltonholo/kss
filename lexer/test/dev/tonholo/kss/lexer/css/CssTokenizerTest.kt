@@ -1543,6 +1543,38 @@ class CssTokenizerTest {
         assertTokens(content, expected)
     }
 
+    @Test
+    fun `given non-ASCII class selector - when tokenize - then emits Ident per CSS Syntax 3`() {
+        // Arrange
+        // Per CSS Syntax Module Level 3 §4.2, any non-ASCII code point (>= U+0080)
+        // is an ident-start code point. Selectors like ".héllo" or ".图标" must
+        // tokenize as Dot followed by Ident.
+        val content = ".héllo"
+        val expected =
+            listOf(
+                Token(kind = CssTokenKind.Dot, startOffset = 0, endOffset = 1),
+                Token(kind = CssTokenKind.Ident, startOffset = 1, endOffset = 6),
+                Token(kind = CssTokenKind.EndOfFile, startOffset = 6, endOffset = 6)
+            )
+
+        // Act / Assert
+        assertTokens(content, expected)
+    }
+
+    @Test
+    fun `given CJK type selector - when tokenize - then emits single Ident token`() {
+        // Arrange
+        val content = "图标"
+        val expected =
+            listOf(
+                Token(kind = CssTokenKind.Ident, startOffset = 0, endOffset = 2),
+                Token(kind = CssTokenKind.EndOfFile, startOffset = 2, endOffset = 2)
+            )
+
+        // Act / Assert
+        assertTokens(content, expected)
+    }
+
     private fun assertTokens(
         content: String,
         tokens: List<Token<out CssTokenKind>>,

@@ -48,9 +48,10 @@ class CssTokenIterator : TokenIterator<CssTokenKind>() {
 
             else -> {
                 CssTokenKind.fromChar(char)
-                    ?: when (char) {
-                        in 'a'..'z', in 'A'..'Z', '-', '_' -> CssTokenKind.Ident
-                        else -> CssTokenKind.Delim
+                    ?: if (char.isIdentStartCodePoint() || char == '-') {
+                        CssTokenKind.Ident
+                    } else {
+                        CssTokenKind.Delim
                     }
             }
         }
