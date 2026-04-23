@@ -1505,6 +1505,44 @@ class CssTokenizerTest {
         assertTokens(content, expected)
     }
 
+    @Test
+    fun `given deep combinator between selectors - when tokenize - then emits DeepCombinator token`() {
+        // Arrange
+        val content = "html /deep/ [layout]"
+        val expected =
+            listOf(
+                Token(kind = CssTokenKind.Ident, startOffset = 0, endOffset = 4),
+                Token(kind = CssTokenKind.WhiteSpace, startOffset = 4, endOffset = 5),
+                Token(kind = CssTokenKind.DeepCombinator, startOffset = 5, endOffset = 11),
+                Token(kind = CssTokenKind.WhiteSpace, startOffset = 11, endOffset = 12),
+                Token(kind = CssTokenKind.OpenSquareBracket, startOffset = 12, endOffset = 13),
+                Token(kind = CssTokenKind.Ident, startOffset = 13, endOffset = 19),
+                Token(kind = CssTokenKind.CloseSquareBracket, startOffset = 19, endOffset = 20),
+                Token(kind = CssTokenKind.EndOfFile, startOffset = 20, endOffset = 20)
+            )
+
+        // Act / Assert
+        assertTokens(content, expected)
+    }
+
+    @Test
+    fun `given stray slash between identifiers - when tokenize - then emits Delim per CSS Syntax 3`() {
+        // Arrange
+        val content = "html / body"
+        val expected =
+            listOf(
+                Token(kind = CssTokenKind.Ident, startOffset = 0, endOffset = 4),
+                Token(kind = CssTokenKind.WhiteSpace, startOffset = 4, endOffset = 5),
+                Token(kind = CssTokenKind.Delim, startOffset = 5, endOffset = 6),
+                Token(kind = CssTokenKind.WhiteSpace, startOffset = 6, endOffset = 7),
+                Token(kind = CssTokenKind.Ident, startOffset = 7, endOffset = 11),
+                Token(kind = CssTokenKind.EndOfFile, startOffset = 11, endOffset = 11)
+            )
+
+        // Act / Assert
+        assertTokens(content, expected)
+    }
+
     private fun assertTokens(
         content: String,
         tokens: List<Token<out CssTokenKind>>,

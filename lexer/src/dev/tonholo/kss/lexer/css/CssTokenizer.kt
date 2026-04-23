@@ -5,6 +5,8 @@ import dev.tonholo.kss.lexer.TokenIterator
 import dev.tonholo.kss.lexer.Tokenizer
 import dev.tonholo.kss.lexer.css.token.consumer.AtKeywordTokenConsumer
 import dev.tonholo.kss.lexer.css.token.consumer.CommentTokenConsumer
+import dev.tonholo.kss.lexer.css.token.consumer.DeepCombinatorTokenConsumer
+import dev.tonholo.kss.lexer.css.token.consumer.DelimTokenConsumer
 import dev.tonholo.kss.lexer.css.token.consumer.DirectTokenConsumer
 import dev.tonholo.kss.lexer.css.token.consumer.FunctionTokenConsumer
 import dev.tonholo.kss.lexer.css.token.consumer.HashTokenConsumer
@@ -34,8 +36,10 @@ class CssTokenizer(
             UrlTokenConsumer(iterator),
             NumberTokenConsumer(iterator),
             CommentTokenConsumer(iterator),
+            DeepCombinatorTokenConsumer(iterator),
             FunctionTokenConsumer(iterator),
-            IdentTokenConsumer(iterator)
+            IdentTokenConsumer(iterator),
+            DelimTokenConsumer(iterator)
         ),
 ) : Tokenizer<CssTokenKind> {
     /**
@@ -48,12 +52,18 @@ class CssTokenizer(
         buildList {
             iterator.initialize(input)
             while (iterator.hasNext()) {
+                val progressOffset = iterator.offset
                 val kind = iterator.getTokenKind() ?: CssTokenKind.Ident
                 val token =
                     consumers
                         .firstOrNull { consumer -> consumer.accept(kind) }
                         ?.consume(kind)
                         ?: error("Unsupported token kind: $kind at position ${iterator.offset}")
+
+                check(iterator.offset > progressOffset) {
+                    "CssTokenizer made no progress at offset $progressOffset on " +
+                        "character '${input[progressOffset]}' (kind=$kind)"
+                }
 
                 addAll(token)
             }

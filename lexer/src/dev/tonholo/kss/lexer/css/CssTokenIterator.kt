@@ -4,6 +4,8 @@ import dev.tonholo.kss.extensions.EMPTY
 import dev.tonholo.kss.lexer.TokenIterator
 import dev.tonholo.kss.lexer.css.constants.CssFunctionConstants
 
+internal const val DEEP_COMBINATOR = "/deep/"
+
 /**
  * Iterator for CSS tokens.
  */
@@ -28,6 +30,10 @@ class CssTokenIterator : TokenIterator<CssTokenKind>() {
                 CssTokenKind.Comment
             }
 
+            char.isDeepCombinatorStart() -> {
+                CssTokenKind.DeepCombinator
+            }
+
             char.isCDOToken() -> {
                 CssTokenKind.CDO
             }
@@ -41,7 +47,11 @@ class CssTokenIterator : TokenIterator<CssTokenKind>() {
             }
 
             else -> {
-                CssTokenKind.fromChar(char) ?: CssTokenKind.Ident
+                CssTokenKind.fromChar(char)
+                    ?: when (char) {
+                        in 'a'..'z', in 'A'..'Z', '-', '_' -> CssTokenKind.Ident
+                        else -> CssTokenKind.Delim
+                    }
             }
         }
     }
@@ -76,6 +86,9 @@ class CssTokenIterator : TokenIterator<CssTokenKind>() {
     }
 
     private fun Char.isCommentStart(): Boolean = this == '/' && peek(1) == '*'
+
+    private fun Char.isDeepCombinatorStart(): Boolean =
+        this == '/' && partialContent(offset, offset + DEEP_COMBINATOR.length) == DEEP_COMBINATOR
 
     private fun Char.isCDOToken(): Boolean = this == '<' && peek(1) == '!' && peek(2) == '-' && peek(offset = 3) == '-'
 

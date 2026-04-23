@@ -18,6 +18,13 @@ enum class CssCombinator(
     NextSiblingCombinator(representation = " ~ ", tokenKind = CssTokenKind.Tilde),
     DescendantCombinator(representation = " ", tokenKind = CssTokenKind.WhiteSpace),
     SubsequentSiblingCombinator(representation = " + ", tokenKind = CssTokenKind.Plus),
+
+    /**
+     * The deprecated Shadow DOM piercing descendant combinator (`/deep/`).
+     * Retained for compatibility with legacy stylesheets (e.g. Polymer-era
+     * SVGs) even though it is no longer part of the CSS specification.
+     */
+    DeepCombinator(representation = " /deep/ ", tokenKind = CssTokenKind.DeepCombinator),
     ;
 
     companion object {
@@ -31,6 +38,7 @@ enum class CssCombinator(
          * - [CssTokenKind.Tilde] : [NextSiblingCombinator] (" ~ ")
          * - [CssTokenKind.WhiteSpace] : [DescendantCombinator] (" ")
          * - [CssTokenKind.Plus] : [SubsequentSiblingCombinator] (" + ")
+         * - [CssTokenKind.DeepCombinator] : [DeepCombinator] (" /deep/ ")
          *
          * For any other token kind, including `null`, the function returns `null`.
          *
@@ -43,6 +51,7 @@ enum class CssCombinator(
                 CssTokenKind.Tilde -> NextSiblingCombinator
                 CssTokenKind.WhiteSpace -> DescendantCombinator
                 CssTokenKind.Plus -> SubsequentSiblingCombinator
+                CssTokenKind.DeepCombinator -> DeepCombinator
                 else -> null
             }
     }

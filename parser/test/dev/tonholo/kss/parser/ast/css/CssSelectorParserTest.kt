@@ -298,6 +298,24 @@ class CssSelectorParserTest {
     }
 
     @Test
+    fun `given selector with legacy deep combinator - when parse - then returns selector with DeepCombinator`() {
+        // Arrange
+        val selector = "html /deep/ [layout][vertical][reverse]"
+
+        // Act
+        val result = parser.parse(selector)
+
+        // Assert
+        assertEquals(expected = 1, actual = result.size)
+        val selectors = result.first().selectors
+        val html = assertIs<Selector.Type>(selectors[0])
+        assertEquals(expected = "html", actual = html.name)
+        assertEquals(expected = CssCombinator.DeepCombinator, actual = html.combinator)
+        val attrs = selectors.drop(n = 1).map { assertIs<Selector.Attribute>(it).name }
+        assertEquals(expected = listOf("layout", "vertical", "reverse"), actual = attrs)
+    }
+
+    @Test
     fun `given presence attribute selector - when parse is called - then returns Attribute with null matcher`() {
         // Arrange
         val selector = "[disabled]"
