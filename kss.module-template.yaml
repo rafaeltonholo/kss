@@ -6,7 +6,7 @@ settings:
     version: 1.10.3
   publishing:
     group: "dev.tonholo.kss"
-    version: "1.0.2"
+    version: "1.0.3"
 
 test-dependencies:
   - $kotlin.test
