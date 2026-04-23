@@ -28,6 +28,10 @@ class CssTokenIterator : TokenIterator<CssTokenKind>() {
                 CssTokenKind.Comment
             }
 
+            char.isDeepCombinatorStart() -> {
+                CssTokenKind.DeepCombinator
+            }
+
             char.isCDOToken() -> {
                 CssTokenKind.CDO
             }
@@ -41,7 +45,12 @@ class CssTokenIterator : TokenIterator<CssTokenKind>() {
             }
 
             else -> {
-                CssTokenKind.fromChar(char) ?: CssTokenKind.Ident
+                CssTokenKind.fromChar(char)
+                    ?: if (char.isIdentStartCodePoint() || char == '-') {
+                        CssTokenKind.Ident
+                    } else {
+                        CssTokenKind.Delim
+                    }
             }
         }
     }
@@ -76,6 +85,14 @@ class CssTokenIterator : TokenIterator<CssTokenKind>() {
     }
 
     private fun Char.isCommentStart(): Boolean = this == '/' && peek(1) == '*'
+
+    private fun Char.isDeepCombinatorStart(): Boolean =
+        this == '/' &&
+            peek(offset = 1) == 'd' &&
+            peek(offset = 2) == 'e' &&
+            peek(offset = 3) == 'e' &&
+            peek(offset = 4) == 'p' &&
+            peek(offset = 5) == '/'
 
     private fun Char.isCDOToken(): Boolean = this == '<' && peek(1) == '!' && peek(2) == '-' && peek(offset = 3) == '-'
 

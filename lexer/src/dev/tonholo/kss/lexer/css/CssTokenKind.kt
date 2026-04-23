@@ -30,6 +30,15 @@ enum class CssTokenKind(
     Dollar(representation = setOf('$')),
     Ident,
     Hash(representation = setOf('#')),
+    Delim,
+
+    /**
+     * The deprecated Shadow DOM piercing descendant combinator (`/deep/`),
+     * originally defined in early drafts of CSS Scoping and implemented by
+     * Blink/Polymer. Removed from modern CSS, but still encountered in legacy
+     * SVG and Web Component stylesheets.
+     */
+    DeepCombinator,
 
     // Decimal or float
     Number,

@@ -1505,6 +1505,142 @@ class CssTokenizerTest {
         assertTokens(content, expected)
     }
 
+    @Test
+    fun `given deep combinator between selectors - when tokenize - then emits DeepCombinator token`() {
+        // Arrange
+        val content = "html /deep/ [layout]"
+        val expected =
+            listOf(
+                Token(kind = CssTokenKind.Ident, startOffset = 0, endOffset = 4),
+                Token(kind = CssTokenKind.WhiteSpace, startOffset = 4, endOffset = 5),
+                Token(kind = CssTokenKind.DeepCombinator, startOffset = 5, endOffset = 11),
+                Token(kind = CssTokenKind.WhiteSpace, startOffset = 11, endOffset = 12),
+                Token(kind = CssTokenKind.OpenSquareBracket, startOffset = 12, endOffset = 13),
+                Token(kind = CssTokenKind.Ident, startOffset = 13, endOffset = 19),
+                Token(kind = CssTokenKind.CloseSquareBracket, startOffset = 19, endOffset = 20),
+                Token(kind = CssTokenKind.EndOfFile, startOffset = 20, endOffset = 20)
+            )
+
+        // Act / Assert
+        assertTokens(content, expected)
+    }
+
+    @Test
+    fun `given stray slash between identifiers - when tokenize - then emits Delim per CSS Syntax 3`() {
+        // Arrange
+        val content = "html / body"
+        val expected =
+            listOf(
+                Token(kind = CssTokenKind.Ident, startOffset = 0, endOffset = 4),
+                Token(kind = CssTokenKind.WhiteSpace, startOffset = 4, endOffset = 5),
+                Token(kind = CssTokenKind.Delim, startOffset = 5, endOffset = 6),
+                Token(kind = CssTokenKind.WhiteSpace, startOffset = 6, endOffset = 7),
+                Token(kind = CssTokenKind.Ident, startOffset = 7, endOffset = 11),
+                Token(kind = CssTokenKind.EndOfFile, startOffset = 11, endOffset = 11)
+            )
+
+        // Act / Assert
+        assertTokens(content, expected)
+    }
+
+    @Test
+    fun `given non-ASCII class selector - when tokenize - then emits Ident per CSS Syntax 3`() {
+        // Arrange
+        // Per CSS Syntax Module Level 3 §4.2, any non-ASCII code point (>= U+0080)
+        // is an ident-start code point. Selectors like ".héllo" or ".图标" must
+        // tokenize as Dot followed by Ident.
+        val content = ".héllo"
+        val expected =
+            listOf(
+                Token(kind = CssTokenKind.Dot, startOffset = 0, endOffset = 1),
+                Token(kind = CssTokenKind.Ident, startOffset = 1, endOffset = 6),
+                Token(kind = CssTokenKind.EndOfFile, startOffset = 6, endOffset = 6)
+            )
+
+        // Act / Assert
+        assertTokens(content, expected)
+    }
+
+    @Test
+    fun `given CJK type selector - when tokenize - then emits single Ident token`() {
+        // Arrange
+        val content = "图标"
+        val expected =
+            listOf(
+                Token(kind = CssTokenKind.Ident, startOffset = 0, endOffset = 2),
+                Token(kind = CssTokenKind.EndOfFile, startOffset = 2, endOffset = 2)
+            )
+
+        // Act / Assert
+        assertTokens(content, expected)
+    }
+
+    @Test
+    fun `given deep combinator with no surrounding whitespace - when tokenize - then emits DeepCombinator token`() {
+        // Arrange
+        val content = "html/deep/body"
+        val expected =
+            listOf(
+                Token(kind = CssTokenKind.Ident, startOffset = 0, endOffset = 4),
+                Token(kind = CssTokenKind.DeepCombinator, startOffset = 4, endOffset = 10),
+                Token(kind = CssTokenKind.Ident, startOffset = 10, endOffset = 14),
+                Token(kind = CssTokenKind.EndOfFile, startOffset = 14, endOffset = 14)
+            )
+
+        // Act / Assert
+        assertTokens(content, expected)
+    }
+
+    @Test
+    fun `given deep combinator at end of input - when tokenize - then emits DeepCombinator token`() {
+        // Arrange
+        val content = "html /deep/"
+        val expected =
+            listOf(
+                Token(kind = CssTokenKind.Ident, startOffset = 0, endOffset = 4),
+                Token(kind = CssTokenKind.WhiteSpace, startOffset = 4, endOffset = 5),
+                Token(kind = CssTokenKind.DeepCombinator, startOffset = 5, endOffset = 11),
+                Token(kind = CssTokenKind.EndOfFile, startOffset = 11, endOffset = 11)
+            )
+
+        // Act / Assert
+        assertTokens(content, expected)
+    }
+
+    @Test
+    fun `given uppercase DEEP sequence - when tokenize - then does not match DeepCombinator`() {
+        // Arrange
+        // The legacy Polymer/Blink implementation only accepted lowercase `/deep/`.
+        // Uppercase variants fall back to Delim + Ident + Delim per CSS Syntax 3.
+        val content = "/DEEP/"
+        val expected =
+            listOf(
+                Token(kind = CssTokenKind.Delim, startOffset = 0, endOffset = 1),
+                Token(kind = CssTokenKind.Ident, startOffset = 1, endOffset = 5),
+                Token(kind = CssTokenKind.Delim, startOffset = 5, endOffset = 6),
+                Token(kind = CssTokenKind.EndOfFile, startOffset = 6, endOffset = 6)
+            )
+
+        // Act / Assert
+        assertTokens(content, expected)
+    }
+
+    @Test
+    fun `given CSS comment that starts with slash - when tokenize - then still emits Comment token`() {
+        // Arrange
+        // Regression guard: `isCommentStart` must win over `isDeepCombinatorStart`
+        // when the slash is followed by an asterisk instead of `deep/`.
+        val content = "/* hi */"
+        val expected =
+            listOf(
+                Token(kind = CssTokenKind.Comment, startOffset = 0, endOffset = 8),
+                Token(kind = CssTokenKind.EndOfFile, startOffset = 8, endOffset = 8)
+            )
+
+        // Act / Assert
+        assertTokens(content, expected)
+    }
+
     private fun assertTokens(
         content: String,
         tokens: List<Token<out CssTokenKind>>,
